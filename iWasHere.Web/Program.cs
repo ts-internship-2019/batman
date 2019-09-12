@@ -15,6 +15,7 @@ namespace iWasHere.Web
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+            ///COMENTARIU
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -22,3 +23,14 @@ namespace iWasHere.Web
                 .UseStartup<Startup>();
     }
 }
+
+
+
+
+
+
+
+
+
+
+//****
