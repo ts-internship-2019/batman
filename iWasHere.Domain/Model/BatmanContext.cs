@@ -9,7 +9,7 @@ namespace iWasHere.Domain.Model
         public DatabaseContext()
         {
         }
-
+        //asa
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
         {
