@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Service;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iWasHere.Web.Controllers
@@ -23,5 +25,16 @@ namespace iWasHere.Web.Controllers
 
             return View(dictionaryLandmarkTypeModels);
         }
+
+        public IActionResult City()
+        {
+            return View();
+        }
+
+
+        public ActionResult CityData([DataSourceRequest]DataSourceRequest request)
+        {
+            return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
+        } 
     }
 }

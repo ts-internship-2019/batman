@@ -25,5 +25,20 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
+
+        public List<DictionaryCityTypeModel> GetDictionaryCity(int page, int pageSize)
+        {
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCityTypeModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityTypeModel()
+            {
+                Id = a.DictionaryCityId,
+                Name = a.DictionaryCityName,
+                CountyId = a.DictionaryCounty.DictionaryCountyId,
+                CountyName = a.DictionaryCounty.DictionaryCountyName
+
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCity;
+        }
     }
 }
