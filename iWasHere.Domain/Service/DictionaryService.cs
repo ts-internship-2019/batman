@@ -17,18 +17,27 @@ namespace iWasHere.Domain.Service
 
         public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels(int page, int pageSize)
         {
+            int skip = (page - 1) * (pageSize);
+            //List<DictionaryLandmarkTypeModel> total = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
+            //{
+            //    Id = a.DictionaryItemId,
+            //    Name = a.DictionaryItemName
+            //}).ToList();
+            
             List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
             {
                 Id = a.DictionaryItemId,
                 Name = a.DictionaryItemName
-            }).ToList();
+            }).Skip(skip).Take(pageSize).ToList();
+
 
             return dictionaryLandmarkTypeModels;
         }
 
         public List<DictionaryCityTypeModel> GetDictionaryCity(int page, int pageSize)
         {
-            int skip = (page - 1) * pageSize;
+            int skip = (page-1) * pageSize;
+            
             List<DictionaryCityTypeModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityTypeModel()
             {
                 Id = a.DictionaryCityId,
@@ -40,8 +49,16 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCity;
         }
-
-        public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
+        public int GetLandmarkCount()
+        {
+            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
+            {
+                Id = a.DictionaryItemId,
+                Name = a.DictionaryItemName
+            }).ToList();
+            return dictionaryLandmarkTypeModels.Count;
+        }
+        public int GetCountryCount()
         {
             List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
             {
@@ -50,6 +67,19 @@ namespace iWasHere.Domain.Service
                 DictionaryCountryName = a.DictionaryCountryName
 
             }).ToList();
+            return dictionaryCountry.Count;
+        }
+
+        public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
+        {
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryCode = a.DictionaryCountryCode,
+                DictionaryCountryName = a.DictionaryCountryName
+
+            }).Skip(skip).Take(pageSize).ToList();
 
             return dictionaryCountry;
         }

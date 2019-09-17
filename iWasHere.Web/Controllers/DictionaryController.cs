@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using iWasHere.Domain.DTOs;
+using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -45,11 +46,26 @@ namespace iWasHere.Web.Controllers
 
         public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request)
         {
-            return Json(_dictionaryService.GetDictionaryCountry(request.Page, request.PageSize).ToDataSourceResult(request));
+            List<DictionaryCountry> data = _dictionaryService.GetDictionaryCountry(request.Page, request.PageSize);
+            //int total = data.Count();
+
+            var result = new DataSourceResult()
+            {
+                Data = data, // Process data (paging and sorting applied)
+                Total = _dictionaryService.GetCountryCount() // Total number of records
+            };
+            return Json(result);
         }
         public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request)
         {
-            return Json(_dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize).ToDataSourceResult(request));
+            List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize);
+            //int total = data.Count();
+            var result = new DataSourceResult()
+            {
+                Data = data, // Process data (paging and sorting applied)
+                Total = _dictionaryService.GetLandmarkCount() // Total number of records
+            };
+            return Json(result);
         }
     }
 }
