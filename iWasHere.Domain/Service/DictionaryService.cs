@@ -53,23 +53,11 @@ namespace iWasHere.Domain.Service
         }
         public int GetLandmarkCount()
         {
-            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
-            {
-                Id = a.DictionaryItemId,
-                Name = a.DictionaryItemName
-            }).ToList();
-            return dictionaryLandmarkTypeModels.Count;
+            return _dbContext.DictionaryLandmarkType.Count();
         }
         public int GetCountryCount()
         {
-            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
-            {
-                DictionaryCountryId = a.DictionaryCountryId,
-                DictionaryCountryCode = a.DictionaryCountryCode,
-                DictionaryCountryName = a.DictionaryCountryName
-
-            }).ToList();
-            return dictionaryCountry.Count;
+            return _dbContext.DictionaryCountry.Count();
         }
 
         public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
