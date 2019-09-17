@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Orase</h1>
+
+
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityTypeModel>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+        
+        columns.Bound(c => c.Id).Width(70);
+        columns.Bound(c => c.Name).Width(110);
+        columns.Bound(c => c.CountyId).Width(70);
+        columns.Bound(c => c.CountyName).Width(110);
+    })
+    .HtmlAttributes(new { style = "height: 550px;" })
+    .Scrollable()
+    .Groupable()
+    .Sortable()
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("CityData", "Dictionary"))
+        .PageSize(20)
+    )
+)
+

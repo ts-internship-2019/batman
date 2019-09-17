@@ -51,9 +51,6 @@ namespace iWasHere.Web
 
             services.AddKendo();
             services.AddScoped<DictionaryService>();
-
-            //sau AddSingleton ???
-            //services.AddScoped<DictionaryCountyService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
