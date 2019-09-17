@@ -25,5 +25,17 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
+
+        public List<DictionaryCountry> GetDictionaryCountryModel()
+        {
+            List<DictionaryCountry> dictionaryCountryModels = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryName = a.DictionaryCountryName,
+                DictionaryCountryCode = a.DictionaryCountryCode
+            }).ToList();
+
+            return dictionaryCountryModels;
+        }
     }
 }
