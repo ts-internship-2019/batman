@@ -40,5 +40,18 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCity;
         }
+
+        public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
+        {
+            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryCode = a.DictionaryCountryCode,
+                DictionaryCountryName = a.DictionaryCountryName
+
+            }).ToList();
+
+            return dictionaryCountry;
+        }
     }
 }

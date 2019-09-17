@@ -35,6 +35,17 @@ namespace iWasHere.Web.Controllers
         public ActionResult CityData([DataSourceRequest]DataSourceRequest request)
         {
             return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
-        } 
+        }
+
+        public IActionResult DictionaryCountry()
+        {
+            return View();
+        }
+
+
+        public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request)
+        {
+            return Json(_dictionaryService.GetDictionaryCountry(request.Page, request.PageSize).ToDataSourceResult(request));
+        }
     }
 }
