@@ -1,34 +1,14 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿<!DOCTYPE html>
+<html>
+<body>
 
-<h1>Orase</h1>
+    <form action="/">
+        First name: <input type="text" name="FirstName" value="Mickey"><br>
+        Last name: <input type="text" name="LastName" value="Mouse"><br>
+        <input type="submit" value="Submit">
+    </form>
 
+    <p>Click the "Submit" button and the form-data will be sent to a page on the server called "/action_page.php".</p>
 
-@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityTypeModel>()
-    .Name("grid")
-    .Columns(columns =>
-    {
-        
-        columns.Bound(c => c.Id).Width(70);
-        columns.Bound(c => c.Name).Width(110);
-        columns.Bound(c => c.CountyId).Width(70);
-        columns.Bound(c => c.CountyName).Width(110);
-    })
-    .HtmlAttributes(new { style = "height: 550px;" })
-    .Scrollable()
-    .Groupable()
-    .Sortable()
-    .Pageable(pageable => pageable
-        .Refresh(true)
-        .PageSizes(true)
-        .ButtonCount(5))
-    .DataSource(dataSource => dataSource
-        .Ajax()
-        .Read(read => read.Action("CityData", "Dictionary"))
-        .PageSize(20)
-    )
-)
-
+</body>
+</html>

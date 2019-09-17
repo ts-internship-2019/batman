@@ -26,14 +26,30 @@ namespace iWasHere.Web.Controllers
 
             return View();
         }
+        public IActionResult Cities()
+        {
+            return View();
+        }
+      
 
+
+        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
+        {
+            var jsonVar = _dictionaryService.GetDictionaryCity().ToDataSourceResult(request);
+            //jsonVar.Total = 23;
+            return Json(jsonVar);
+
+        }
         public IActionResult City()
         {
             return View();
         }
+        public IActionResult ClientFiltering()
+        {
+            return View();
+        }
 
-
-        public ActionResult CityData([DataSourceRequest]DataSourceRequest request)
+        public JsonResult GetCascadeCounty()
         {
             return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
         }
