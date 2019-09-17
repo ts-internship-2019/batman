@@ -1,0 +1,34 @@
+﻿@model IEnumerable<iWasHere.Domain.DTOs.DictionaryLandmarkTypeModel>
+
+@{
+    ViewData["Title"] = "Landmarks";
+}
+
+    <h1>Landmarks</h1>
+
+
+
+
+
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryLandmarkTypeModel>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+
+        columns.Bound(c => c.Id).Width(70);
+        columns.Bound(c => c.Name).Width(110);
+    })
+    .HtmlAttributes(new { style = "height: 550px;" })
+    .Scrollable()
+    .Groupable()
+    .Sortable()
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("DictionaryLandmarkData", "Dictionary"))
+        .PageSize(20)
+    )
+)

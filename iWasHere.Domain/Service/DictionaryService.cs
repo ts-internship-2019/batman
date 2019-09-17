@@ -15,7 +15,7 @@ namespace iWasHere.Domain.Service
             _dbContext = databaseContext;
         }
 
-        public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels()
+        public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels(int page, int pageSize)
         {
             List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
             {
@@ -53,5 +53,6 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountry;
         }
+        
     }
 }

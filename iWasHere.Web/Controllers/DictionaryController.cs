@@ -19,11 +19,11 @@ namespace iWasHere.Web.Controllers
             _dictionaryService = dictionaryService;
         }
 
-        public IActionResult Index()
+        public IActionResult DictionaryLandmark()
         {
-            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
+            //List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dictionaryService.GetDictionaryLandmarkTypeModels();
 
-            return View(dictionaryLandmarkTypeModels);
+            return View();
         }
 
         public IActionResult City()
@@ -46,6 +46,10 @@ namespace iWasHere.Web.Controllers
         public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request)
         {
             return Json(_dictionaryService.GetDictionaryCountry(request.Page, request.PageSize).ToDataSourceResult(request));
+        }
+        public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request)
+        {
+            return Json(_dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize).ToDataSourceResult(request));
         }
     }
 }
