@@ -9,11 +9,15 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace iWasHere.Web.Controllers
 {
     public class DictionaryController : Controller
     {
         private readonly DictionaryService _dictionaryService;
+
+
+        public object SeasonName { get; private set; }
 
         public DictionaryController(DictionaryService dictionaryService)
         {
@@ -119,5 +123,26 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_dictionaryService.ServerFiltering_GetCountries(text));
         }
+
+
+        public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request)
+        {
+            return Json(_dictionaryService.GetDictionarySeasonTypeModels(request.Page, request.PageSize).ToDataSourceResult(request));
+        }
+
+        public IActionResult DictionarySeasonType()
+        {
+            return View();
+        }
+
+      
+
+
+
+
+
+
+
+
     }
 }

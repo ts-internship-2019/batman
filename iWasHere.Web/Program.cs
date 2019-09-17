@@ -25,12 +25,4 @@ namespace iWasHere.Web
 }
 
 
-
-
-
-
-
-
-
-
 //****
