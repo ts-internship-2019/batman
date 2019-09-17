@@ -4,7 +4,7 @@ using System.Text;
 
 namespace iWasHere.Domain.DTOs
 {
-    public class DictionaryCityTypeModel
+    public class DictionaryCityModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

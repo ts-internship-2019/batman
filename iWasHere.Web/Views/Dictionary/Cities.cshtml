@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewData["Title"] = "Cities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Lista Orase</h1>
+<div class="text-right">
+    <p>
+        @(Html.Kendo().Button()
+            .Name("primaryTextButton")
+            .HtmlAttributes(new { type = "button", @class = "k-primary" })
+            .Content("Adauga Oras")
+            .Events(e => e.Click("City")))
+    </p>
+
+</div>
+<div class="demo-section k-content">
+  
+        
+            <h4>Select product</h4>
+    @(Html.Kendo().AutoComplete()
+          .Name("Judete")
+          .DataTextField("CountyName")
+          .HtmlAttributes(new { style = "width:100%" })
+          .Filter("contains")
+          .DataSource(source => {
+              source.Read(read =>
+              {
+                  read.Action("GetCascadeCounty", "Dictionary");
+              })
+              .ServerFiltering(false);
+          })
+    )
+
+            <div class="demo-hint">Start typing the name of an European country</div>
+
+</div>
+        
+<li>
+    <p>
+        <label for="cities">
+            City:@Html.TextBox("Oras", null, new { @class = "form-control" })
+        </label>
+    </p>
+</li>
+    </ul>
+</div>
+
+<div class="text-center">
+    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+                columns.Bound(c => c.Id).Width(70);
+                columns.Bound(c => c.Name).Width(110);
+                columns.Bound(c => c.CountyId).Width(70);
+                columns.Bound(c => c.CountyName).Width(110);
+                columns.Template("<input type ='button' class='k-button info' name='info' value='Editeaza'/>").Width(70);
+                columns.Template("<input type ='button' class='k-button info' name='info' value='Sterge'/>").Width(70);
+        })
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("CitiesData", "Dictionary"))
+            .PageSize(20)
+        )
+    )
+</div>
+
+<style>
+    .k-autocomplete {
+        width: 100%;
+    }
+</style>
