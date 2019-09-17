@@ -1,0 +1,74 @@
+﻿<h1>Currency</h1>
+
+
+<p>
+    <input type="button" value="Add New Currency" onclick='window.location="@Url.Action("CurrencyAdd", "Dictionary")";' />
+</p>
+
+
+@*<div class="well">
+    <div class="form-inline">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Last Name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="LastName" />
+        </div>
+        <div class="form-group">
+
+
+            <input type="email" class="form-control" placeholder="First name"
+                   data-mvcgrid-type="filter" data-mvcgrid-option="FirstName" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" data-mvcgrid-type="filter" data-mvcgrid-option="Status">
+                <option value=""></option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Apply</button>
+    </div>
+</div>*@
+
+
+
+
+                @model IEnumerable<iWasHere.Domain.DTOs.DictionaryCurrencyTypeModel>
+
+                @{
+                    ViewData["Title"] = "Currency";
+                    Layout = "~/Views/Shared/_Layout.cshtml";
+                }
+
+
+                @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyTypeModel>()
+                    .Name("grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(c => c.Name);
+
+                        columns.Bound(c => c.Code);
+
+                        columns.Bound(c => c.Value);
+
+                        columns.Bound(c => c.Data);
+
+                    })
+                    .HtmlAttributes(new { style = "height: 550px;" })
+                    .Scrollable()
+                    .Groupable()
+                    .Sortable()
+                    
+                    .Pageable(pageable => pageable
+                        .Refresh(true)
+                        .PageSizes(true)
+                        .ButtonCount(5))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Read(read => read.Action("CurrencyData", "Dictionary"))
+                        .PageSize(20)
+                    )
+                )
+
+
+
+
