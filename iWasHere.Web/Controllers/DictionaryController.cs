@@ -35,7 +35,7 @@ namespace iWasHere.Web.Controllers
 
         public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
         {
-            var jsonVar = _dictionaryService.GetDictionaryCity().ToDataSourceResult(request);
+            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page,request.PageSize).ToDataSourceResult(request);
             //jsonVar.Total = 23;
             return Json(jsonVar);
 
@@ -49,7 +49,7 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public JsonResult GetCascadeCounty()
+        public JsonResult GetCascadeCounty([DataSourceRequest]DataSourceRequest request)
         {
             return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
         }
