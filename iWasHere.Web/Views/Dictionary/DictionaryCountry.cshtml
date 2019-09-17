@@ -1,0 +1,36 @@
+﻿@model IEnumerable<iWasHere.Domain.Model.DictionaryCountry>
+
+@{
+    ViewData["Title"] = "Countries";
+}
+
+<h1>Countries</h1>
+
+<p>
+    <a asp-action="Create">Add</a>
+</p>
+
+
+
+@(Html.Kendo().Grid<iWasHere.Domain.Model.DictionaryCountry>()
+    .Name("grid")
+    .Columns(columns =>
+    {
+
+        columns.Bound(c => c.DictionaryCountryCode).Width(70);
+        columns.Bound(c => c.DictionaryCountryName).Width(110);
+    })
+    .HtmlAttributes(new { style = "height: 550px;" })
+    .Scrollable()
+    .Groupable()
+    .Sortable()
+    .Pageable(pageable => pageable
+        .Refresh(true)
+        .PageSizes(true)
+        .ButtonCount(5))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Read(read => read.Action("DictionaryCountryData", "Dictionary"))
+        .PageSize(20)
+    )
+)

@@ -15,19 +15,30 @@ namespace iWasHere.Domain.Service
             _dbContext = databaseContext;
         }
 
-        public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels()
+        public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkTypeModels(int page, int pageSize)
         {
+            int skip = (page - 1) * (pageSize);
+            //List<DictionaryLandmarkTypeModel> total = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
+            //{
+            //    Id = a.DictionaryItemId,
+            //    Name = a.DictionaryItemName
+            //}).ToList();
+            
             List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
             {
                 Id = a.DictionaryItemId,
                 Name = a.DictionaryItemName
-            }).ToList();
+            }).Skip(skip).Take(pageSize).ToList();
+
 
             return dictionaryLandmarkTypeModels;
         }
 
         public List<DictionaryCityModel> GetDictionaryCity()
         {
+            int skip = (page-1) * pageSize;
+            
+            List<DictionaryCityTypeModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityTypeModel()
             //int skip = (page - 1) * pageSize;
             List<DictionaryCityModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
@@ -40,17 +51,40 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCity;
         }
-
-        public List<DictionaryCountyModel> GetDictionaryCounty()
+        public int GetLandmarkCount()
         {
-            //int skip = (page - 1) * pageSize;
-            List<DictionaryCountyModel> dictionaryCounty = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
+            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
             {
-                CountyId = a.DictionaryCountyId,
-                CountyName = a.DictionaryCountyName
+                Id = a.DictionaryItemId,
+                Name = a.DictionaryItemName
             }).ToList();
-
-            return dictionaryCounty;
+            return dictionaryLandmarkTypeModels.Count;
         }
+        public int GetCountryCount()
+        {
+            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryCode = a.DictionaryCountryCode,
+                DictionaryCountryName = a.DictionaryCountryName
+
+            }).ToList();
+            return dictionaryCountry.Count;
+        }
+
+        public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
+        {
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryCode = a.DictionaryCountryCode,
+                DictionaryCountryName = a.DictionaryCountryName
+
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCountry;
+        }
+        
     }
 }
