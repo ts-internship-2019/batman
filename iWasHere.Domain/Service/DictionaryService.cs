@@ -34,12 +34,11 @@ namespace iWasHere.Domain.Service
             return dictionaryLandmarkTypeModels;
         }
 
-        public List<DictionaryCityModel> GetDictionaryCity()
+        public List<DictionaryCityModel> GetDictionaryCity(int page, int pageSize)
         {
             int skip = (page-1) * pageSize;
             
-            List<DictionaryCityTypeModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityTypeModel()
-            //int skip = (page - 1) * pageSize;
+            
             List<DictionaryCityModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,

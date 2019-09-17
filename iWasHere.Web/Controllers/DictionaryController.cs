@@ -49,7 +49,7 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public JsonResult GetCascadeCounty()
+        public JsonResult GetCascadeCounty([DataSourceRequest]DataSourceRequest request)
         {
             return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
         }
@@ -83,9 +83,8 @@ namespace iWasHere.Web.Controllers
             };
             return Json(result);
         }
-                return Json(_dictionaryService.GetDictionaryCounty());
-        }
+              
+    }
 
         
     }
-}
