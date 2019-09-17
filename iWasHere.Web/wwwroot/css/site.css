@@ -54,8 +54,14 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
-
-.MyCssClass 
-{
-
+.k-primary {
+    bottom: 10%;
+    right: 5px;
+    margin: 0;
+    padding: 5px 3px;
+    float: initial;
 }
+.form-control {
+    width: 90%;
+    word-wrap: break-word;
+} 

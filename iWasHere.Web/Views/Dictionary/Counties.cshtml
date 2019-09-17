@@ -1,0 +1,143 @@
+﻿@model IEnumerable<iWasHere.Domain.DTOs.DictionaryCountyModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>County</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div>
+    <button> Filter </button>   
+
+    <div class="demo-section k-content">        
+        @(Html.Kendo().AutoComplete()
+              .Name("countries")
+              .DataTextField("CountryName")
+              .Filter("StartsWith")
+             // .MinLength(3)
+              .HtmlAttributes(new { style = "width:100%" })
+              .DataSource(source =>
+                      {
+                  source.Read(read =>
+                  {
+                      read.Action("ServerFiltering_GetCountries", "Dictionary")
+                          .Data("onAdditionalData");
+                  })
+                  .ServerFiltering(true);
+              })
+        )       
+    </div>
+    <script>
+        function onAdditionalData() {
+            return {
+                text: $("#countries").val()
+            };
+        }
+    </script>
+
+    Find by county name: @Html.TextBox("SearchCountyName")
+    @* <label for="searchCountyName">Nume judet</label>*@
+    @*<input type="text" name="searchCountyName" />*@
+    Find by county code: @Html.TextBox("SearchCountyCode")
+    @*<label for="searchCountyCode">Cod judet</label>
+        <input type="text" name="searchCountyCode" />*@
+
+
+</div>
+
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCountyModel>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.CountyId);
+            columns.Bound(c => c.CountyName);
+            columns.Bound(c => c.CountyCode);
+            columns.Bound(c => c.CountryId);
+            columns.Bound(c => c.CountryName);
+        })
+        .HtmlAttributes(new { style = "height: 550px;" })
+        .Scrollable()
+        .Groupable()
+        .Sortable()
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .Read(read => read.Action("CountyData", "Dictionary"))
+            .PageSize(20)
+        )
+)
+
+<style>
+    .customer-photo {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-size: 32px 35px;
+        background-position: center center;
+        vertical-align: middle;
+        line-height: 32px;
+        box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+        margin-left: 5px;
+    }
+
+    .customer-name {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 32px;
+        padding-left: 3px;
+    }
+</style>
+
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountyId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountyName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountryId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CountryName)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountyId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountryId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountryName)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
