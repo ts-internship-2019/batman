@@ -26,16 +26,19 @@ namespace iWasHere.Domain.Service
             return dictionaryLandmarkTypeModels;
         }
 
-        public List<DictionaryCountry> GetDictionaryCountryModel()
+        public List<DictionaryCityTypeModel> GetDictionaryCity(int page, int pageSize)
         {
-            List<DictionaryCountry> dictionaryCountryModels = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
+            int skip = (page - 1) * pageSize;
+            List<DictionaryCityTypeModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityTypeModel()
             {
-                DictionaryCountryId = a.DictionaryCountryId,
-                DictionaryCountryName = a.DictionaryCountryName,
-                DictionaryCountryCode = a.DictionaryCountryCode
-            }).ToList();
+                Id = a.DictionaryCityId,
+                Name = a.DictionaryCityName,
+                CountyId = a.DictionaryCounty.DictionaryCountyId,
+                CountyName = a.DictionaryCounty.DictionaryCountyName
 
-            return dictionaryCountryModels;
+            }).Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryCity;
         }
     }
 }
