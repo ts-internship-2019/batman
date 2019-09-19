@@ -169,5 +169,10 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+
+        public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
+        {
+            _dictionaryService.DeleteCountry(model.DictionaryCountryId);
+        }
     }
 }

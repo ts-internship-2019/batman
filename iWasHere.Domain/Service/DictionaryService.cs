@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace iWasHere.Domain.Service
 {
@@ -199,6 +200,57 @@ namespace iWasHere.Domain.Service
 
 
 
+        }
+
+        public void DeleteCountry(int CountryId)
+        {
+            using (_dbContext)
+            {
+                try
+                {
+                    using (TransactionScope scope = new TransactionScope())
+                    {
+                        var Country = from tb in _dbContext.DictionaryCountry
+                                      where tb.DictionaryCountryId == CountryId
+                                      select tb;
+                        var County = from tb in _dbContext.DictionaryCounty
+                                     where tb.DictionaryCountryId == CountryId
+                                     select tb;
+
+                        if (County != null)
+                        {
+                            foreach (var item in County)
+                            {
+                                var City = from tb in _dbContext.DictionaryCity
+                                             where tb.DictionaryCountyId == item.DictionaryCountyId
+                                             select tb;
+
+                                if (City != null)
+                                {
+                                    foreach (var itemCity in City)
+                                        _dbContext.DictionaryCity.Remove(itemCity);
+                                }
+
+                                _dbContext.DictionaryCounty.Remove(item);
+                            }
+                        }
+
+                        if (Country != null)
+                        {
+
+                        foreach (var item in Country)
+                            _dbContext.DictionaryCountry.Remove(item);
+
+                        }
+                        _dbContext.SaveChanges();
+                        scope.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
         }
     }
 }
