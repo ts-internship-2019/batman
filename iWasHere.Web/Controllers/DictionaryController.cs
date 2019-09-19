@@ -30,12 +30,12 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-      
+
 
 
         public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
         {
-            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page,request.PageSize).ToDataSourceResult(request);
+            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request);
             //jsonVar.Total = 23;
             return Json(jsonVar);
 
@@ -86,38 +86,31 @@ namespace iWasHere.Web.Controllers
 
         public IActionResult Counties()
         {
-            // List<DictionaryCountyModel> dictionaryCountyModels = _dictionaryService.GetDictionaryCountyModels();
-
-            // return View(dictionaryCountyModels);
-
             return View();
         }
 
-        public ActionResult CountyData([DataSourceRequest]DataSourceRequest request)
+        public ActionResult CountyData([DataSourceRequest]DataSourceRequest request,
+            int? countryId, string countyName, string countyCode)
         {
-            List<DictionaryCountyModel> data = _dictionaryService.GetDictionaryCountyModels(request.Page, request.PageSize);
+            List<DictionaryCountyModel> data = _dictionaryService.GetDictionaryCountyModels(request.Page, request.PageSize,
+                 countryId, countyName, countyCode, out int countiesCount);
             var result = new DataSourceResult()
             {
-                Data = data, // process data (paging and sorting applied)
-                Total = _dictionaryService.GetDictionaryCountyCount()
+                Data = data, 
+                Total = countiesCount              
 
             };
             return Json(result);
-        }
-
-        public ActionResult FilterCountyData([DataSourceRequest]DataSourceRequest request, string searchCountyName, string searchCountyCode, string searchCountryName)
-        {
-            return Json(_dictionaryService.FilterDictionaryCountyModels(searchCountyName, searchCountyCode, searchCountryName, request.Page, request.PageSize).ToDataSourceResult(request));
-        }
-
-        public ActionResult GetCountryList([DataSourceRequest]DataSourceRequest request)
-        {
-            return Json(_dictionaryService.GetCountryList());
-        }
+        }       
 
         public ActionResult ServerFiltering_GetCountries(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetCountries(text));
+        }
+
+        public IActionResult County()
+        {
+            return View();
         }
     }
 }
