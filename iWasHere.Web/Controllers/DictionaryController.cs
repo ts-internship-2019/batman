@@ -152,7 +152,7 @@ namespace iWasHere.Web.Controllers
         { 
             return Content(CountryName);
         }
-        public ActionResult ServerFiltering_GetCountries(string text)
+        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyId)
         {
             _dictionaryService.DeleteCounty(countyId);
 
