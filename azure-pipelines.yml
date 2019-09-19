@@ -20,7 +20,7 @@ steps:
     command: 'restore'
     restoreSolution: '**/*.sln'
     feedsToUse: 'config'
-    nugetConfigPath: '**/NuGet.config'
+    nugetConfigPath: 'NuGet.config'
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
