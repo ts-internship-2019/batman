@@ -44,6 +44,11 @@ namespace iWasHere.Web.Controllers
             return Json(jsonVar);
 
         }
+        public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
+        {
+            DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
+            return View(dictionaryLandmarkType);
+        }
         public IActionResult City()
         {
             return View();
@@ -96,7 +101,10 @@ namespace iWasHere.Web.Controllers
 
             return View();
         }
+        //public ActionResult SaveLandmark()
+        //{
 
+        //}
         public ActionResult CountyData([DataSourceRequest]DataSourceRequest request)
         {
             List<DictionaryCountyModel> data = _dictionaryService.GetDictionaryCountyModels(request.Page, request.PageSize);

@@ -4,10 +4,36 @@
     ViewData["Title"] = "Landmarks";
 }
 
-    <h1>Landmarks</h1>
+<h1>Landmarks</h1>
+<input type='button' class='k-button info' name='info' value='Adauga' onclick='window.location.href = "@Url.Action("Landmark", "Dictionary")";' />
 
+<script type="text/javascript">
+    //var gview = $("#grid").data("kendoGrid");
+        
+    
+    //var selectedItem = gview.dataItem(gview.select());
+    
+    //var id = selectedItem.Id;
+    function edit() {
+    var gview = $("#grid").data("kendoGrid");
+        
+    
+    var selectedItem = gview.dataItem(gview.select());
+    
+    var id = selectedItem.Id;
+    
+        //if (selectedItem == undefined) {
+        //    alert("NO Row Is SELECTED");
+        //    return;
+        //}
+        
+        
+        
+    
 
-
+    window.location.href = "@Url.Action("Landmark", "Dictionary")?id="+ id;
+}
+</script>
 
 
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryLandmarkTypeModel>()
@@ -17,9 +43,13 @@
 
         columns.Bound(c => c.Id).Width(70);
         columns.Bound(c => c.Name).Width(110);
+        columns.Command(command => { command.Custom("Edit").Click("edit"); command.Destroy(); }).Width(250);
+
+
     })
     .HtmlAttributes(new { style = "height: 550px;" })
     .Scrollable()
+    .Selectable()
     .Groupable()
     .Sortable()
     .Pageable(pageable => pageable
@@ -30,5 +60,9 @@
         .Ajax()
         .Read(read => read.Action("DictionaryLandmarkData", "Dictionary"))
         .PageSize(20)
+        .Model(model => model.Id(p => p.Id))
+        .Update(update => update.Action("Landmark", "Dictionary"))
+        
+        .Destroy(update => update.Action("EditingInline_Destroy", "grid"))
     )
 )

@@ -33,7 +33,24 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
+        public DictionaryLandmarkType GetSelectedLandmark(int id)
+        {
+            if (id == 0 )
+            {
+                return null;
+            }
+            List<DictionaryLandmarkType> dictionaryLandmarkTypes = _dbContext.DictionaryLandmarkType.Where(a => a.DictionaryItemId == id).Select(a => new DictionaryLandmarkType()
 
+            {
+                DictionaryItemId = a.DictionaryItemId,
+                DictionaryItemCode = a.DictionaryItemCode,
+                DictionaryItemName = a.DictionaryItemName,
+                Description = a.Description
+
+
+            }).ToList();
+            return dictionaryLandmarkTypes[0];
+        }
         public List<DictionaryCityModel> GetDictionaryCity(int page, int pageSize)
         {
             int skip = (page-1) * pageSize;
