@@ -158,6 +158,49 @@ namespace iWasHere.Domain.Service
             return dictionaryCountryModels;
         }
 
+        public List<DictionaryCountry> FilterCountriesByName(int page, int pageSize, string CountryName)//filtrare dupa nume
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == CountryName || a.DictionaryCountryName.StartsWith(CountryName))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
+        public List<DictionaryCountry> FilterCountriesByCode(int page, int pageSize, string CountryCode)//filtrare dupa cod
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryCode == CountryCode || a.DictionaryCountryCode.StartsWith(CountryCode))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
+        public List<DictionaryCountry> FilterCountriesByCodeAndName(int page, int pageSize, string CountryName, string CountryCode)//filtrare dupa nume si cod
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == CountryName || a.DictionaryCountryName.StartsWith(CountryName))
+                .Where(a => a.DictionaryCountryCode == CountryCode || a.DictionaryCountryCode.StartsWith(CountryCode))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
         public List<DictionarySeasonType> GetDictionarySeasonTypeModels(int Page, int PageSize)
         {
             int skip = (Page - 1) * PageSize;
