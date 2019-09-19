@@ -19,10 +19,14 @@ namespace iWasHere.Web.Controllers
 
         public object SeasonName { get; private set; }
 
+
+
+
         public DictionaryController(DictionaryService dictionaryService)
         {
             _dictionaryService = dictionaryService;
         }
+       
 
         public IActionResult DictionaryLandmark()
         {
@@ -34,12 +38,12 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-      
+
 
 
         public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
         {
-            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page,request.PageSize).ToDataSourceResult(request);
+            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request);
             //jsonVar.Total = 23;
             return Json(jsonVar);
 
@@ -125,24 +129,64 @@ namespace iWasHere.Web.Controllers
         }
 
 
-        public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request)
-        {
-            return Json(_dictionaryService.GetDictionarySeasonTypeModels(request.Page, request.PageSize).ToDataSourceResult(request));
-        }
-
         public IActionResult DictionarySeasonType()
         {
             return View();
         }
 
-      
 
-
-
-
-
-
-
-
+        public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request, string SeasonName, string SeasonCode)//************
+        {
+            if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == true)
+            {
+                var jsonVar = _dictionaryService.GetDictionarySeasonTypeModels(request.Page, request.PageSize);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeModels() // Total number of records
+                };
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(SeasonName) == false && string.IsNullOrEmpty(SeasonCode) == true)
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByName(request.Page, request.PageSize, SeasonName);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == false)
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCode(request.Page, request.PageSize, SeasonCode);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCodeAndName(request.Page, request.PageSize, SeasonName, SeasonCode);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+        }
+        ///functie stergere Sezoane
+        public void DeleteSeason ([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
+        {
+            _dictionaryService.DeleteSeason(model.DictionarySeasonId);
+        }
+        
     }
+   
+
 }
+   
+

@@ -2,18 +2,92 @@
 
 @{
     ViewData["Title"] = "DictionarySeasonType";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Season</h1>
+<center><h1>Season</h1></center>
+
+<br>
+<br>
+
+
+@*Butoane*@
+@*<p>
+        <input id="btnCreateNewSeason" type="button" value="Create New " />
+        <a asp-action="Create">Create New Season Type</a>
+    </p>*@
+
+@*<input id="Text1 " type="text" />*@
+
+
+
+@*Find by Season Name: @Html.TextBox("txtBoxSeasonName")*@
+@* <label for="searchSeasonName">Nume sezon</label>*@
+@*<input type="text" name="searchSeasonyName" />*@
+<label>
+    Denumire Sezon
+</label>
+<input id="SeasonName" type="text">
+<label>
+    Tip Cod
+</label>
+<input id="SeasonCode" type="text">
+<button id=" FilterSeason" onclick="test()">Filtreaza</button>
+<button id=" DeleteFilterSeason" onclick="test()">Sterge Filtre</button>
+
 
 <p>
-    <a asp-action="Create">Create New Season Type</a>
+
+</p>
+<p>
+    <input id="btnCreateNewSeason" type="button" value="Create New " />
 </p>
 
-<input id="Text1 " type="text" />
 
-<input id="SearchButton" type="button" value="Cauta" />
+<script type="text/javascript">
 
+
+
+    function test() {
+
+
+
+        $("#Grid").data("kendoGrid").dataSource.read();
+        $("#Grid").data("kendoGrid").dataSource.page(1);
+    }
+
+
+
+    function filter() {
+        var SeasonName = $("#SeasonName").val();
+        var SeasonCode = $("#SeasonCode").val();
+        var filter = {};
+        filter["SeasonName"] = SeasonName;
+        filter["SeasonCode"] = SeasonCode;
+        console.log(filter.SeasonName);
+        return filter;
+    }
+
+
+
+    function txtFilterSeason() {
+
+
+
+        var object = {};
+        object["SeasonName"] = $("#SeasonName").val();
+        object["SeasonCode"] = $("#SeasonCode").val();
+        return object;
+    }
+
+    function EditareSezon() {
+
+
+    }
+
+
+
+</script>
 
 @*-->KendoGrid*@
 
@@ -21,10 +95,14 @@
       .Name("Grid")
        .Columns(columns =>
        {
-           columns.Bound(p => p.DictionarySeasonName).Title("Season Type").Width(150);
-           columns.Bound(p => p.DictionarySeasonCode).Title("Season Code").Width(100);
-           columns.Template("<input type ='button' class='k-button info' name='info' value='Editeaza'/>").Width(70);
-           columns.Template("<input type ='button' class='k-button info' name='info' value='Sterge'/>").Width(70);
+           columns.Bound(s => s.DictionarySeasonId).Title("Season Id").Visible(false);
+           columns.Bound(s => s.DictionarySeasonName).Title("Season Type").Width(150);
+           columns.Bound(s => s.DictionarySeasonCode).Title("Season Code").Width(100);
+           //columns.Template("<input type ='button' class='k-button info' name='info' value='Editeaza'/>").Width(70);
+           //columns.Template("<input type ='button' class='k-button info' name='info' value='Sterge'/>").Width(70);
+           columns.Command(command => { command.Custom("Editare").Click("EditareSezon"); command.Destroy(); }).Width(250);
+
+
 
        })
        .HtmlAttributes(new { style = "height: 550px;" })
@@ -32,76 +110,76 @@
        .Groupable()
        .Sortable()
        .Scrollable(scr => scr.Height(300))
-       //.Filterable() --filtre de pus manual(nu in header)
-
+       //.Filterable()
        .Pageable(pageable => pageable
            .Refresh(true)
            .PageSizes(true)
            .ButtonCount(5))
-       .DataSource(dataSource => dataSource
+           .DataSource(dataSource => dataSource
            .Ajax()
-           .Read(read => read.Action("DictionarySeasonTypeData", "Dictionary"))
-           .PageSize(8)
+
+          .Model(model =>
+          {
+             model.Id(s => s.DictionarySeasonId);
+             model.Field(s => s.DictionarySeasonId).Editable(false);
+          }
+          )
+          .PageSize(8)
+          .Read(read => read.Action("DictionarySeasonTypeData", "Dictionary").Data("filter"))
+          .Destroy(update => update.Action("DeleteSeason", "Dictionary"))
        )
 )
 
+@*Click pagina noua*@
 
+@(Html.Kendo().Window().Name("EditareSezon")
+.Title("EditareSezon")
+.Visible(false)
+    .Modal(true)
+    .Draggable(true)
+    .Width(300) 
+)
 
-@*Model 2 kendogrid*@
+<script type=" text/x-kendo-template" id="template">
+    <center><h2>Edit Season</h2></center>
+    <label>
+        Denumire Sezon
+    </label>
+    <input id="SeasonName" type="text">
+    <label>
+        Tip Cod
+    </label>
+    <input id="SeasonCode" type="text">
+    <button id=" FilterSeason" onclick="test()">Filtreaza</button>
 
-@*@(Html.Kendo().Grid(Model)
-        .Name("Grid")
-        .Columns(columns =>
-        {
-            columns.Bound(p => p.DictionarySeasonName).Title("Season Type").Width(150);
-            columns.Bound(p => p.DictionarySeasonCode).Title("Season Code").Width(100);
-
-        })
-        .HtmlAttributes(new { style = "height: 350px;" })
-        .Pageable(pageable => pageable
-            .Input(true)
-            .Numeric(false)
-         )
-        .Sortable()
-        .Scrollable(scr => scr.Height(300))
-        .Filterable()
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .PageSize(20)
-            .ServerOperation(false)
-         )
-    )*@
+    </script>
 
 
 
+    @*Model 2 kendogrid*@
 
-@*<table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.DictionarySeasonName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DictionarySeasonCode)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DictionarySeasonName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DictionarySeasonCode)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.DictionarySeasonId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.DictionarySeasonId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.DictionarySeasonId">Delete</a>
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>*@
+    @*@(Html.Kendo().Grid(Model)
+            .Name("Grid")
+            .Columns(columns =>
+            {
+                columns.Bound(p => p.DictionarySeasonName).Title("Season Type").Width(150);
+                columns.Bound(p => p.DictionarySeasonCode).Title("Season Code").Width(100);
+
+            })
+            .HtmlAttributes(new { style = "height: 350px;" })
+            .Pageable(pageable => pageable
+                .Input(true)
+                .Numeric(false)
+             )
+            .Sortable()
+            .Scrollable(scr => scr.Height(300))
+            .Filterable()
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(20)
+                .ServerOperation(false)
+             )
+        )*@
+
+
+
