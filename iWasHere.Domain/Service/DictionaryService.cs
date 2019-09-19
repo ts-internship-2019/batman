@@ -75,6 +75,10 @@ namespace iWasHere.Domain.Service
             return _dbContext.DictionaryCountry.Count();
         }
 
+        public int GetDictionarySeasonTypeCount()
+        {
+            return _dbContext.DictionarySeasonType.Count();
+        }
         public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
@@ -377,23 +381,19 @@ namespace iWasHere.Domain.Service
 
 
         }
+        public List<DictionarySeasonType> GetDictionarySeasonTypeModelsbyId(int Page, int PageSize, int DictionarySeasonId)
+        {
+            int skip = (Page - 1) * PageSize;
+            List<DictionarySeasonType> dictionarySeasonTypeModels = _dbContext.DictionarySeasonType.Select(a => new DictionarySeasonType()
+            {
+                DictionarySeasonId = a.DictionarySeasonId,
+                DictionarySeasonCode = a.DictionarySeasonCode,
+                DictionarySeasonName = a.DictionarySeasonName
+
+            }).Where(a => a.DictionarySeasonId == DictionarySeasonId).Skip(skip).Take(PageSize).ToList();
+            return dictionarySeasonTypeModels;
+
+        }
     }
-
-
-
-
 }
 
-public List<DictionarySeasonType> GetDictionarySeasonTypeModelsbyId(int Page, int PageSize, int DictionarySeasonId)
-{
-    int skip = (Page - 1) * PageSize;
-    List<DictionarySeasonType> dictionarySeasonTypeModels = _dbContext.DictionarySeasonType.Select(a => new DictionarySeasonType()
-    {
-        DictionarySeasonId = a.DictionarySeasonId,
-        DictionarySeasonCode = a.DictionarySeasonCode,
-        DictionarySeasonName = a.DictionarySeasonName
-
-    }).Where(a => a.DictionarySeasonId == DictionarySeasonId).Skip(skip).Take(PageSize).ToList();
-    return dictionarySeasonTypeModels;
-
-}

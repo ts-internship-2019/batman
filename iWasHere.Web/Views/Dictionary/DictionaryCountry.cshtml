@@ -6,10 +6,6 @@
 
 <h1>Countries</h1>
 
-<p>
-    <a asp-action="Create">Add</a>
-</p>
-
 <script type="text/javascript">
 
     function test() {
@@ -38,6 +34,11 @@
     }
 
 
+    function addCountry() {
+
+        window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + null;
+    }
+
     function editCountry() {
 
         var gview = $("#grid").data("kendoGrid");
@@ -46,19 +47,81 @@
         window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + id;
     }
 
-
 </script>
 
 
     <label>Country Code </label>
-    <input id="CountryCode" type="text" />
+    <input id="CountryCode" type="text" style="display: block;
+    width: 200px;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;"/>
     <br />
     <label>Country Name </label>
-    <input id="CountryName" type="text" />
+    <input id="CountryName" type="text" style="display: block;
+    width: 200px;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;"/>
     <br />
-    <button id="FilterCountry" onclick="test()">Filtreaza</button>
+    <button id="FilterCountry" onclick="test()" style="display: inline-block;
+    font-weight: 400;
+    border-style: solid !important;
+    border-color: #ced4da!important;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;">Filtreaza</button>
 
+        <button id="AddCountry" onclick="addCountry()" style="display: inline-block;
+    font-weight: 400;
+    border-style: solid !important;
+    border-color: #ced4da!important;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;">
+            Add
+        </button>
 
+        <br />
+        <br />
     @(Html.Kendo().Grid<iWasHere.Domain.Model.DictionaryCountry>()
         .Name("grid")
         .Columns(columns =>

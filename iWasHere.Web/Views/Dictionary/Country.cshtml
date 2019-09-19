@@ -10,14 +10,13 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Country</title>
-
+    
     @if (Model == null)
     {
         <script>
             function SaveCountry() {
                 var code = $("#DictionaryCountryCode").val();
                 var name = $("#DictionaryCountryName").val();
-               // window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + id;
             }
         </script>
     }
@@ -42,7 +41,7 @@
     <br />
     @if (Model == null)
     {
-        <button type="button" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">Save and New</button>
+        <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">Save and New</button>
     }
     <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="save" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry">Save</button>
 
