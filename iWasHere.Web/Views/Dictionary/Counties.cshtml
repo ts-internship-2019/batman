@@ -44,10 +44,10 @@
         }
     </script>
 
-   
+
     <label for="searchCountyName">Nume judet</label>
     <input type="text" name="searchCountyName" id="filterCountyName" />
-   
+
     <label for="searchCountyCode">Cod judet</label>
     <input type="text" name="searchCountyCode" id="filterCountyCode" />
 
@@ -63,9 +63,12 @@
                     columns.Bound(c => c.CountyCode);
                     columns.Bound(c => c.CountryId);
                     columns.Bound(c => c.CountryName);
+                    columns.Command(command => command.Custom("Edit").Click("redirectCounty")).Width(180);
+                    columns.Command(command => command.Custom("Delete").Click("deleteCounty")).Width(180);
                 })
                 .HtmlAttributes(new { style = "height: 550px;" })
                 .Scrollable()
+                .Selectable()
                 .Groupable()
                 .Sortable()
                 .Pageable(pageable => pageable
@@ -74,6 +77,10 @@
                 .ButtonCount(5))
                 .DataSource(dataSource => dataSource
                     .Ajax()
+                    //.Model(model =>
+                    //{
+                    //    model.Id(c => c.CountyId);
+                    //})
                     .Read(read => read.Action("CountyData", "Dictionary")
                         .Data("getFilters"))
                     .PageSize(20)
@@ -127,6 +134,33 @@
 
     function redirectCounty() {
         document.location = 'County';
+    }
+
+    function deleteCounty(e) {
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+        var grid = $("#grid").data("kendoGrid");
+
+        if (confirm("Are you sure you want to delete the selected record(s)?")) {
+            grid.removeRow($(e.target).closest("tr")); // remove the row
+            // custom actions here
+        } else {
+            // cancel button is clicked
+        }
+
+        $.ajax({
+            type: "Post",
+            url: '@Url.Action("DeleteCounty", "Dictionary")',
+            data: 
+                //grid = $("#grid").data("kendoGrid"),
+               countyId = $("#grid").data("kendoGrid").dataItem($("#grid").data("kendoGrid").select()).CountyId
+                   
+        }).done(function () {
+            document.location = 'Counties';
+        }).error(function () {
+            alert("Something Went Wrong.");
+        });
+       return countyId;
     }
 </script>
 

@@ -112,5 +112,13 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyId)
+        {
+            _dictionaryService.DeleteCounty(countyId);
+
+            return RedirectToAction("Counties");
+        }
     }
 }

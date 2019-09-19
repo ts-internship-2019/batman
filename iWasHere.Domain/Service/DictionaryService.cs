@@ -112,9 +112,8 @@ namespace iWasHere.Domain.Service
             List<DictionaryCountyModel> dictionaryCountyModels = x.Skip(skip).Take(pageSize).ToList();
 
             return dictionaryCountyModels;          
-        }   
-     
-
+        }       
+        
         public List<DictionaryCountryModel> GetCountryList()
         {
             List<DictionaryCountryModel> dictionaryCountryModels = _dbContext.DictionaryCountry.Select(a => new DictionaryCountryModel()
@@ -142,6 +141,19 @@ namespace iWasHere.Domain.Service
             List<DictionaryCountryModel> dictionaryCountryModels = x.ToList();                                            
                        
             return dictionaryCountryModels;
-        }       
+        }     
+        
+        public void DeleteCounty(int? countyId)
+        {
+            //DictionaryCounty 
+            var countyToDelete = _dbContext.DictionaryCounty.Find(countyId);
+
+            if (countyId.HasValue)
+            {
+                _dbContext.DictionaryCounty.Remove(countyToDelete);
+            }          
+               
+            _dbContext.SaveChanges();                
+        }
     }
 }
