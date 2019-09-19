@@ -28,7 +28,7 @@
         return filter;
     }
 
-    function txtFilter() {
+    function txtFilterCountry() {
 
         var object = {};
         object["CountryName"] = $("#CountryName").val();
@@ -69,7 +69,7 @@
             .ButtonCount(5))
         .DataSource(dataSource => dataSource
             .Ajax()
-            .Read(read => read.Action("DictionaryCountryData", "Dictionary").Data("txtFilter"))
+            .Read(read => read.Action("DictionaryCountryData", "Dictionary").Data("txtFilterCountry"))
             .PageSize(20)
         )
     )
