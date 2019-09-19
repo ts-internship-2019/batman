@@ -44,6 +44,7 @@ namespace iWasHere.Web.Controllers
             return Json(jsonVar);
 
         }
+        
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);

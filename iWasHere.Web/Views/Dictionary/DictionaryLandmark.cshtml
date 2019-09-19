@@ -61,7 +61,7 @@
         .Read(read => read.Action("DictionaryLandmarkData", "Dictionary"))
         .PageSize(20)
         .Model(model => model.Id(p => p.Id))
-        .Update(update => update.Action("Landmark", "Dictionary"))
+        
         
         .Destroy(update => update.Action("EditingInline_Destroy", "grid"))
     )
