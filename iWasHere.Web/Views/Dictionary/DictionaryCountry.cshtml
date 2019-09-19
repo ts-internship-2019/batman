@@ -37,6 +37,16 @@
         return object;
     }
 
+
+    function editCountry() {
+
+        var gview = $("#grid").data("kendoGrid");
+        var selectedItem = gview.dataItem(gview.select());
+        var id = selectedItem.id;
+        window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + id;
+    }
+
+
 </script>
 
 
@@ -56,12 +66,12 @@
             columns.Bound(c => c.DictionaryCountryId).Visible(false);
             columns.Bound(c => c.DictionaryCountryCode).Width(70);
             columns.Bound(c => c.DictionaryCountryName).Width(110);
-            columns.Template("<input type ='button' class='k-button info' name='info' value='Editeaza'/>").Width(70);
-            columns.Command(command => { command.Destroy(); }).Width(70);
+            columns.Command(command => { command.Custom("Editare").Click("editCountry"); command.Destroy();}).Width(70);
         })
         .HtmlAttributes(new { style = "height: 550px;" })
         .Scrollable()
         .Groupable()
+        .Selectable()
         .Sortable()
         .Pageable(pageable => pageable
             .Refresh(true)
@@ -72,7 +82,7 @@
             .Model( model =>
             {
                 model.Id(c => c.DictionaryCountryId);
-                model.Field(c => c.DictionaryCountryId).Editable(false);
+                //model.Field(c => c.DictionaryCountryId).Editable(false);
             }
             )
             .Read(read => read.Action("DictionaryCountryData", "Dictionary").Data("txtFilterCountry"))

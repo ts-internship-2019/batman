@@ -129,8 +129,6 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-        //public ActionResult SaveLandmark()
-        //{
 
         public ActionResult CountyData([DataSourceRequest]DataSourceRequest request,
             int? countryId, string countyName, string countyCode)
@@ -181,6 +179,12 @@ namespace iWasHere.Web.Controllers
         public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
         {
             _dictionaryService.DeleteCountry(model.DictionaryCountryId);
+        }
+
+        public IActionResult Country(int CountryId)
+        {
+            DictionaryCountry dictionaryCountry = _dictionaryService.GetSelectedCountry(CountryId);
+            return View(dictionaryCountry);
         }
     }
 }

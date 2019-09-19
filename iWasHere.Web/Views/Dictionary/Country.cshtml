@@ -1,0 +1,50 @@
+﻿@model iWasHere.Domain.Model.DictionaryCountry
+
+@{
+    ViewData["Title"] = "Country";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Country</title>
+
+    @if (Model == null)
+    {
+        <script>
+            function SaveCountry() {
+                var code = $("#DictionaryCountryCode").val();
+                var name = $("#DictionaryCountryName").val();
+               // window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + id;
+            }
+        </script>
+    }
+
+</head>
+<body>
+    <h1>Edit Country</h1>
+    <br />
+    <td>Country Code</td>
+    <br />
+    <td>
+        @Html.TextBoxFor(model => model.DictionaryCountryCode, new
+    {
+        @class = "form-control maintain-text",
+            @id = "DictionaryCountryCode",
+    })
+
+        <br />
+    <td>Country Name</td>
+    <br />
+    <td>@Html.TextBoxFor(model => model.DictionaryCountryName, new { @class = "form-control maintain-text", @id = "DictionaryCountryName" })</td>
+    <br />
+    @if (Model == null)
+    {
+        <button type="button" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">Save and New</button>
+    }
+    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="save" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry">Save</button>
+
+</body>
+</html>

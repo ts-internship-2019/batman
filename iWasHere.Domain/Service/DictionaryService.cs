@@ -233,27 +233,27 @@ namespace iWasHere.Domain.Service
                         var Country = from tb in _dbContext.DictionaryCountry
                                       where tb.DictionaryCountryId == CountryId
                                       select tb;
-                        var County = from tb in _dbContext.DictionaryCounty
-                                     where tb.DictionaryCountryId == CountryId
-                                     select tb;
+                        //var County = from tb in _dbContext.DictionaryCounty
+                        //             where tb.DictionaryCountryId == CountryId
+                        //             select tb;
 
-                        if (County != null)
-                        {
-                            foreach (var item in County)
-                            {
-                                var City = from tb in _dbContext.DictionaryCity
-                                             where tb.DictionaryCountyId == item.DictionaryCountyId
-                                             select tb;
+                        //if (County != null)
+                        //{
+                        //    foreach (var item in County)
+                        //    {
+                        //        var City = from tb in _dbContext.DictionaryCity
+                        //                     where tb.DictionaryCountyId == item.DictionaryCountyId
+                        //                     select tb;
 
-                                if (City != null)
-                                {
-                                    foreach (var itemCity in City)
-                                        _dbContext.DictionaryCity.Remove(itemCity);
-                                }
+                        //        if (City != null)
+                        //        {
+                        //            foreach (var itemCity in City)
+                        //                _dbContext.DictionaryCity.Remove(itemCity);
+                        //        }
 
-                                _dbContext.DictionaryCounty.Remove(item);
-                            }
-                        }
+                        //        _dbContext.DictionaryCounty.Remove(item);
+                        //    }
+                        //}
 
                         if (Country != null)
                         {
@@ -271,6 +271,25 @@ namespace iWasHere.Domain.Service
                     throw ex;
                 }
             }
+        }
+
+        public DictionaryCountry GetSelectedCountry(int CountryId)
+        {
+            if (CountryId == 0)
+            {
+                return null;
+            }
+            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryId == CountryId).Select(a => new DictionaryCountry()
+
+            {
+                DictionaryCountryId = a.DictionaryCountryId,
+                DictionaryCountryCode = a.DictionaryCountryCode,
+                DictionaryCountryName = a.DictionaryCountryName
+
+
+            }).ToList();
+            return dictionaryCountry[0];
         }
     }
 }
