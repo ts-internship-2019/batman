@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace iWasHere.Domain.Service
 {
@@ -45,23 +46,11 @@ namespace iWasHere.Domain.Service
         }
         public int GetLandmarkCount()
         {
-            List<DictionaryLandmarkTypeModel> dictionaryLandmarkTypeModels = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
-            {
-                Id = a.DictionaryItemId,
-                Name = a.DictionaryItemName
-            }).ToList();
-            return dictionaryLandmarkTypeModels.Count;
+            return _dbContext.DictionaryLandmarkType.Count();
         }
         public int GetCountryCount()
         {
-            List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry.Select(a => new DictionaryCountry()
-            {
-                DictionaryCountryId = a.DictionaryCountryId,
-                DictionaryCountryCode = a.DictionaryCountryCode,
-                DictionaryCountryName = a.DictionaryCountryName
-
-            }).ToList();
-            return dictionaryCountry.Count;
+            return _dbContext.DictionaryCountry.Count();
         }
 
         public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
@@ -154,6 +143,117 @@ namespace iWasHere.Domain.Service
             }          
                
             _dbContext.SaveChanges();                
+        }
+
+        public List<DictionaryCountry> FilterCountriesByName(int page, int pageSize, string CountryName)//filtrare dupa nume
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == CountryName || a.DictionaryCountryName.StartsWith(CountryName))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
+        public List<DictionaryCountry> FilterCountriesByCode(int page, int pageSize, string CountryCode)//filtrare dupa cod
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryCode == CountryCode || a.DictionaryCountryCode.StartsWith(CountryCode))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
+        public List<DictionaryCountry> FilterCountriesByCodeAndName(int page, int pageSize, string CountryName, string CountryCode)//filtrare dupa nume si cod
+        {
+            List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
+                .Where(a => a.DictionaryCountryName == CountryName || a.DictionaryCountryName.StartsWith(CountryName))
+                .Where(a => a.DictionaryCountryCode == CountryCode || a.DictionaryCountryCode.StartsWith(CountryCode))
+                .Select(a => new DictionaryCountry()
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName,
+                }).ToList();
+
+            return filterDictionaryCountryModels;
+        }
+
+        public List<DictionarySeasonType> GetDictionarySeasonTypeModels(int Page, int PageSize)
+        {
+            int skip = (Page - 1) * PageSize;
+            List<DictionarySeasonType> dictionarySeasonTypeModels = _dbContext.DictionarySeasonType.Select(a => new DictionarySeasonType()
+            {
+                DictionarySeasonId = a.DictionarySeasonId,
+                DictionarySeasonCode = a.DictionarySeasonCode,
+                DictionarySeasonName = a.DictionarySeasonName
+
+            }).Skip(skip).Take(PageSize).ToList();
+
+            return dictionarySeasonTypeModels;
+
+
+
+        }
+
+        public void DeleteCountry(int CountryId)
+        {
+            using (_dbContext)
+            {
+                try
+                {
+                    using (TransactionScope scope = new TransactionScope())
+                    {
+                        var Country = from tb in _dbContext.DictionaryCountry
+                                      where tb.DictionaryCountryId == CountryId
+                                      select tb;
+                        var County = from tb in _dbContext.DictionaryCounty
+                                     where tb.DictionaryCountryId == CountryId
+                                     select tb;
+
+                        if (County != null)
+                        {
+                            foreach (var item in County)
+                            {
+                                var City = from tb in _dbContext.DictionaryCity
+                                             where tb.DictionaryCountyId == item.DictionaryCountyId
+                                             select tb;
+
+                                if (City != null)
+                                {
+                                    foreach (var itemCity in City)
+                                        _dbContext.DictionaryCity.Remove(itemCity);
+                                }
+
+                                _dbContext.DictionaryCounty.Remove(item);
+                            }
+                        }
+
+                        if (Country != null)
+                        {
+
+                        foreach (var item in Country)
+                            _dbContext.DictionaryCountry.Remove(item);
+
+                        }
+                        _dbContext.SaveChanges();
+                        scope.Complete();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
         }
     }
 }

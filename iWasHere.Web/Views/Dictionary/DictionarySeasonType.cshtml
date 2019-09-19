@@ -1,0 +1,107 @@
+﻿@model IEnumerable<iWasHere.Domain.Model.DictionarySeasonType>
+
+@{
+    ViewData["Title"] = "DictionarySeasonType";
+}
+
+<h1>Season</h1>
+
+<p>
+    <a asp-action="Create">Create New Season Type</a>
+</p>
+
+<input id="Text1 " type="text" />
+
+<input id="SearchButton" type="button" value="Cauta" />
+
+
+@*-->KendoGrid*@
+
+@(Html.Kendo().Grid<iWasHere.Domain.Model.DictionarySeasonType>()
+      .Name("Grid")
+       .Columns(columns =>
+       {
+           columns.Bound(p => p.DictionarySeasonName).Title("Season Type").Width(150);
+           columns.Bound(p => p.DictionarySeasonCode).Title("Season Code").Width(100);
+           columns.Template("<input type ='button' class='k-button info' name='info' value='Editeaza'/>").Width(70);
+           columns.Template("<input type ='button' class='k-button info' name='info' value='Sterge'/>").Width(70);
+
+       })
+       .HtmlAttributes(new { style = "height: 550px;" })
+       .Scrollable()
+       .Groupable()
+       .Sortable()
+       .Scrollable(scr => scr.Height(300))
+       //.Filterable() --filtre de pus manual(nu in header)
+
+       .Pageable(pageable => pageable
+           .Refresh(true)
+           .PageSizes(true)
+           .ButtonCount(5))
+       .DataSource(dataSource => dataSource
+           .Ajax()
+           .Read(read => read.Action("DictionarySeasonTypeData", "Dictionary"))
+           .PageSize(8)
+       )
+)
+
+
+
+@*Model 2 kendogrid*@
+
+@*@(Html.Kendo().Grid(Model)
+        .Name("Grid")
+        .Columns(columns =>
+        {
+            columns.Bound(p => p.DictionarySeasonName).Title("Season Type").Width(150);
+            columns.Bound(p => p.DictionarySeasonCode).Title("Season Code").Width(100);
+
+        })
+        .HtmlAttributes(new { style = "height: 350px;" })
+        .Pageable(pageable => pageable
+            .Input(true)
+            .Numeric(false)
+         )
+        .Sortable()
+        .Scrollable(scr => scr.Height(300))
+        .Filterable()
+        .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(20)
+            .ServerOperation(false)
+         )
+    )*@
+
+
+
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DictionarySeasonName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DictionarySeasonCode)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DictionarySeasonName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DictionarySeasonCode)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.DictionarySeasonId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.DictionarySeasonId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.DictionarySeasonId">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@
