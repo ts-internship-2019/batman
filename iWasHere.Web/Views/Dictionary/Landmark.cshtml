@@ -10,40 +10,124 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Landmark</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     @if (Model == null)
+    {
+        <script>
+
+            function save() {
+                var code = $("#code").val();
+                var name = $("#name").val();
+                var description = $("#description").val();
+                var formData = {
+                    DictionaryItemId: parseInt(id),
+                    DictionaryItemCode: code,
+                    DictionaryItemName:name,
+                    Description:description
+
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("InsertLandmark", "Dictionary"))",          
+                    data: formData,
+                    
+                    
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionaryLandmark", "Dictionary")';
+                @*location.href = '@Url.Action("InsertLandmark", "Dictionary")?code=' + code + '&name=' + name+ '&description=' + description;*@
+
+            }
+            function saveAndNew() {
+                var code = $("#code").val();
+                var name = $("#name").val();
+                var description = $("#description").val();
+                var id = $("#id").val();
+                var formData = {
+                    DictionaryItemId: parseInt(id),
+                    DictionaryItemCode: code,
+                    DictionaryItemName:name,
+                    Description:description
+
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateLandmark", "Dictionary"))",          
+                    data: formData,
+                    
+                    success: function (response) {
+                    }
+                });
+                //location.reload();
+                window.location.href = "@Url.Action("Landmark", "Dictionary")";
+
+            }
+        </script>
+    }
+    else
     {
         <script>
             function save() {
                 var code = $("#code").val();
                 var name = $("#name").val();
                 var description = $("#description").val();
-                @*location.href = '@Url.Action( "Index","Controller", new {  id =code,  })';*@
+                var id = $("#id").val();
+                var formData = {
+                    DictionaryItemId: parseInt(id),
+                    DictionaryItemCode: code,
+                    DictionaryItemName:name,
+                    Description:description
+
+                }
+                
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateLandmark", "Dictionary"))",          
+                    data: formData,
+                    
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionaryLandmark", "Dictionary")';
+
+                @*location.href = '@Url.Action("UpdateLandmark", "Dictionary")?code=' + code + '&name=' + name+ '&description=' + description + '&id=' + id.toString();*@
+
             }
+            
         </script>
     }
 
 </head>
 <body>
-    <td>Code :</td>
+    
+
+
+        <td>Code :</td>
     <td>
         @Html.TextBoxFor(model => model.DictionaryItemCode, new
-    {
-        @class = "form-control maintain-text",@id = "code",
+   {
+       @class = "form-control maintain-text",
+       @id = "code",
 
 
-    })
+   })
+    </td>
 
 
     <td>Name :</td>
-    <td>@Html.TextBoxFor(model => model.DictionaryItemName, new { @class = "form-control",@id = "name", style = "width:380px;" })</td>
+    <td>@Html.TextBoxFor(model => model.DictionaryItemName, new { @class = "form-control", @id = "name", style = "width:380px;" })</td>
+    <td>@Html.TextBoxFor(model => model.DictionaryItemId, new { @class = "form-control", @id = "id", style = "width:380px;display: none" })</td>
 
     <td>Descriere :</td>
-    <td>@Html.TextBoxFor(model => model.Description, new { @class = "form-control",@id = "description", style = "width:380px;" })</td>
+    <td>@Html.TextBoxFor(model => model.Description, new { @class = "form-control", @id = "description", style = "width:380px;" })</td>
     @if (Model == null)
     {
-        <button type="button" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">SAVE AND NEW</button>
+        <button type="submit" id="saveAndNew" name="saveAndNewButton" value="Save and new" class="btn btn-default" onclick="saveAndNew()" runat="server">SAVE AND NEW</button>
     }
-    <button type="button" id="save" runat="server" name="saveButton" value="Save" class="btn btn-default" OnClick="SaveLandmark">SAVE</button>
+    <button type="submit" id="save" runat="server" name="saveButton" value="Save" class="btn btn-default" onclick="save()" >SAVE</button>
+    
 
 </body>
 </html>

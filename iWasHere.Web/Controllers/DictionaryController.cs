@@ -44,7 +44,7 @@ namespace iWasHere.Web.Controllers
             return Json(jsonVar);
 
         }
-        
+
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
@@ -72,7 +72,7 @@ namespace iWasHere.Web.Controllers
 
         public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request, string CountryName, string CountryCode)//************
         {
-            if(string.IsNullOrEmpty(CountryName) == true && string.IsNullOrEmpty(CountryCode) == true)
+            if (string.IsNullOrEmpty(CountryName) == true && string.IsNullOrEmpty(CountryCode) == true)
             {
                 var jsonVar = _dictionaryService.GetDictionaryCountry(request.Page, request.PageSize);
                 DataSourceResult result = new DataSourceResult()
@@ -83,48 +83,76 @@ namespace iWasHere.Web.Controllers
                 return Json(result);
             }
             else if (string.IsNullOrEmpty(CountryName) == false && string.IsNullOrEmpty(CountryCode) == true)
+            {
+                var jsonVar = _dictionaryService.FilterCountriesByName(request.Page, request.PageSize, CountryName);
+                DataSourceResult result = new DataSourceResult()
                 {
-                    var jsonVar = _dictionaryService.FilterCountriesByName(request.Page, request.PageSize, CountryName);
-                    DataSourceResult result = new DataSourceResult()
-                    {
-                        Data = jsonVar, // Process data (paging and sorting applied)
-                        Total = _dictionaryService.GetCountryCount() // Total number of records
-                    };
-                    return Json(result);
-                }
-                else if (string.IsNullOrEmpty(CountryName) == true && string.IsNullOrEmpty(CountryCode) == false)
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetCountryCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(CountryName) == true && string.IsNullOrEmpty(CountryCode) == false)
+            {
+                var jsonVar = _dictionaryService.FilterCountriesByCode(request.Page, request.PageSize, CountryCode);
+                DataSourceResult result = new DataSourceResult()
                 {
-                    var jsonVar = _dictionaryService.FilterCountriesByCode(request.Page, request.PageSize, CountryCode);
-                    DataSourceResult result = new DataSourceResult()
-                    {
-                        Data = jsonVar, // Process data (paging and sorting applied)
-                        Total = _dictionaryService.GetCountryCount() // Total number of records
-                    };
-                    return Json(result);
-                }
-                else
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetCountryCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else
+            {
+                var jsonVar = _dictionaryService.FilterCountriesByCodeAndName(request.Page, request.PageSize, CountryName, CountryCode);
+                DataSourceResult result = new DataSourceResult()
                 {
-                        var jsonVar = _dictionaryService.FilterCountriesByCodeAndName(request.Page, request.PageSize, CountryName, CountryCode);
-                        DataSourceResult result = new DataSourceResult()
-                        {
-                            Data = jsonVar, // Process data (paging and sorting applied)
-                            Total = _dictionaryService.GetCountryCount() // Total number of records
-                        };
-                        return Json(result);
-                }
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetCountryCount() // Total number of records
+                };
+                return Json(result);
+            }
         }
-        public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request)
+        public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request, int? landmarkId, string LandmarkName,string LandmarkCode)
         {
-            List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize);
-            //int total = data.Count();
+            List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkModels(request.Page, request.PageSize,
+                 landmarkId, LandmarkName, LandmarkCode, out int landmarkCount);
+            //List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize);
             var result = new DataSourceResult()
             {
-                Data = data, // Process data (paging and sorting applied)
-                Total = _dictionaryService.GetLandmarkCount() // Total number of records
+                Data = data, 
+                Total = landmarkCount
+
             };
             return Json(result);
         }
+        public ActionResult InsertLandmark(DictionaryLandmarkType landmarkType)
+        {
+            string status = "";
+            _dictionaryService.InsertLandmark(landmarkType);
 
+            return Json(status);
+        }
+        
+        public IActionResult UpdateLandmark(DictionaryLandmarkType landmarkType)
+        {
+            string status = "";
+            _dictionaryService.UpdateLandmark(landmarkType);
+
+            return Json(status);
+        }
+        public ActionResult LandmarkForm(DictionaryLandmarkType landmarkType)
+        {
+            if (landmarkType.DictionaryItemId<1)
+            {
+                _dictionaryService.InsertLandmark(landmarkType);
+            }
+            else
+            {
+                _dictionaryService.UpdateLandmark(landmarkType);
+            }
+            return View(landmarkType);
+        }
         public IActionResult Counties()
         {
             return View();
@@ -149,6 +177,10 @@ namespace iWasHere.Web.Controllers
         public ActionResult ServerFiltering_GetCountries(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetCountries(text));
+        }
+        public ActionResult ServerFiltering_GetLandmarks(string text)
+        {
+            return Json(_dictionaryService.ServerFiltering_GetLandmarks(text));
         }
 
         public IActionResult County()
@@ -181,6 +213,12 @@ namespace iWasHere.Web.Controllers
         public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
         {
             _dictionaryService.DeleteCountry(model.DictionaryCountryId);
+        }
+        public void DeleteLandmark([DataSourceRequest] DataSourceRequest request, int landmarkToDelete)
+        {
+            _dictionaryService.DeleteCountry(landmarkToDelete);
+
+
         }
     }
 }
