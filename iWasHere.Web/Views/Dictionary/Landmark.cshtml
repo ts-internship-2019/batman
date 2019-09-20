@@ -1,0 +1,49 @@
+﻿@model iWasHere.Domain.Model.DictionaryLandmarkType
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Landmark</title>
+    @if (Model == null)
+    {
+        <script>
+            function save() {
+                var code = $("#code").val();
+                var name = $("#name").val();
+                var description = $("#description").val();
+                @*location.href = '@Url.Action( "Index","Controller", new {  id =code,  })';*@
+            }
+        </script>
+    }
+
+</head>
+<body>
+    <td>Code :</td>
+    <td>
+        @Html.TextBoxFor(model => model.DictionaryItemCode, new
+    {
+        @class = "form-control maintain-text",@id = "code",
+
+
+    })
+
+
+    <td>Name :</td>
+    <td>@Html.TextBoxFor(model => model.DictionaryItemName, new { @class = "form-control",@id = "name", style = "width:380px;" })</td>
+
+    <td>Descriere :</td>
+    <td>@Html.TextBoxFor(model => model.Description, new { @class = "form-control",@id = "description", style = "width:380px;" })</td>
+    @if (Model == null)
+    {
+        <button type="button" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">SAVE AND NEW</button>
+    }
+    <button type="button" id="save" runat="server" name="saveButton" value="Save" class="btn btn-default" OnClick="SaveLandmark">SAVE</button>
+
+</body>
+</html>
