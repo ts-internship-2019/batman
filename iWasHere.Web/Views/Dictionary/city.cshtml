@@ -1,14 +1,151 @@
-﻿<!DOCTYPE html>
-<html>
-<body>
+﻿@model iWasHere.Domain.DTOs.DictionaryCityModel;
 
-    <form action="/">
-        First name: <input type="text" name="FirstName" value="Mickey"><br>
-        Last name: <input type="text" name="LastName" value="Mouse"><br>
-        <input type="submit" value="Submit">
-    </form>
+@{
+    ViewData["Title"] = "AddCity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    <p>Click the "Submit" button and the form-data will be sent to a page on the server called "/action_page.php".</p>
+<h4>Add City</h4>
+
+<body onload="onLoadEdit()">
+    <ul style="list-style-type:none">
+        <li>
+            
+            
+        </li>   
+        <li>
+            <label>City Name</label>
+            @(Html.Kendo().TextBoxFor(model => model.Name)
+                                .HtmlAttributes(new { @id = "CityName", style = "margin:10px" })
+            )
+        <label>City Code</label>
+            @(Html.Kendo().TextBoxFor(model => model.Code)
+                .HtmlAttributes(new { @id = "CityCode", style = "margin:10px" })
+            )
+            @(Html.Kendo().TextBoxFor(model => model.Id)
+                .HtmlAttributes(new { @id = "CityId", style = "margin:10px" })
+            )
+        </li>
+
+        <li>
+            <label>County</label>
+        </li>
+        <li>
+            @(Html.Kendo().ComboBox()
+           .Name("Judete")
+           .DataTextField("CountyName")
+           .DataValueField("CountyId")
+           .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
+           .Filter("StartsWith")
+           .DataSource(source =>
+           {
+               source.Read(read =>
+               {
+                   read.Action("ServerFiltering_GetCounties", "Dictionary");
+
+               })
+               .ServerFiltering(true);
+           })
+            )
+        </li>
+
+    </ul>
+    <div>
+        @(Html.Kendo().Button()
+           .Name("primaryTextButton")
+           .HtmlAttributes(new { type = "button", @class = "k-primary" })
+           .Content("Save")
+           .Events(ev => ev.Click("add"))
+        )
+        @if(Model.Id  == 0)
+        {
+        @(Html.Kendo().Button()
+               .Name("addNewButton")
+               .HtmlAttributes(new { type = "button", @class = "k-primary" })
+               .Content("Save and New")
+               .Events(ev => ev.Click("addNew"))
+        )
+        }
+        @(Html.Kendo().Button()
+              .Name("cancelButton")
+              .HtmlAttributes(new { type = "button", @class = "k-primary" })
+              .Content("Cancel")
+              .Events(ev => ev.Click("cancelAdd"))
+        )
+    </div>
 
 </body>
-</html>
+
+<script type="text/javascript">
+
+    let fromUpdate = false;
+
+    function add() {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var id = url.searchParams.get("id");
+        if (id != 0) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("EditCity", "Dictionary")',
+                data: {
+                    cityName: document.getElementById("CityName").value,
+                    cityId: document.getElementById("CityId").value,
+                    cityCode: document.getElementById("CityCode").value,
+                    countyId: document.getElementById("Judete").value
+                },
+                success: function (response) {
+                    if (status != 500) alert("Oras inserat");
+                    window.location.href = '@Url.Action("Cities", "Dictionary")';
+                },
+                error: function (response) {
+                   if (status == 500) alert("Nu se poate insera acest nume de oras sau acest cod de oras");
+                }
+            })
+        }
+        else {
+            $.ajax({
+                type: 'PUT',
+                url: '@Url.Action("SaveCity", "DictionaryCounty")',
+                data: {
+                    cityName: document.getElementById("CityName").value,
+                    cityCode: document.getElementById("CityCode").value,
+                    countyId: document.getElementById("Judete").value
+                },
+                success: function (response) {
+                    if (fromUpdate) {
+                        document.getElementById("CityName").value = "";
+                        document.getElementById("CityCode").value = "";
+                        $("#Judete").val("").data("kendoComboBox").text("");
+                        fromUpdate = false;
+                    }
+                    else {
+                        window.location.href = '@Url.Action("Cities", "Dictionary")';
+                    }
+                },
+                error: function (response) {
+                    alert("Nu se poate insera acest nume de oras sau de cod");
+                }
+            })
+        }
+    }
+
+        function onLoadEdit() {
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        document.getElementById("CityId").style.visibility = "hidden";
+        var id = url.searchParams.get("id");
+        if (id != 0) {
+            document.getElementById("buttonId").innerText = "Update";
+        }
+        
+    }
+
+    function addNew() {
+        fromUpdate = true;
+        add();
+    }
+    function cancelAdd() {
+        window.location.href = '@Url.Action("Cities", "Dictionary")';
+    }
+</script>
