@@ -101,10 +101,10 @@
 
 </head>
 <body>
-    
 
 
-        <td>Code :</td>
+
+    <td>Code :</td>
     <td>
         @Html.TextBoxFor(model => model.DictionaryItemCode, new
    {
@@ -126,8 +126,9 @@
     {
         <button type="submit" id="saveAndNew" name="saveAndNewButton" value="Save and new" class="btn btn-default" onclick="saveAndNew()" runat="server">SAVE AND NEW</button>
     }
-    <button type="submit" id="save" runat="server" name="saveButton" value="Save" class="btn btn-default" onclick="save()" >SAVE</button>
-    
+    <button type="submit" id="save" runat="server" name="saveButton" value="Save" class="btn btn-default" onclick="save()">SAVE</button>
+    <button type="submit" id="cancel" runat="server" name="backButton"  class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionaryLandmark", "Dictionary")";'>Anuleaza</button>
+
 
 </body>
 </html>

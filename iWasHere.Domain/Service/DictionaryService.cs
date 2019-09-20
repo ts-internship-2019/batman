@@ -100,7 +100,7 @@ namespace iWasHere.Domain.Service
             _dbContext.SaveChanges();
 
         }
-        public List<DictionaryCityModel> GetDictionaryCity(int page, int pageSize)
+        public Tuple<List<DictionaryCityModel>,int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page-1) * pageSize;
 

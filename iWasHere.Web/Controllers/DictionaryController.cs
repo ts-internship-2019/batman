@@ -37,13 +37,13 @@ namespace iWasHere.Web.Controllers
 
 
 
-        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
-        {
-            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request);
-            //jsonVar.Total = 23;
-            return Json(jsonVar);
+        //public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
+        //{
+        //    var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request).;
+        //    //jsonVar.Total = 23;
+        //    return Json(jsonVar);
 
-        }
+        //}
 
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
@@ -327,6 +327,10 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
 
               return Json(status);
            
+        }
+        public void DeleteLandmark([DataSourceRequest] DataSourceRequest request, int  landmarkToDelete)
+        {
+            _dictionaryService.DeleteLandmark(landmarkToDelete);
         }
     }
 }

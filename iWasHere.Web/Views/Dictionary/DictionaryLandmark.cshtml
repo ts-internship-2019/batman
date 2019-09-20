@@ -69,10 +69,11 @@
 
 
         var selectedItem = gview.dataItem(gview.select());
-        var id = parseInt(selectedItem.Id);
+        
+        
         console.log(parseInt(selectedItem.Id));
         var data = {
-            landmarkToDelete:id
+            landmarkToDelete:parseInt(selectedItem.Id)
         }
 
         $.ajax({
@@ -104,12 +105,15 @@
     .Name("grid")
     .Columns(columns =>
     {
-        
+
         columns.Bound(c => c.Id).Width(70);
         columns.Bound(c => c.Code).Width(110);
         columns.Bound(c => c.Name).Width(110);
         columns.Command(command => { command.Custom("Edit").Click("edit");  }).Width(250);
-        columns.Command(command => command.Custom("Delete").Click("deleteLandmark")).Width(180);
+        columns.Command(command => { command.Custom("Delete").Click("deleteLandmark"); }).Width(250);
+        //columns.Command(command => { command.Destroy();  }).Width(250);
+
+
 
 
     })
@@ -127,9 +131,10 @@
         .Read(read => read.Action("DictionaryLandmarkData", "Dictionary").Data("txtFilterLandmark"))
         .PageSize(20)
         .Model(model => model.Id(p => p.Id))
-        
+    //.Destroy(update => update.Action("DeleteLandmark", "Dictionary"))
 
 
-        
+
+
     )
 )
