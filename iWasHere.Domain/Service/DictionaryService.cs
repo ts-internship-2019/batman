@@ -51,12 +51,8 @@ namespace iWasHere.Domain.Service
             }).ToList();
             return dictionaryLandmarkTypes[0];
         }
-        public List<DictionaryCityModel> GetDictionaryCity(int page, int pageSize)
-        {
-            int skip = (page-1) * pageSize;          
-                        
-            List<DictionaryCityModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
-        public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int? countyId, string cityName )
+
+        public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName )
         {
             int skip = (page-1) * pageSize;
 
@@ -432,11 +428,7 @@ namespace iWasHere.Domain.Service
             return dictionarySeasonTypeModels;
 
         }
-    }
-}
-
-        }
-
+    
         public int InsertCity(DictionaryCity city)
         {
             int status;
@@ -505,3 +497,4 @@ namespace iWasHere.Domain.Service
         }
     }
 }
+

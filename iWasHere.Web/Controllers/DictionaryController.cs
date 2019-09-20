@@ -35,31 +35,10 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-
-
-        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request, int countyId, string cityName)
-        {
-
-        }
-        
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
             return View(dictionaryLandmarkType);
-        }
-        public IActionResult City()
-        {
-            return View();
-            List<DictionaryCityModel> data = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize, countyId, cityName).Item1;
-
-
-            var result = new DataSourceResult()
-            {
-                Data = data, // Process data (paging and sorting applied)
-                Total = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize, countyId, cityName).Item2
-            };
-            return Json(result);
-
         }
        
         public IActionResult ClientFiltering()
@@ -67,10 +46,7 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-        public JsonResult GetCascadeCounty([DataSourceRequest]DataSourceRequest request)
-        {
-            return Json(_dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request));
-        }
+      
 
         public IActionResult DictionaryCountry()
         {
@@ -150,7 +126,19 @@ namespace iWasHere.Web.Controllers
 
             };
             return Json(result);
-        }       
+        }
+
+        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request, int countyId, string cityName)
+        {
+            List<DictionaryCityModel> data = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize,
+                 countyId, cityName).Item1;
+            var result = new DataSourceResult()
+            {
+                Data = data,
+                Total = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize,countyId, cityName).Item2
+             };
+            return Json(result);
+        }
 
         public ActionResult ServerFiltering_GetCountries(string text)
         {
@@ -240,11 +228,6 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
     _dictionaryService.DeleteSeason(model.DictionarySeasonId);
 }
         
-        public ActionResult ServerFiltering_GetCountries(string text)
-        {
-            return Json(_dictionaryService.ServerFiltering_GetCountries(text));
-        }
-
         public ActionResult ServerFiltering_GetCounties(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetCounties(text));
