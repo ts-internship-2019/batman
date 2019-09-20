@@ -245,7 +245,9 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
                 DictionaryCityCode = cityCode
             };
             int status = _dictionaryService.InsertCity(city);
-            return Json(status);
+            if (status != 500)
+                return Json(status);
+            else return View();
         }
 
         public ActionResult DeleteCity([DataSourceRequest] DataSourceRequest request, int id)
@@ -262,7 +264,7 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
         {
             if (id != 0)
             {
-                DictionaryCityModel c = _dictionaryService.GetCityToEdit(id);
+                DictionaryCityModel c = _dictionaryService.GetSelectedCity(id);
                 return View(c);
             }
             else
@@ -282,8 +284,10 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
                 DictionaryCityCode = cityCode
             };
             int status = _dictionaryService.UpdateCity(city);
-
-              return Json(status);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
            
         }
     }
