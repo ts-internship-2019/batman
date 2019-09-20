@@ -33,6 +33,41 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkTypeModels;
         }
+        public List<DictionaryLandmarkTypeModel> GetDictionaryLandmarkModels(int page, int pageSize,
+           int? landmarkId, string landmarkName, string landmarkCode, out int landmarkCount)
+        {
+            int skip = (page - 1) * pageSize;
+
+            var x = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
+            {
+                Id = a.DictionaryItemId,
+                Code = a.DictionaryItemCode,
+                Name = a.DictionaryItemName
+                
+            });
+
+            if (landmarkId.HasValue)
+            {
+                x = x.Where(p => p.Id == landmarkId);
+            }
+
+            if (!string.IsNullOrEmpty(landmarkName))
+            {
+                x = x.Where(p => p.Name.StartsWith(landmarkName));
+            }
+
+            if (!string.IsNullOrEmpty(landmarkCode))
+            {
+                x = x.Where(p => p.Code.StartsWith(landmarkCode));
+            }
+
+            landmarkCount = x.Count();
+
+            List<DictionaryLandmarkTypeModel> dictionaryLandmarkModels = x.Skip(skip).Take(pageSize).ToList();
+
+            return dictionaryLandmarkModels;
+        }
+
         public DictionaryLandmarkType GetSelectedLandmark(int id)
         {
             if (id == 0 )
@@ -51,8 +86,21 @@ namespace iWasHere.Domain.Service
             }).ToList();
             return dictionaryLandmarkTypes[0];
         }
+        public void InsertLandmark(DictionaryLandmarkType landmarkType)
+        {
+            
+            _dbContext.DictionaryLandmarkType.Add(landmarkType);
+            _dbContext.SaveChanges();
 
-        public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName )
+        }
+        public void UpdateLandmark(DictionaryLandmarkType landmarkType)
+        {
+            
+            _dbContext.DictionaryLandmarkType.Update(landmarkType);
+            _dbContext.SaveChanges();
+
+        }
+        public Tuple<List<DictionaryCityModel>,int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page-1) * pageSize;
 
@@ -190,8 +238,25 @@ namespace iWasHere.Domain.Service
             List<DictionaryCountryModel> dictionaryCountryModels = x.ToList();
 
             return dictionaryCountryModels;
-        }     
-        
+        }
+        public List<DictionaryLandmarkType> ServerFiltering_GetLandmarks(string text)
+        {
+            var x = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkType()
+            {
+                DictionaryItemId = a.DictionaryItemId,
+                DictionaryItemCode = a.DictionaryItemCode,
+                DictionaryItemName = a.DictionaryItemName,
+                Description = a.Description
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                x = x.Where(p => p.DictionaryItemName.StartsWith(text));
+            }
+            List<DictionaryLandmarkType> dictionaryLandmarkModels = x.ToList();
+
+            return dictionaryLandmarkModels;
+        }
+
         public void DeleteCounty(int? countyId)
         {
             //DictionaryCounty 
@@ -203,6 +268,18 @@ namespace iWasHere.Domain.Service
             }          
                
             _dbContext.SaveChanges();                
+        }
+        public void DeleteLandmark(int? id)
+        {
+           
+            var landmark = _dbContext.DictionaryLandmarkType.Find(id);
+
+            if (id.HasValue)
+            {
+                _dbContext.DictionaryLandmarkType.Remove(landmark);
+            }
+
+            _dbContext.SaveChanges();
         }
 
         public List<DictionaryCountry> FilterCountriesByName(int page, int pageSize, string CountryName)//filtrare dupa nume
@@ -217,6 +294,46 @@ namespace iWasHere.Domain.Service
                 }).ToList();
 
             return filterDictionaryCountryModels;
+        }
+        public List<DictionaryLandmarkType> FilterLandmarksByName(int page, int pageSize, string LandmarkName)//filtrare dupa nume
+        {
+            List<DictionaryLandmarkType> filterDictionaryLandmarkTypes = _dbContext.DictionaryLandmarkType
+                .Where(a => a.DictionaryItemName == LandmarkName || a.DictionaryItemName.StartsWith(LandmarkName))
+                .Select(a => new DictionaryLandmarkType()
+                {
+                    DictionaryItemId = a.DictionaryItemId,
+                    DictionaryItemCode = a.DictionaryItemCode,
+                    DictionaryItemName = a.DictionaryItemName,
+                }).ToList();
+
+            return filterDictionaryLandmarkTypes;
+        }
+        public List<DictionaryLandmarkType> FilterLandmarksByCode(int page, int pageSize, string LandmarkCode)//filtrare dupa cod
+        {
+            List<DictionaryLandmarkType> filterDictionaryLandmarkTypes = _dbContext.DictionaryLandmarkType
+                .Where(a => a.DictionaryItemCode == LandmarkCode || a.DictionaryItemCode.StartsWith(LandmarkCode))
+                .Select(a => new DictionaryLandmarkType()
+                {
+                    DictionaryItemId = a.DictionaryItemId,
+                    DictionaryItemCode = a.DictionaryItemCode,
+                    DictionaryItemName = a.DictionaryItemName,
+                }).ToList();
+
+            return filterDictionaryLandmarkTypes;
+        }
+        public List<DictionaryLandmarkType> FilterLandmarksByCodeAndName(int page, int pageSize, string LandmarkName, string LandmarkCode)//filtrare dupa nume si cod
+        {
+            List<DictionaryLandmarkType> filterDictionaryLandmarkModels = _dbContext.DictionaryLandmarkType
+                .Where(a => a.DictionaryItemName == LandmarkName || a.DictionaryItemName.StartsWith(LandmarkName))
+                .Where(a => a.DictionaryItemCode == LandmarkCode || a.DictionaryItemCode.StartsWith(LandmarkCode))
+                .Select(a => new DictionaryLandmarkType()
+                {
+                    DictionaryItemId = a.DictionaryItemId,
+                    DictionaryItemCode = a.DictionaryItemCode,
+                    DictionaryItemName = a.DictionaryItemName,
+                }).ToList();
+
+            return filterDictionaryLandmarkModels;
         }
 
         public List<DictionaryCountry> FilterCountriesByCode(int page, int pageSize, string CountryCode)//filtrare dupa cod
