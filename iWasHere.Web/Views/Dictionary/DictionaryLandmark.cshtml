@@ -4,9 +4,100 @@
     ViewData["Title"] = "Landmarks";
 }
 
-    <h1>Landmarks</h1>
+<h1>Landmarks</h1>
+<input type='button' class='k-button info' name='info' value='Adauga' onclick='window.location.href = "@Url.Action("Landmark", "Dictionary")";' />
+
+<script type="text/javascript">
+    function test() {
+
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").dataSource.page(1);
+    }
+    function edit() {
+    var gview = $("#grid").data("kendoGrid");
 
 
+    var selectedItem = gview.dataItem(gview.select());
+
+    var id = selectedItem.Id;
+
+        //if (selectedItem == undefined) {
+        //    alert("NO Row Is SELECTED");
+        //    return;
+        //}
+
+
+
+
+
+    window.location.href = "@Url.Action("Landmark", "Dictionary")?id="+ id;
+    }
+    function filter() {
+        var LandmarkName = $("#LandmarkName").val();
+        var LandmarkCode = $("#LandmarkCode").val();
+        var filter = {};
+        filter["CountryName"] = LandmarkName;
+        filter["CountryCode"] = LandmarkCode;
+
+        return filter;
+    }
+
+    function txtFilterLandmark() {
+
+        var object = {};
+        object["LandmarkName"] = $("#LandmarkName").val();
+        object["LandmarkCode"] = $("#LandmarkCode").val();
+        return object;
+    }
+    function deleteFilter() {
+    
+
+       
+
+        $("#LandmarkCode").val('');
+        $("#LandmarkName").val('');
+
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").dataSource.page(1);
+
+    }
+    function deleteLandmark() {
+        
+
+        
+        var gview = $("#grid").data("kendoGrid");
+
+
+        var selectedItem = gview.dataItem(gview.select());
+        
+        
+        console.log(parseInt(selectedItem.Id));
+        var data = {
+            landmarkToDelete:parseInt(selectedItem.Id)
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("DeleteLandmark", "Dictionary")',
+            data:data
+
+        }).done(function () {
+            //nfirm("Are you sure you want to delete the selected record(s)?")
+            $("#grid").data("kendoGrid").dataSource.read();
+            $("#grid").data("kendoGrid").dataSource.page(1);
+        });
+        return parseInt(selectedItem.Id);
+    }
+</script>
+
+<label>Landmark Code </label>
+<input id="LandmarkCode" type="text" />
+<br />
+<label>Landmark Name </label>
+<input id="LandmarkName" type="text" />
+<br />
+<button id="FilterLandmark" onclick="test()">Filtreaza</button>
+<button id="deleteFilterLndmark" onclick="deleteFilter()">Delete filter</button>
 
 
 
@@ -16,10 +107,19 @@
     {
 
         columns.Bound(c => c.Id).Width(70);
+        columns.Bound(c => c.Code).Width(110);
         columns.Bound(c => c.Name).Width(110);
+        columns.Command(command => { command.Custom("Edit").Click("edit");  }).Width(250);
+        columns.Command(command => { command.Custom("Delete").Click("deleteLandmark"); }).Width(250);
+        //columns.Command(command => { command.Destroy();  }).Width(250);
+
+
+
+
     })
     .HtmlAttributes(new { style = "height: 550px;" })
     .Scrollable()
+    .Selectable()
     .Groupable()
     .Sortable()
     .Pageable(pageable => pageable
@@ -28,7 +128,13 @@
         .ButtonCount(5))
     .DataSource(dataSource => dataSource
         .Ajax()
-        .Read(read => read.Action("DictionaryLandmarkData", "Dictionary"))
+        .Read(read => read.Action("DictionaryLandmarkData", "Dictionary").Data("txtFilterLandmark"))
         .PageSize(20)
+        .Model(model => model.Id(p => p.Id))
+    //.Destroy(update => update.Action("DeleteLandmark", "Dictionary"))
+
+
+
+
     )
 )
