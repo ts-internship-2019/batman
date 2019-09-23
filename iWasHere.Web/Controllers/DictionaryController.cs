@@ -36,15 +36,7 @@ namespace iWasHere.Web.Controllers
         }
 
 
-
-        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
-        {
-            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request);
-            //jsonVar.Total = 23;
-            return Json(jsonVar);
-
-        //}
-
+        
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
@@ -194,6 +186,7 @@ namespace iWasHere.Web.Controllers
         public ActionResult ServerFiltering_GetCountries(string text)
         {
             _dictionaryService.DeleteCounty(countyId);
+        }
 
         public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyToDeleteId)
         {

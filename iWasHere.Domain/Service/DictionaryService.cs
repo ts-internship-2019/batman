@@ -106,11 +106,6 @@ namespace iWasHere.Domain.Service
 
             
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
-        public List<DictionaryCityModel> GetDictionaryCity(int page, int pageSize)
-        {
-            int skip = (page - 1) * pageSize;
-
-            List<DictionaryCityModel> dictionaryCity = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,
                 Name = a.DictionaryCityName,
@@ -521,21 +516,24 @@ namespace iWasHere.Domain.Service
             List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry
                 .Where(a => a.DictionaryCountryId == CountryId).Select(a => new DictionaryCountry()
 
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName
+
+                }).ToList();
+            if (County != null)
             {
-                DictionaryCountryId = a.DictionaryCountryId,
-                DictionaryCountryCode = a.DictionaryCountryCode,
-                DictionaryCountryName = a.DictionaryCountryName
-
-                        if (County != null)
-                        {
-                            foreach (var item in County)
-                            {
-                                var City = from tb in _dbContext.DictionaryCity
-                                           where tb.DictionaryCountyId == item.DictionaryCountyId
-                                           select tb;
-
-            }).ToList();
+                foreach (var item in County)
+                {
+                    var City = from tb in _dbContext.DictionaryCity
+                               where tb.DictionaryCountyId == item.DictionaryCountyId
+                               select tb;
+                }
+            }
+                
             return dictionaryCountry[0];
+        }
         }
         public int GetDictionarySeasonTypeModels()
         {
