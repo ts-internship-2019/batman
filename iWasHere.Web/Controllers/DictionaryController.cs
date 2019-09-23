@@ -183,10 +183,6 @@ namespace iWasHere.Web.Controllers
         {
             return Content(CountryName);
         }
-        public ActionResult ServerFiltering_GetCountries(string text)
-        {
-            _dictionaryService.DeleteCounty(countyId);
-        }
 
         public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyToDeleteId)
         {
@@ -367,5 +363,25 @@ public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceReques
             else
                 return View();
         }
+
+
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public IActionResult UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.UpdateCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        public ActionResult InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.InsertCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        // ******************   23.09 - Modificari Dragos - End  ******************************
     }
 }

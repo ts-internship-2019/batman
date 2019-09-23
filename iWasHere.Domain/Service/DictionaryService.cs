@@ -159,8 +159,7 @@ namespace iWasHere.Domain.Service
         {
             return _dbContext.DictionarySeasonType.Count();
         }
-       
-
+      
         public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
@@ -257,7 +256,7 @@ namespace iWasHere.Domain.Service
             return dictionaryLandmarkModels;
         }
 
-        public void DeleteCounty(int? countyId)
+        public int DeleteCounty(int? countyId)
         {
             int status;
             try
@@ -281,8 +280,6 @@ namespace iWasHere.Domain.Service
 
         public DictionaryCountyModel getInfoCounty(int countyId)
         {
-            //  if (countyId.HasValue)
-            // {
             DictionaryCountyModel countyToEdit = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
                 CountyId = a.DictionaryCountyId,
@@ -294,13 +291,6 @@ namespace iWasHere.Domain.Service
             .Where(a => a.CountyId == countyId)
             .FirstOrDefault();
             return countyToEdit;
-            //  } else
-            //  {
-            //     countyId = 0;
-            //      return null;
-            //    }           
-
-
         }
 
         public int AddCounty(string countyName, string countyCode, int countryId)
@@ -522,19 +512,9 @@ namespace iWasHere.Domain.Service
                     DictionaryCountryName = a.DictionaryCountryName
 
                 }).ToList();
-            if (County != null)
-            {
-                foreach (var item in County)
-                {
-                    var City = from tb in _dbContext.DictionaryCity
-                               where tb.DictionaryCountyId == item.DictionaryCountyId
-                               select tb;
-                }
-            }
-                
             return dictionaryCountry[0];
         }
-        }
+        
         public int GetDictionarySeasonTypeModels()
         {
             return _dbContext.DictionarySeasonType.Count();
@@ -601,8 +581,6 @@ namespace iWasHere.Domain.Service
                         {
                             foreach (var item in Season)
                             _dbContext.DictionarySeasonType.Remove(item);
-                            foreach (var item in Country)
-                                _dbContext.DictionaryCountry.Remove(item);
 
                         }
                         _dbContext.SaveChanges();
@@ -698,6 +676,22 @@ namespace iWasHere.Domain.Service
             return x;
 
         }
+
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public void UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Update(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+
+        public void InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Add(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+        // ******************   23.09 - Modificari Dragos - End  ******************************
     }
 }
 

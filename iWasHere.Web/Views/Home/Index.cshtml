@@ -1,32 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<html class="k-webkit k-webkit76" style="
+    background: url(https://www.jesusislife.in/wp-content/uploads/2019/05/Savin-NY-Website-Background-Web.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; "> 
 
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-        @(Html.Kendo().ComboBox()
-             .Name("fabric")
-             .Filter(FilterType.Contains)
-             .Placeholder("Select fabric...")
-             .DataTextField("Text")
-             .DataValueField("Value")
-             .BindTo(new List<SelectListItem>() {
-                 new SelectListItem() {
-                   Text = "Cotton", Value = "1"
-                 },
-                 new SelectListItem() {
-                   Text = "Polyester", Value = "2"
-                 },
-                 new SelectListItem() {
-                   Text = "Cotton/Polyester", Value = "3"
-                 },
-                 new SelectListItem() {
-                   Text = "Rib Knit", Value = "4"
-                 }
-             })
-             .SelectedIndex(3)
-             .Suggest(true)
-             .HtmlAttributes(new { style = "width:100%;" })
-        )
-    </div>
+<body>
+
+</body>  
+</html>
