@@ -37,11 +37,11 @@ namespace iWasHere.Web.Controllers
 
 
 
-        //public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
-        //{
-        //    var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request).;
-        //    //jsonVar.Total = 23;
-        //    return Json(jsonVar);
+        public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
+        {
+            var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request);
+            //jsonVar.Total = 23;
+            return Json(jsonVar);
 
         //}
 
@@ -159,8 +159,8 @@ namespace iWasHere.Web.Controllers
                  countryId, countyName, countyCode, out int countiesCount);
             var result = new DataSourceResult()
             {
-                Data = data, 
-                Total = countiesCount              
+                Data = data,
+                Total = countiesCount
 
             };
             return Json(result);
@@ -187,20 +187,22 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.ServerFiltering_GetLandmarks(text));
         }
 
-        public IActionResult County()
-        {
-            return View();
-        }
-
         public ActionResult FliterButton(string CountryCode, string CountryName)
-        { 
+        {
             return Content(CountryName);
         }
-        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyId)
+        public ActionResult ServerFiltering_GetCountries(string text)
         {
             _dictionaryService.DeleteCounty(countyId);
 
-            return RedirectToAction("Counties");
+        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyToDeleteId)
+        {
+            int status = _dictionaryService.DeleteCounty(countyToDeleteId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
+           // return RedirectToAction("Counties");
         }
 
 
@@ -211,7 +213,7 @@ namespace iWasHere.Web.Controllers
 
         public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
         {
-            _dictionaryService.DeleteCountry(model.DictionaryCountryId);
+            _dictionaryService.DeleteCountry(model.DictionaryCountryId);                       
         }
 
         public IActionResult Country(int CountryId)
@@ -335,6 +337,42 @@ public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceReques
         public void DeleteLandmark([DataSourceRequest] DataSourceRequest request, int  landmarkToDelete)
         {
             _dictionaryService.DeleteLandmark(landmarkToDelete);
+        }
+
+        public ActionResult County(int countyToEditId)
+        {
+            if (countyToEditId == 0)
+            {
+                return View(new DictionaryCountyModel());
+
+            }
+            else
+            {
+                DictionaryCountyModel countyToEdit = new DictionaryCountyModel();
+                countyToEdit = _dictionaryService.getInfoCounty(countyToEditId);
+                return View(countyToEdit);
+            }
+           
+        }       
+
+        public ActionResult AddCounty([DataSourceRequest] DataSourceRequest request, string countyName, string countyCode,
+            int countryId)
+        {
+            int status = _dictionaryService.AddCounty(countyName, countyCode, countryId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
+        }
+
+        public ActionResult EditCounty([DataSourceRequest] DataSourceRequest request, int countyId, string countyName, 
+            string countyCode, int countryId)
+        {
+            int status = _dictionaryService.EditCounty(countyId, countyName, countyCode, countryId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
         }
     }
 }
