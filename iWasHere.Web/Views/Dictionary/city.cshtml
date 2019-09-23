@@ -8,63 +8,67 @@
 <h4>Add City</h4>
 
 <body onload="onLoadEdit()">
-    <ul style="list-style-type:none">
-        <li>
-            <label>City Name</label>
-            @(Html.Kendo().TextBoxFor(model => model.Name)
-                                .HtmlAttributes(new { @id = "CityName", style = "margin:10px" })
-            )
-            <label>City Code</label>
-            @(Html.Kendo().TextBoxFor(model => model.Code)
-                .HtmlAttributes(new { @id = "CityCode", style = "margin:10px" })
-            )
-            @(Html.Kendo().TextBoxFor(model => model.Id)
-                .HtmlAttributes(new { @id = "CityId", style = "margin:10px" })
-            )
-        </li>
+        <div class="container">
+            <div class="container__text">
 
-        <li>
-            <label>County</label>
-        </li>
-        <li>
-            @(Html.Kendo().ComboBoxFor(model => model.CountyId)
-           //.Name("Judete")
-           .DataTextField("CountyName")
-           .DataValueField("CountyId")
-           .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
-           .Filter("StartsWith")
-           .DataSource(source =>
-           {
-               source.Read(read =>
-               {
-                   read.Action("ServerFiltering_GetCounties", "Dictionary");
 
-               })
-               .ServerFiltering(true);
-           })
-            )
-        </li>
+                <p><p>
+                    <label for="CityName">Nume oras</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Name)
+                                        .HtmlAttributes(new { @id = "CityName", style = "margin:10px", height = "50px", width = "150px" })
+                    )
+                </p>
+                <p>
+                    <label for="CityCode">Cod oras</label>
+                    @(Html.Kendo().TextBoxFor(model => model.Code)
+                        .HtmlAttributes(new { @id = "CityCode", style = "margin:10px", height = "50px", width = "150px" })
+                    )
+                </p>
+                <p>
+                    <label for="Judete">Judet</label>
+                    @(Html.Kendo().ComboBoxFor(model => model.CountyId)
+                   //.Name("Judete")
+                   .DataTextField("CountyName")
+                   .DataValueField("CountyId")
+                   .HtmlAttributes(new { @id = "Judete", style = "margin:10px", height = "50px", width = "150px" })
+                   .Filter("StartsWith")
+                   .DataSource(source =>
+                   {
+                       source.Read(read =>
+                       {
+                           read.Action("ServerFiltering_GetCounties", "Dictionary");
 
-    </ul>
+                       })
+                       .ServerFiltering(true);
+                   })
+                    )
+                </p>
+                <p>
+                    <label for="CityId"></label>
+                    @(Html.Kendo().TextBoxFor(model => model.Id)
+                        .HtmlAttributes(new { @id = "CityId", style = "margin:10px" })
+                    )
+                </p></p>
 
-    <div>
-        @if (Model.Id == 0)
-        {
-            @(Html.Kendo().Button()
-          .Name("primaryTextButton")
-          .HtmlAttributes(new { type = "button", @class = "k-primary" })
-          .Content("Save")
-          .Events(ev => ev.Click("add"))
-          )
+            </div>
+            <div class="container__image">
+                    @if (Model.Id == 0)
+                    {
+                        @(Html.Kendo().Button()
+                      .Name("primaryTextButton")
+                      .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px" })
+                      .Content("Save")
+                      .Events(ev => ev.Click("add"))
+                        )
 
-           @(Html.Kendo().Button()
-                  .Name("addNewButton")
-                  .HtmlAttributes(new { type = "button", @class = "k-primary" })
-                  .Content("Save and new")
-                  .Events(ev => ev.Click("addNew"))
-            )
+                        @(Html.Kendo().Button()
+                               .Name("addNewButton")
+                               .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px"})
+                               .Content("Save and new")
+                               .Events(ev => ev.Click("addNew"))
+                        )
 
-            <script type="text/javascript">
+                        <script type="text/javascript">
                  function add() {
                              $.ajax({
                                     type: 'POST',
@@ -103,64 +107,65 @@
                                          }
                                 })
                 }
-            </script>
-            @(Html.Kendo().Button()
-              .Name("cancelButton")
-              .HtmlAttributes(new { type = "button", @class = "k-primary" })
-              .Content("Cancel")
-              .Events(ev => ev.Click("cancelAdd"))
-            )
-        }
+                        </script>
+                        @(Html.Kendo().Button()
+                          .Name("cancelButton")
+                          .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px" })
+                          .Content("Cancel")
+                          .Events(ev => ev.Click("cancelAdd"))
+                        )
+                    }
 
 
 
-        @if(Model.Id != 0)
-        {
-            @(Html.Kendo().Button()
-          .Name("primaryTextButton")
-          .HtmlAttributes(new { type = "button", @class = "k-primary" })
-          .Content("Save")
-          .Events(ev => ev.Click("edit"))
-            )
+                    @if (Model.Id != 0)
+                    {
+                        @(Html.Kendo().Button()
+                      .Name("primaryTextButton")
+                      .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px" })
+                      .Content("Save")
+                      .Events(ev => ev.Click("edit"))
+                        )
 
             <script type="text/javascript">
 
                 function edit() {
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("EditCity", "Dictionary")',
-                        data: {
-                            cityName: document.getElementById("CityName").value,
-                            cityId: document.getElementById("CityId").value,
-                            cityCode: document.getElementById("CityCode").value,
-                            countyId: document.getElementById("Judete").value
-                        },
-                        success: function (response) {
-                             alert("Oras modificat");
-                            window.location.href = '@Url.Action("Cities", "Dictionary")';
-                        },
-                        error: function (response) {
-                            alert("Nu se poate modifica acest oras in acest fel!");
-                        }
-                    })
+                                    $.ajax({
+                                             type: 'POST',
+                                            url: '@Url.Action("EditCity", "Dictionary")',
+                                            data: {
+                                                    cityName: document.getElementById("CityName").value,
+                                                    cityId: document.getElementById("CityId").value,
+                                                    cityCode: document.getElementById("CityCode").value,
+                                                    countyId: document.getElementById("Judete").value
+                                            },
+                                            success: function (response) {
+                                                         alert("Oras modificat");
+                                                        window.location.href = '@Url.Action("Cities", "Dictionary")';
+                                             },
+                                            error: function (response) {
+                                                alert("Nu se poate modifica acest oras in acest fel!");
+                                            }
+                                     })
                 }
             </script>
-
-            @(Html.Kendo().Button()
-              .Name("cancelButton")
-              .HtmlAttributes(new { type = "button", @class = "k-primary" })
-              .Content("Cancel")
-              .Events(ev => ev.Click("cancelAdd"))
-            )
-        }
-    </div>
+                        @(Html.Kendo().Button()
+                          .Name("cancelButton")
+                          .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px" })
+                          .Content("Cancel")
+                          .Events(ev => ev.Click("cancelAdd"))
+                        )
+                    }
+            </div>
+        </div>
 </body>
 
 <script>
         function onLoadEdit() {
             var url_string = window.location.href;
-            var url = new URL(url_string);
             document.getElementById("CityId").style.visibility = "hidden";
+            var url = new URL(url_string);
+            
             var id = url.searchParams.get("id");
             if (id != 0) {
                 document.getElementById("primaryTextButton").innerText = "Update";
@@ -171,3 +176,47 @@
                      window.location.href = '@Url.Action("Cities", "Dictionary")';
          }
 </script>
+
+<style>
+    .k-autocomplete {
+        width: 100%;
+    }
+
+    .demo-hint {
+        font-size: 10px;
+        font-style: italic;
+    }
+
+    form {
+        display: table;
+    }
+
+    p {
+        display: table-row;
+    }
+
+    label {
+        display: table-cell;
+    }
+
+    input {
+        display: table-cell;
+    }
+
+    .container {
+        display: flex;
+       justify-content: space-between;
+       }
+       &__image
+
+    {
+        margin: 20px 60px 0 0;
+        width: 200px;
+        align-items: flex-end
+    }
+
+    &__text {
+        align-self: flex-start;
+    }
+    }
+</style>

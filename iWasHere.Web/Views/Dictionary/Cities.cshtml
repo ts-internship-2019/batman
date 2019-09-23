@@ -5,85 +5,116 @@
 }
 
 <h1 class="text-center">Lista Orase</h1>
-<div class="text-left">
-    <@(Html.Kendo().Button()
-           .Name("primaryTextButton")
-           .HtmlAttributes(new { type = "button", @class = "k-primary" })
-           .Content("Adauga un orasel minunat")
-           .Events(ev => ev.Click("redirectToAddContext"))
+<p>
+    <div class="text-left">
+        @(Html.Kendo().Button()
+               .Name("primaryTextButton")
+               .HtmlAttributes(new { type = "button", @class = "k-primary" })
+               .Content("Adauga un orasel minunat")
+               .Events(ev => ev.Click("redirectToAddContext"))
 
-)
+        )
+    </div>
+</p>
+
+<br />
+
+
+
+
+<div class="container">
+    <div class="container__text">
+    <p>
+         <p>
+        <label for="Judete">Alege judetul:</label>
+
+        @(Html.Kendo().ComboBox()
+          .Name("Judete")
+          .DataTextField("CountyName")
+          .DataValueField("CountyId")
+          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
+          .Filter("StartsWith")
+          .DataSource(source =>
+          {
+              source.Read(read =>
+              {
+                  read.Action("ServerFiltering_GetCounties", "Dictionary");
+
+              })
+              .ServerFiltering(true);
+          })
+        )
+
+         </p>
+
+         <p>
+        <label for="id"></label>
+        <label class="demo-hint" id="id">Incepe sa scrii un nume de Judet</label>
+         </p>
+         <p>
+        <label for="cities">Oras:</label>
+        @(Html.Kendo().TextBox()
+.Name("cities")
+.HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='cities'" })
+        )
+        </p>
+    </p>
+
+    <br />
+    <p>
+        @(Html.Kendo().Button()
+              .Name("get")
+              .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:5px" })
+              .Icon("filter")
+              .Content("Filtreaza")
+              .Events(ev => ev.Click("Refresh"))
+
+        )
+       
+        @(Html.Kendo().Button()
+              .Name("deleteget")
+              .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:5px" })
+              .Content("Reset")
+              .Icon("filter-clear")
+              .Events(ev => ev.Click("DeleteFilters"))
+
+        )
+    </p>
+        </div>
+    <img src="~/images/pic_trulli.jpg" style="width:700px;height:200px" float="right" class="container__image" />
 </div>
 
+    <br />
 
-
-<div class="text-center">
-
-    <button id="get" class="k-button" onclick="Refresh()">Filtreaza</button>
-    <button id="deleteget" class="k-button" onclick="DeleteFilters()">Sterge filtre</button>
 
     <div class="text-center">
-
-        <label>Alege judetul:</label>
-        @(Html.Kendo().ComboBox()
-              .Name("Judete")
-              .DataTextField("CountyName")
-              .DataValueField("CountyId")
-              .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
-              .Filter("StartsWith")
-              .DataSource(source =>
-              {
-                  source.Read(read =>
-                  {
-                      read.Action("ServerFiltering_GetCounties", "Dictionary");
-
-                  })
-                  .ServerFiltering(true);
-              })
+        @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
+            .Name("grid")
+            .Columns(columns =>
+            {
+                    columns.Bound(c => c.Id);
+                    columns.Bound(c => c.Name);
+                    columns.Bound(c => c.CountyId);
+                    columns.Bound(c => c.CountyName);
+                columns.Template("<button class ='k-button' id=\"btnDelete\" onclick=\"deleteCity(#=Id#)\">Delete</button>");
+                columns.Template("<a class='k-button' href='/Dictionary/City?Id=#=Id# '> Editeaza </a>").Width(150);
+            })
+            .HtmlAttributes(new { style = "height: 550px; widith:400px" })
+            .Scrollable()
+            //.Groupable()
+            .Sortable()
+            .Pageable(pageable => pageable
+                .Refresh(true)
+                .PageSizes(true)
+                .ButtonCount(5))
+            .DataSource(dataSource => dataSource
+                .Ajax()
+                .Read(read => read.Action("CitiesData", "Dictionary")
+                                  .Data("getFilters"))
+                .PageSize(20)
+            )
         )
-
-
-        <p class="demo-hint">        Incepe sa scrii un nume de Judet</p>
-        <p><label for="cities"</p>
-        Oras: @(Html.Kendo().TextBox()
-.Name("oras")
-.HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='oras'" })
-        )
-        </label></p>
     </div>
-</div>
-
-
-
-
-<div class="text-center">
-    @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCityModel>()
-        .Name("grid")
-        .Columns(columns =>
-        {
-                columns.Bound(c => c.Id);
-                columns.Bound(c => c.Name);
-                columns.Bound(c => c.CountyId);
-                columns.Bound(c => c.CountyName);
-            columns.Template("<button id=\"btnDelete\" onclick=\"deleteCity(#=Id#)\">Delete</button>");
-            columns.Template("<a class='k-button' href='/Dictionary/City?Id=#=Id# '> Editeaza </a>").Width(150);
-        })
-        .HtmlAttributes(new { style = "height: 550px; widith:400px" })
-        .Scrollable()
-        .Groupable()
-        .Sortable()
-        .Pageable(pageable => pageable
-            .Refresh(true)
-            .PageSizes(true)
-            .ButtonCount(5))
-        .DataSource(dataSource => dataSource
-            .Ajax()
-            .Read(read => read.Action("CitiesData", "Dictionary")
-                              .Data("getFilters"))
-            .PageSize(20)
-        )
-    )
-</div>
 </div>
 
 
@@ -97,11 +128,42 @@
         font-size: 10px;
         font-style: italic;
     }
+
+    form {
+        display: table;
+    }
+
+    p {
+        display: table-row;
+    }
+
+    label {
+        display: table-cell;
+    }
+
+    input {
+        display: table-cell;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__image 
+        {
+        margin: 20px 60px 0 0;
+        width: 200px;
+        align-items:flex-end
+    }
+    &__text {
+        align-self: flex-start;
+    }
+}
 </style>
 
 
 
-    <script>
+<script>
     function Refresh() {
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").dataSource.page(1);
@@ -151,7 +213,7 @@
         function redirectToAddContext() {
         window.location.href = '/Dictionary/City/?id=' + 0;
     }
-    </script>
+</script>
 
 
 

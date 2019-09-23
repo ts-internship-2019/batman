@@ -265,18 +265,18 @@ public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceReques
     }
 }
 ///functie stergere Sezoane
-public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
-{
-    _dictionaryService.DeleteSeason(model.DictionarySeasonId);
-}
+        public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
+        {
+             _dictionaryService.DeleteSeason(model.DictionarySeasonId);
+        }
         
-        public ActionResult ServerFiltering_GetCounties(string text)
+             public ActionResult ServerFiltering_GetCounties(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetCounties(text));
         }
 
-        [HttpPost]
-        public ActionResult SaveCity(string cityName, int countyId,string cityCode)
+            [HttpPost]
+            public ActionResult SaveCity(string cityName, int countyId,string cityCode)
 
         {
             DictionaryCity city = new DictionaryCity()
