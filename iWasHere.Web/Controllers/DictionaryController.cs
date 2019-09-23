@@ -54,6 +54,8 @@ namespace iWasHere.Web.Controllers
         }
 
 
+
+
         public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request, string CountryName, string CountryCode)//************
         {
             if(string.IsNullOrEmpty(CountryName) == true && string.IsNullOrEmpty(CountryCode) == true)
@@ -222,8 +224,10 @@ public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceReques
         return Json(result);
     }
 }
-///functie stergere Sezoane
-public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
+        ///functie stergere Sezoane
+       
+
+        public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
 {
     _dictionaryService.DeleteSeason(model.DictionarySeasonId);
 }
@@ -283,8 +287,34 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
             };
             int status = _dictionaryService.UpdateCity(city);
 
-              return Json(status);
+            return Json(status);
+
+
+        }
+
+       public IActionResult UpdateSeason (DictionarySeasonType dictionarySeason)
+        {
+
+            string status = "";
+                _dictionaryService.UpdateSeason(dictionarySeason);
+            return Json(status);
+
+        }
+
+
+        public ActionResult InsertSeason(DictionarySeasonType dictionarySeason)
+        {
+            string status = "";
+            _dictionaryService.InsertSeason(dictionarySeason);
+            return Json(status);
+
+        }
+        public IActionResult EditSeason ( int SeasonId)
+        {
            
+           DictionarySeasonType dictionarySeason = _dictionaryService.GetSelectedSeason(SeasonId);
+            return View(dictionarySeason);
         }
     }
+
 }

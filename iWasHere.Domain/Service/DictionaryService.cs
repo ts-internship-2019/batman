@@ -494,6 +494,37 @@ namespace iWasHere.Domain.Service
 
             return x;
 
+
+        }
+        public void UpdateSeason(DictionarySeasonType dictionarySeason)
+        {
+            _dbContext.DictionarySeasonType.Update(dictionarySeason);
+            _dbContext.SaveChanges();
+
+        }
+        public void InsertSeason(DictionarySeasonType dictionarySeason)
+        {
+            _dbContext.DictionarySeasonType.Add(dictionarySeason);
+            _dbContext.SaveChanges();
+
+        }
+        public DictionarySeasonType GetSelectedSeason(int SeasonId)
+        {
+            if (SeasonId == 0)
+            {
+                return null;
+            }
+            List<DictionarySeasonType> dictionarySeason = _dbContext.DictionarySeasonType
+                .Where(a => a.DictionarySeasonId == SeasonId).Select(a => new DictionarySeasonType()
+
+                {
+                    DictionarySeasonId = a.DictionarySeasonId,
+                    DictionarySeasonCode = a.DictionarySeasonCode,
+                    DictionarySeasonName = a.DictionarySeasonName
+
+
+                }).ToList();
+            return dictionarySeason[0];
         }
     }
 }
