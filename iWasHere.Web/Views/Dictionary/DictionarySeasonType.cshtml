@@ -36,7 +36,8 @@
 <button id=" FilterSeason" onclick="test()">Filtreaza</button>
 <button id=" DeleteFilterSeason" onclick="ClearFilter()">Sterge Filtre</button>
 
-
+<br>
+<br>
 
 
 
@@ -130,7 +131,7 @@
        })
        .HtmlAttributes(new { style = "height: 550px;" })
        .Scrollable()
-       .Groupable()
+       .Groupable(false)
        .Sortable()
        .Selectable()
        .Scrollable(scr => scr.Height(300))
