@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 
 namespace iWasHere.Domain.Service
@@ -101,6 +104,7 @@ namespace iWasHere.Domain.Service
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
 
 
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
@@ -139,7 +143,23 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountyModels;
         }
+        public List<DictionarySeasonType> ServerFiltering_GetSeasons(string text)
+        {
+            var x = _dbContext.DictionarySeasonType.Select(a => new DictionarySeasonType()
+            {
+                DictionarySeasonName = a.DictionarySeasonName,
+                DictionarySeasonCode = a.DictionarySeasonCode,
+                DictionarySeasonId = a.DictionarySeasonId
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                x = x.Where(p => p.DictionarySeasonName.StartsWith(text));
+            }
+            List<DictionarySeasonType> dictionarySeason = x.Take(50).ToList();
 
+            return dictionarySeason;
+        }
+        
         public int GetCityCount()
         {
             return _dbContext.DictionaryCity.Count();
@@ -172,7 +192,6 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountry;
         }
-
         public List<DictionaryCountyModel> GetDictionaryCountyModels(int page, int pageSize,
             int? countryId, string countyName, string countyCode, out int countiesCount)
         {
@@ -220,7 +239,6 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountryModels;
         }
-
         public List<DictionaryCountryModel> ServerFiltering_GetCountries(string text)
         {
             var x = _dbContext.DictionaryCountry.Select(a => new DictionaryCountryModel()
@@ -276,11 +294,8 @@ namespace iWasHere.Domain.Service
 
             return status;
         }
-
         public DictionaryCountyModel getInfoCounty(int countyId)
         {
-            //  if (countyId.HasValue)
-            // {
             DictionaryCountyModel countyToEdit = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
                 CountyId = a.DictionaryCountyId,
@@ -292,13 +307,6 @@ namespace iWasHere.Domain.Service
             .Where(a => a.CountyId == countyId)
             .FirstOrDefault();
             return countyToEdit;
-            //  } else
-            //  {
-            //     countyId = 0;
-            //      return null;
-            //    }           
-
-
         }
 
         public int AddCounty(string countyName, string countyCode, int countryId)
@@ -352,7 +360,6 @@ namespace iWasHere.Domain.Service
             {
                 _dbContext.DictionaryLandmarkType.Remove(landmark);
             }
-
             _dbContext.SaveChanges();
         }
 
@@ -409,7 +416,6 @@ namespace iWasHere.Domain.Service
 
             return filterDictionaryLandmarkModels;
         }
-
         public List<DictionaryCountry> FilterCountriesByCode(int page, int pageSize, string CountryCode)//filtrare dupa cod
         {
             List<DictionaryCountry> filterDictionaryCountryModels = _dbContext.DictionaryCountry
@@ -451,7 +457,6 @@ namespace iWasHere.Domain.Service
             }).Skip(skip).Take(PageSize).ToList();
 
             return dictionarySeasonTypeModels;
-
         }
 
         public void DeleteCountry(int CountryId)
@@ -465,28 +470,6 @@ namespace iWasHere.Domain.Service
                         var Country = from tb in _dbContext.DictionaryCountry
                                       where tb.DictionaryCountryId == CountryId
                                       select tb;
-                        //var County = from tb in _dbContext.DictionaryCounty
-                        //             where tb.DictionaryCountryId == CountryId
-                        //             select tb;
-
-                        //if (County != null)
-                        //{
-                        //    foreach (var item in County)
-                        //    {
-                        //        var City = from tb in _dbContext.DictionaryCity
-                        //                     where tb.DictionaryCountyId == item.DictionaryCountyId
-                        //                     select tb;
-
-                        //        if (City != null)
-                        //        {
-                        //            foreach (var itemCity in City)
-                        //                _dbContext.DictionaryCity.Remove(itemCity);
-                        //        }
-
-                        //        _dbContext.DictionaryCounty.Remove(item);
-                        //    }
-                        //}
-
                         if (Country != null)
                         {
 
@@ -518,9 +501,16 @@ namespace iWasHere.Domain.Service
                     DictionaryCountryId = a.DictionaryCountryId,
                     DictionaryCountryCode = a.DictionaryCountryCode,
                     DictionaryCountryName = a.DictionaryCountryName
+
+                }).ToList();
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName
                 }).ToList();
             return dictionaryCountry[0];
         }
+
         public int GetDictionarySeasonTypeModels()
         {
             return _dbContext.DictionarySeasonType.Count();
@@ -530,8 +520,6 @@ namespace iWasHere.Domain.Service
         {
             List<DictionarySeasonType> filterDictionarySeasonTypeModels = _dbContext.DictionarySeasonType
          .Where(a => a.DictionarySeasonName == SeasonName || a.DictionarySeasonName.StartsWith(SeasonName))
-
-
          .Select(a => new DictionarySeasonType()
          {
              DictionarySeasonName = a.DictionarySeasonName,
@@ -544,8 +532,6 @@ namespace iWasHere.Domain.Service
         {
             List<DictionarySeasonType> filterDictionarySeasonTypeModels = _dbContext.DictionarySeasonType
          .Where(a => a.DictionarySeasonCode == SeasonCode || a.DictionarySeasonCode.StartsWith(SeasonCode))
-
-
          .Select(a => new DictionarySeasonType()
          {
              DictionarySeasonName = a.DictionarySeasonName,
@@ -567,10 +553,6 @@ namespace iWasHere.Domain.Service
          }).ToList();
             return filterDictionarySeasonTypeModels;
         }
-
-
-
-
         //Stergere sezoane
         public void DeleteSeason(int SeasonId)
         {
@@ -597,10 +579,8 @@ namespace iWasHere.Domain.Service
                     throw ex;
                 }
             }
-
-
-
         }
+
         public List<DictionarySeasonType> GetDictionarySeasonTypeModelsbyId(int Page, int PageSize, int DictionarySeasonId)
         {
             int skip = (Page - 1) * PageSize;
@@ -679,7 +659,156 @@ namespace iWasHere.Domain.Service
             }).Where(a => a.Id == id).FirstOrDefault();
 
             return x;
+
+
+        }
+        public void UpdateSeason(DictionarySeasonType dictionarySeason)
+        {
+            _dbContext.DictionarySeasonType.Update(dictionarySeason);
+            _dbContext.SaveChanges();
+
+        }
+        public void InsertSeason(DictionarySeasonType dictionarySeason)
+        {
+            _dbContext.DictionarySeasonType.Add(dictionarySeason);
+            _dbContext.SaveChanges();
+
+        }
+        public DictionarySeasonType GetSelectedSeason(int SeasonId)
+        {
+            if (SeasonId == 0)
+            {
+                return null;
+            }
+            List<DictionarySeasonType> dictionarySeason = _dbContext.DictionarySeasonType
+                .Where(a => a.DictionarySeasonId == SeasonId).Select(a => new DictionarySeasonType()
+
+                {
+                    DictionarySeasonId = a.DictionarySeasonId,
+                    DictionarySeasonCode = a.DictionarySeasonCode,
+                    DictionarySeasonName = a.DictionarySeasonName
+
+
+                }).ToList();
+            return dictionarySeason[0];
+        }
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public void UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Update(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+
+        public void InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Add(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+        // ******************   23.09 - Modificari Dragos - End  ******************************
+
+        public int GetCurrencyCount()
+        {
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
         }       
     }
 }
 
+            {
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId
+            }).ToList();
+            return dictionaryCurrencyTypeModels.Count;
+        }
+
+        public int GetDictionaryCurrencyTypeModels1(int Page, int PageSize, string currencyName)
+        {
+
+            int skip = (Page - 1) * PageSize;
+            var x = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+
+            {
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+               
+            });
+            if (!string.IsNullOrEmpty(currencyName))
+            {
+                x = x.Where(p => p.DictionaryCurrencyName.Contains(currencyName));
+            }
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = x.ToList();
+            return dictionaryCurrencyTypeModels.Count;
+
+        }
+        public List<DictionaryCurrencyType>  GetDictionaryCurrencyTypeModels(int Page, int PageSize, string currencyName)
+        {
+            
+            int skip = (Page - 1) * PageSize;
+            var x = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+
+            {
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+            });
+            if(!string.IsNullOrEmpty(currencyName))
+            {
+                x = x.Where(p => p.DictionaryCurrencyName.Contains(currencyName));
+            }
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = x.Skip(skip).Take(PageSize).ToList();
+                    
+            return dictionaryCurrencyTypeModels;
+
+        }
+
+        public List<DictionaryCurrencyTypeModel> GetAllCurrencyList()
+        {
+            List<DictionaryCurrencyTypeModel> dictionaryCountryModels = _dbContext.Currrency.Select(a => new DictionaryCurrencyTypeModel()
+            {
+                DicurrencyId = a.CurrencyType.DictionaryCurrencyTypeId,
+
+                Name = a.CurrencyType.DictionaryCurrencyName,
+                Code = a.CurrencyType.DictionaryCurrencyCode,
+
+                Id = a.CurrencyType.DictionaryCurrencyTypeId,
+             
+            }).ToList();
+
+            return dictionaryCountryModels;
+        }
+        public int DeleteCurrency(int id)
+        {
+            int status = 0;
+            DictionaryCurrencyType getDictionaryId = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+            {
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+            }).Where(a => a.DictionaryCurrencyTypeId.Equals(id)).FirstOrDefault();
+            try
+            {
+                DictionaryCurrencyType dictionary = new DictionaryCurrencyType() { DictionaryCurrencyTypeId = getDictionaryId.DictionaryCurrencyTypeId };
+                _dbContext.DictionaryCurrencyType.Remove(dictionary);
+                status =_dbContext.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                status = 500;
+            }
+            return status;
+        }
+
+        public DictionaryCurrencyType CurrencyEdit(int id)
+        {
+            DictionaryCurrencyType currency1 = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+            {
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode=a.DictionaryCurrencyCode
+            }).Where(a => a.DictionaryCurrencyTypeId == id).FirstOrDefault();
+            return currency1;
+        }
+    }
+}

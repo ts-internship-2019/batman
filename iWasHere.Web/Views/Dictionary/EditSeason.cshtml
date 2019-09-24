@@ -1,0 +1,159 @@
+﻿@model iWasHere.Domain.Model.DictionarySeasonType
+
+@{
+    ViewData["Title"] = "EditSeason";
+}
+
+<h1>EditSeason</h1>
+
+@*<h4>DictionarySeasonType</h4>*@
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditSeason">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DictionarySeasonName" class="control-label"></label>
+                <input asp-for="DictionarySeasonName" class="form-control" />
+                <span asp-validation-for="DictionarySeasonName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DictionarySeasonCode" class="control-label"></label>
+                <input asp-for="DictionarySeasonCode" class="form-control" />
+                <span asp-validation-for="DictionarySeasonCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @*<input type="submit" value="Save" class="btn btn-primary" />*@
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@Html.TextBoxFor(model => model.DictionarySeasonId, new { @class = "form-control", @id = "DictionarySeasonId", style = "width:380px;display: none" })
+
+
+@if (Model == null)
+{
+    <script>
+
+            function SaveSeason() {
+
+                var SeasonCode = $("#DictionarySeasonCode ").val();
+                var SeasonName = $("#DictionarySeasonName").val();
+                var SeasonId = $("#DictionarySeasonId").val();
+                var formData = {
+                    DictionarySeasonId: parseInt(SeasonId),
+                    DictionarySeasonCode: SeasonCode,
+                    DictionarySeasonName:SeasonName
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("InsertSeason", "Dictionary"))",
+                    data: formData,
+
+
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionarySeasonType", "Dictionary")';
+               }
+            function SaveAndNew() {
+
+                var SeasonCode = $("#DictionarySeasonCode").val();
+                var SeasonName = $("#DictionarySeasonName").val();
+                var SeasonId = $("#DictionarySeasonId").val();
+                var formData = {
+                    DictionarySeasonId: parseInt(SeasonId),
+                    DictionarySeasonCode: SeasonCode,
+                    DictionarySeasonName:SeasonName
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateSeason", "Dictionary"))",
+                    data: formData,
+
+                    success: function (response) {
+                    }
+                });
+                window.location.href = "@Url.Action("EditSeason", "Dictionary")";
+
+            }
+    </script>
+}
+else
+{
+    <script>
+            function SaveSeason() {
+
+                var SeasonCode = $("#DictionarySeasonCode").val();
+                var SeasonName = $("#DictionarySeasonName").val();
+                var SeasonId = $("#DictionarySeasonId").val();
+                var formData = {
+                    DictionarySeasonId: parseInt(SeasonId),
+                    DictionarySeasonCode: SeasonCode,
+                    DictionarySeasonName:SeasonName
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateSeason", "Dictionary"))",
+                    data: formData,
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionarySeasonType", "Dictionary")';
+            }
+    </script>
+}
+@if (Model == null)
+{
+    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New </button>
+}
+<button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveSeason" runat="server" name="saveSeasonButton" value="SaveSeason" class="btn btn-default" OnClick="SaveSeason()">Save </button>
+@*<button type="submit" style=" border-style: solid !important; border-color: #ced4da!important;" id="cancel" runat="server" name="backButton" class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionarySeasonType", "Dictionary")";'>Cancel</button>*@
+
+
+
+@*buton adauga*@
+@*<div>
+        <button type="submit" class="btn  btn-danger" onclick="save()">Save  </button>
+
+    </div>*@
+
+@*<button id=" SaveSeason" onclick="SaveSeason()">Save</button>*@
+@*<button id=" AddandNewSeason" onclick="test()">Add and New</button>*@
+
+<br>
+<br>
+
+
+@*buton adauga si nou*@
+@*<div>
+        <button type="submit" class="btn  btn-danger" onclick="saveandnew()">Save and New  </button>
+
+    </div>*@
+
+
+
+
+@*buton cancel*@
+
+<div>
+    <button type="submit" class="btn  btn-danger" onclick="cancel()">Cancel  </button>
+
+</div>
+
+
+@*redirectionare pagina*@
+<script>
+    function cancel() {
+        window.location = "/Dictionary/DictionarySeasonType";
+    }
+</script>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

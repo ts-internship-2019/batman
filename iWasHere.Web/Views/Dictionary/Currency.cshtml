@@ -1,0 +1,148 @@
+﻿<h1>Currency</h1>
+
+
+<p>
+   
+    <input type="button" class="btn btn-success" value="Add New Currency" onclick="OpenToAdd()" />
+   
+</p>
+
+
+
+
+<div style="margin-bottom: 5px;">
+
+    Search Currency: @Html.TextBox("compSearch", (string)TempData["currencyName"], new { id = "name", style = "width: 400px;" })
+    <button id="searchButton" class="btn btn-info" type="button" style="text-align:center;" onclick="BindGrid()">
+        <span>Search</span>
+
+    </button>
+    <button id="resetFilter" class="btn btn-warning" type="button" style="text-align:center;" onclick="ClearFilters()">
+        <span>Reset Filter</span>
+
+    </button>
+
+</div>
+<script type="text/javascript">
+  
+
+    function deleteCurrency(id) {
+        if (window.confirm('Sunteti sigur ca doriti sa stergeti aceasta moneda?'))
+{
+     $.ajax({
+            type: 'DELETE',
+            url: '@Url.Action("DeleteCurrency", "Dictionary")',
+            data: { id: id },
+            success: function (response) {
+                
+                $("#grid").data("kendoGrid").dataSource.read();
+                 
+            },
+            error: function (response) {
+                alert("Aceasta moneda nu poate fi stearsa");
+            }
+        })
+}
+else
+{
+            return false;
+}
+       
+    }
+
+  function OpenToEdit(id)
+    {
+        window.location.href = 'CurrencyAdd/?id=' + id;
+        
+    }
+
+    function OpenToAdd() {
+        window.location.href = 'CurrencyAdd/?id=' + 0;
+    }
+    
+
+    function BindGrid() {
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").refresh;
+    }
+
+    function ClearFilters()
+   {  
+        document.getElementById('name').value = "";
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").refresh;
+   }
+    
+    
+
+    
+</script>
+
+
+<div class="k-content">
+    @model IEnumerable<iWasHere.Domain.Model.DictionaryCurrencyType>
+
+    @{
+        ViewData["Title"] = "Currency";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    @(Html.Kendo().Grid<iWasHere.Domain.Model.DictionaryCurrencyType>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.DictionaryCurrencyName).Title("Currency Name").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
+
+            columns.Bound(c => c.DictionaryCurrencyCode).Title("Currency Code").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
+
+
+
+            columns.Bound(c => c.DictionaryCurrencyTypeId).Hidden();
+
+
+
+            columns.Template("<button id=\"editButton\"  class=\"btn btn-warning\" onclick=\"OpenToEdit(#=DictionaryCurrencyTypeId#)\"> Edit </button>").HtmlAttributes(new {style = "text-align: center;" });
+            columns.Template("<button id=\"deleteButton\" class=\"btn btn-danger\" onclick=\"deleteCurrency(#=DictionaryCurrencyTypeId#)\">Delete</button>").HtmlAttributes(new {style = "text-align: center;" });
+
+
+        })
+        .HtmlAttributes(new { style = "height: 550px;" , @id = "grid"  })
+        .Scrollable()
+        //.Groupable()
+        //.Sortable()
+
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
+
+            .Read(read => read.Action("CurrencyData", "Dictionary").Data("additionalData"))
+
+            .PageSize(20)
+        .Destroy(update => update.Action("DeleteCurrency", "Dictionary"))
+
+        )
+
+
+    )
+    <script type="text/javascript">
+        function additionalData() {
+            return {
+                currencyName: $("#name").val()
+            }
+        }
+        
+       
+
+    </script>
+    
+</div>
+   
+
+    
+
+
+
