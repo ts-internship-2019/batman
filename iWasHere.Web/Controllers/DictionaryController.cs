@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
-using iWasHere.Web.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
@@ -35,28 +31,18 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
-
-
-        //public ActionResult CitiesData([DataSourceRequest]DataSourceRequest request)
-        //{
-        //    var jsonVar = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize).ToDataSourceResult(request).;
-        //    //jsonVar.Total = 23;
-        //    return Json(jsonVar);
-
-        //}
-
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
             return View(dictionaryLandmarkType);
         }
-       
+
         public IActionResult ClientFiltering()
         {
             return View();
         }
 
-      
+
 
         public IActionResult DictionaryCountry()
         {
@@ -107,14 +93,14 @@ namespace iWasHere.Web.Controllers
                 return Json(result);
             }
         }
-        public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request, int? landmarkId, string LandmarkName,string LandmarkCode)
+        public ActionResult DictionaryLandmarkData([DataSourceRequest]DataSourceRequest request, int? landmarkId, string LandmarkName, string LandmarkCode)
         {
             List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkModels(request.Page, request.PageSize,
                  landmarkId, LandmarkName, LandmarkCode, out int landmarkCount);
             //List<DictionaryLandmarkTypeModel> data = _dictionaryService.GetDictionaryLandmarkTypeModels(request.Page, request.PageSize);
             var result = new DataSourceResult()
             {
-                Data = data, 
+                Data = data,
                 Total = landmarkCount
 
             };
@@ -127,7 +113,7 @@ namespace iWasHere.Web.Controllers
 
             return Json(status);
         }
-        
+
         public IActionResult UpdateLandmark(DictionaryLandmarkType landmarkType)
         {
             string status = "";
@@ -137,7 +123,7 @@ namespace iWasHere.Web.Controllers
         }
         public ActionResult LandmarkForm(DictionaryLandmarkType landmarkType)
         {
-            if (landmarkType.DictionaryItemId<1)
+            if (landmarkType.DictionaryItemId < 1)
             {
                 _dictionaryService.InsertLandmark(landmarkType);
             }
@@ -159,8 +145,8 @@ namespace iWasHere.Web.Controllers
                  countryId, countyName, countyCode, out int countiesCount);
             var result = new DataSourceResult()
             {
-                Data = data, 
-                Total = countiesCount              
+                Data = data,
+                Total = countiesCount
 
             };
             return Json(result);
@@ -173,8 +159,8 @@ namespace iWasHere.Web.Controllers
             var result = new DataSourceResult()
             {
                 Data = data,
-                Total = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize,countyId, cityName).Item2
-             };
+                Total = _dictionaryService.GetDictionaryCity(request.Page, request.PageSize, countyId, cityName).Item2
+            };
             return Json(result);
         }
 
@@ -191,20 +177,20 @@ namespace iWasHere.Web.Controllers
             return Json(_dictionaryService.ServerFiltering_GetSeasons(text));
         }
 
-        public IActionResult County()
-        {
-            return View();
-        }
-
         public ActionResult FliterButton(string CountryCode, string CountryName)
-        { 
+        {
             return Content(CountryName);
         }
-        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyId)
-        {
-            _dictionaryService.DeleteCounty(countyId);
 
-            return RedirectToAction("Counties");
+
+        public ActionResult DeleteCounty([DataSourceRequest]DataSourceRequest request, int countyToDeleteId)
+        {
+            int status = _dictionaryService.DeleteCounty(countyToDeleteId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
+            // return RedirectToAction("Counties");
         }
 
 
@@ -225,62 +211,62 @@ namespace iWasHere.Web.Controllers
         }
 
 
-public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request, string SeasonName, string SeasonCode)//************
-{
-    if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == true)
-    {
-        var jsonVar = _dictionaryService.GetDictionarySeasonTypeModels(request.Page, request.PageSize);
-        DataSourceResult result = new DataSourceResult()
+        public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request, string SeasonName, string SeasonCode)//************
         {
-            Data = jsonVar, // Process data (paging and sorting applied)
-            Total = _dictionaryService.GetDictionarySeasonTypeModels() // Total number of records
-        };
-        return Json(result);
-    }
-    else if (string.IsNullOrEmpty(SeasonName) == false && string.IsNullOrEmpty(SeasonCode) == true)
-    {
-        var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByName(request.Page, request.PageSize, SeasonName);
-        DataSourceResult result = new DataSourceResult()
+            if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == true)
+            {
+                var jsonVar = _dictionaryService.GetDictionarySeasonTypeModels(request.Page, request.PageSize);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeModels() // Total number of records
+                };
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(SeasonName) == false && string.IsNullOrEmpty(SeasonCode) == true)
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByName(request.Page, request.PageSize, SeasonName);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == false)
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCode(request.Page, request.PageSize, SeasonCode);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+            else
+            {
+                var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCodeAndName(request.Page, request.PageSize, SeasonName, SeasonCode);
+                DataSourceResult result = new DataSourceResult()
+                {
+                    Data = jsonVar, // Process data (paging and sorting applied)
+                    Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
+                };
+                return Json(result);
+            }
+        }
+        ///functie stergere Sezoane
+        public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
         {
-            Data = jsonVar, // Process data (paging and sorting applied)
-            Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
-        };
-        return Json(result);
-    }
-    else if (string.IsNullOrEmpty(SeasonName) == true && string.IsNullOrEmpty(SeasonCode) == false)
-    {
-        var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCode(request.Page, request.PageSize, SeasonCode);
-        DataSourceResult result = new DataSourceResult()
-        {
-            Data = jsonVar, // Process data (paging and sorting applied)
-            Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
-        };
-        return Json(result);
-    }
-    else
-    {
-        var jsonVar = _dictionaryService.FilterDictionarySeasonTypeByCodeAndName(request.Page, request.PageSize, SeasonName, SeasonCode);
-        DataSourceResult result = new DataSourceResult()
-        {
-            Data = jsonVar, // Process data (paging and sorting applied)
-            Total = _dictionaryService.GetDictionarySeasonTypeCount() // Total number of records
-        };
-        return Json(result);
-    }
-}
-///functie stergere Sezoane
-public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
-{
-    _dictionaryService.DeleteSeason(model.DictionarySeasonId);
-}
-        
+            _dictionaryService.DeleteSeason(model.DictionarySeasonId);
+        }
+
         public ActionResult ServerFiltering_GetCounties(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetCounties(text));
         }
 
         [HttpPost]
-        public ActionResult SaveCity(string cityName, int countyId,string cityCode)
+        public ActionResult SaveCity(string cityName, int countyId, string cityCode)
 
         {
             DictionaryCity city = new DictionaryCity()
@@ -291,7 +277,9 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
                 DictionaryCityCode = cityCode
             };
             int status = _dictionaryService.InsertCity(city);
-            return Json(status);
+            if (status != 500)
+                return Json(status);
+            else return View();
         }
 
         public ActionResult DeleteCity([DataSourceRequest] DataSourceRequest request, int id)
@@ -308,7 +296,7 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
         {
             if (id != 0)
             {
-                DictionaryCityModel c = _dictionaryService.GetCityToEdit(id);
+                DictionaryCityModel c = _dictionaryService.GetSelectedCity(id);
                 return View(c);
             }
             else
@@ -328,13 +316,71 @@ public void DeleteSeason([DataSourceRequest] DataSourceRequest request, Dictiona
                 DictionaryCityCode = cityCode
             };
             int status = _dictionaryService.UpdateCity(city);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
 
-              return Json(status);
-           
         }
-        public void DeleteLandmark([DataSourceRequest] DataSourceRequest request, int  landmarkToDelete)
+        public void DeleteLandmark([DataSourceRequest] DataSourceRequest request, int landmarkToDelete)
         {
             _dictionaryService.DeleteLandmark(landmarkToDelete);
         }
+
+        public ActionResult County(int countyToEditId)
+        {
+            if (countyToEditId == 0)
+            {
+                return View(new DictionaryCountyModel());
+
+            }
+            else
+            {
+                DictionaryCountyModel countyToEdit = new DictionaryCountyModel();
+                countyToEdit = _dictionaryService.getInfoCounty(countyToEditId);
+                return View(countyToEdit);
+            }
+
+        }
+
+        public ActionResult AddCounty([DataSourceRequest] DataSourceRequest request, string countyName, string countyCode,
+            int countryId)
+        {
+            int status = _dictionaryService.AddCounty(countyName, countyCode, countryId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
+        }
+
+        public ActionResult EditCounty([DataSourceRequest] DataSourceRequest request, int countyId, string countyName,
+            string countyCode, int countryId)
+        {
+            int status = _dictionaryService.EditCounty(countyId, countyName, countyCode, countryId);
+            if (status != 500)
+                return Json(status);
+            else
+                return View();
+        }
+
+
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public IActionResult UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.UpdateCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        public ActionResult InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.InsertCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        // ******************   23.09 - Modificari Dragos - End  ******************************
     }
 }
