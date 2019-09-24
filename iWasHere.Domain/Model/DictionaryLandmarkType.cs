@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iWasHere.Domain.Model
 {
@@ -10,6 +11,7 @@ namespace iWasHere.Domain.Model
             Attractions = new HashSet<Attractions>();
         }
 
+      
         public int DictionaryItemId { get; set; }
         public string DictionaryItemCode { get; set; }
         public string DictionaryItemName { get; set; }
