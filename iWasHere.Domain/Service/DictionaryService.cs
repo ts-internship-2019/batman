@@ -104,7 +104,7 @@ namespace iWasHere.Domain.Service
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page - 1) * pageSize;
-
+           
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,
@@ -711,7 +711,10 @@ namespace iWasHere.Domain.Service
                 DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId
             }).ToList();
             return dictionaryCurrencyTypeModels.Count;
-        }
+        }       
+
+
+           
 
         public int GetDictionaryCurrencyTypeModels1(int Page, int PageSize, string currencyName)
         {
