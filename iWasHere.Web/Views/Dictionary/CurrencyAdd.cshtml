@@ -120,7 +120,10 @@
             <p>
                 <input type="submit" value="Add" id="buttonId" class="btn btn-success" onclick="Add()" />
 
-                <input type="submit" value="Add and New" id="buttonIdd" class="btn btn-primary" onclick="AddAndNew()" />
+                @if (Model.DictionaryCurrencyTypeId == 0)
+                {
+                    <input type="submit" value="Add and New" id="buttonIdd" class="btn btn-primary" onclick="AddAndNew()" />
+                }
 
                 <input type="button" value="Cancel" id="buttonIddd" class="btn btn-warning" onclick="Cancel()" />
             </p>

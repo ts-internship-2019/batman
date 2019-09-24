@@ -3,8 +3,11 @@
 
 <p>
    
-    <input type="button" class="btn btn-success" value="Add New Currency" onclick="OpenToAdd()" />
-   
+
+        <input type="button" class="btn btn-success" value="Add New Currency +" onclick="OpenToAdd()" />
+       
+
+    
 </p>
 
 
@@ -24,11 +27,9 @@
 
 </div>
 <script type="text/javascript">
-  
-
-    function deleteCurrency(id) {
+  function deleteCurrency(id) {
         if (window.confirm('Sunteti sigur ca doriti sa stergeti aceasta moneda?'))
-{
+        {
      $.ajax({
             type: 'DELETE',
             url: '@Url.Action("DeleteCurrency", "Dictionary")',
@@ -42,19 +43,23 @@
                 alert("Aceasta moneda nu poate fi stearsa");
             }
         })
-}
-else
-{
+     }
+        else
+        {
             return false;
-}
+        }
        
-    }
+  }
+
+    
+   
+    
 
   function OpenToEdit(id)
-    {
+  {
         window.location.href = 'CurrencyAdd/?id=' + id;
         
-    }
+  }
 
     function OpenToAdd() {
         window.location.href = 'CurrencyAdd/?id=' + 0;
@@ -67,11 +72,11 @@ else
     }
 
     function ClearFilters()
-   {  
+    {  
         document.getElementById('name').value = "";
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").refresh;
-   }
+    }
     
     
 

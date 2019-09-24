@@ -22,7 +22,6 @@ namespace iWasHere.Domain.Model
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string AttractionName { get; set; }
-        public string Observations { get; set; }
 
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
