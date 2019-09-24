@@ -1,11 +1,8 @@
-﻿using iWasHere.Domain.DTOs;
-using iWasHere.Domain.Model;
-using iWasHere.Domain.Service;
+﻿using iWasHere.Domain.Service;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using iWasHere.Domain.DTOs;
 
 
 namespace iWasHere.Web.Controllers
@@ -13,13 +10,10 @@ namespace iWasHere.Web.Controllers
     public class AttractionController : Controller
     {
         private readonly AttractionService _attractionService;
-        private readonly DatabaseContext _dbContext;
-
-        public AttractionController(AttractionService attractionService, DatabaseContext databaseContext)
+        public AttractionController( AttractionService attractionService)
         {
             _attractionService = attractionService;
-            _dbContext = databaseContext;
-        }       
+        }
 
         public ActionResult Attraction(int attrId)
         {
@@ -27,6 +21,15 @@ namespace iWasHere.Web.Controllers
             attr = _attractionService.GetAttractionLocation(attrId);
             return View(attr);
         }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult GetAttractions([DataSourceRequest] DataSourceRequest request)
+        {
+            return Json(_attractionService.GetAttractionListModels().ToDataSourceResult(request));
+        }
     }
 }
-
