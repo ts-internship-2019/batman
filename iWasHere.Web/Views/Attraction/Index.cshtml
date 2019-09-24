@@ -5,64 +5,58 @@
 }
 
 <h1>Index</h1>
-@(Html.Kendo().Grid<iWasHere.Domain.DTOs.TouristicObjectiveListModel>
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.AttractionListModel>
     ()
     .Name("Grid")
 
     .Columns(columns =>
     {
-    columns.Bound(p => p.TouristicObjectiveId).Hidden(true);
+    columns.Bound(p => p.AttractionId).Hidden(true);
     columns.Template(@"<div class='row'>
         <div class='col-md-4' style='text-align: center'>
-            <img align='middle' style='max-height:300px' src='img/#=MainImgPath#' />
+            <img align='middle' style='max-height:300px' src='img/#=MainPhotoName#' />
         </div>
-<div class='col-md-8'>
-    <div class='row'>
         <div class='col-md-8'>
-            <h1>#=Name#</h1>
+            <div class='row'>
+                <div class='col-md-8'>
+                    <h1>#=Name#</h1>
+                </div>
+                
+            </div>
+            <div class='row'>
+               
+                <div class='col-md-4'>
+                    <b>#=Price#</b> #=CurrencyName#
                 </div>
                 <div class='col-md-4'>
-                    <h3 style='text-align:right'>#=Code#</h3>
+                    <b>#=Rating#</b><i class='fa fa-star'></i>
                 </div>
             </div>
             <div class='row'>
                 <div class='col-md-4'>
-                    Entry: #if(HasEntry==true){#<i class='fa fa-check-square'></i>#}else{#<i class='fa fa-times'></i>#}#
+                    LandmarkType: <b>#=LandmarkTypeName#</b>
                 </div>
                 <div class='col-md-4'>
-                    <b>#=Price#</b> RON
+                    Season: <b>#=SeasonName#</b>
                 </div>
                 <div class='col-md-4'>
-                    <b>#=Rank#</b><i class='fa fa-star'></i>
-                </div>
-            </div>
-            <div class='row'>
-                <div class='col-md-4'>
-                    AttractionCategory: <b>#=AttractionCategory#</b>
-                </div>
-                <div class='col-md-4'>
-                    OpenSeason: <b>#=OpenSeason#</b>
-                </div>
-                <div class='col-md-4'>
-                    City: <b>#=City#</b>
+                    City: <b>#=CityName#</b>
                 </div>
             </div>
             <br />
             <div class='row'>
                 <div class='col-md-12'>
-                  #=Description# </div>
+                  #=Observations# </div>
             </div>
         </div>
     </div>
         <div class='row'>
-            <div class='col-md-4'>
-                <a <b>#=AttractionCategory#</b>
-        </div>
-                <div class='col-md-4'>
-                <b>#=OpenSeason#</b>
-        </div>
-                <div class='col-md-4'>
-            City: <b>#=City#</b>
+            <div class='col-md-12' style='text-align: end'>
+                <a href='/TouristicObjective/AddOrEdit?id=#=AttractionId#' class='btn btn-info'><i class='fa fa-edit'></i> Edit</a>
+                <a href='/TouristicObjective/TouristicObjectiveDetail?id=#=AttractionId#' class='btn btn-success'><i class='fa fa-eye'></i> View</a>
+                <a href='' class='btn btn-success'><i class='fa fa-eye'></i> View2</a>
+                <a href='' class='btn btn-primary'><i class='fa fa-download'></i> Export</a>
+            </div>
         </div>
 ");
 
@@ -75,6 +69,6 @@
     .DataSource(dataSource => dataSource
     .Ajax()
     .PageSize(20)
-    .Read(r => r.Action("GetTuristicObjectives", "TouristicObjective"))
+    .Read(r => r.Action("GetAttractions", "Attraction"))
     )
-)
+    )
