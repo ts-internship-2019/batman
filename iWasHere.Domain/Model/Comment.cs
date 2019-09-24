@@ -7,10 +7,10 @@ namespace iWasHere.Domain.Model
     {
         public string CommentTitle { get; set; }
         public string CommentText { get; set; }
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
         public string Name { get; set; }
         public int CommentId { get; set; }
-        public int AttractionId { get; set; }
+        public int? AttractionId { get; set; }
         public string UserId { get; set; }
 
         public virtual Attractions Attraction { get; set; }

@@ -1,0 +1,123 @@
+﻿@model iWasHere.Domain.DTOs.DictionaryCountyModel
+
+
+
+<h1 style="margin: 50px 0">County</h1>
+
+
+<div id="countyDetails" style="margin: 10px 0">
+    <label for="countyName">County Name</label>
+    @(Html.Kendo().TextBoxFor(model => model.CountyName)    
+     .HtmlAttributes(new { required = "required", validationmessage = "Enter County Name", id = "setCountyName" })
+    )
+
+    <label for="countyCode">County Code</label>
+    @(Html.Kendo().TextBoxFor(model => model.CountyCode)
+    .HtmlAttributes(new { required = "required", validationmessage = "Enter County Code", id = "setCountyCode" })
+    )
+
+    <label for="countries">Country</label>
+    @(Html.Kendo().ComboBoxFor(model => model.CountryId)                  
+                     .DataTextField("CountryName")
+                     .DataValueField("CountryId")                     
+                     .Filter(FilterType.StartsWith)
+                     .HtmlAttributes(new { style = "width:35%", id = "countries" })
+                     .DataSource(source =>
+                     {
+                         source.Read(read =>
+                         {
+                             read.Action("ServerFiltering_GetCountries", "Dictionary");
+
+                         })
+                 .ServerFiltering(true);
+                     })
+    )
+</div>
+
+<div id="countyButton" style="margin:20px 0;">
+    @if (Model.CountyId == 0)
+    {
+        <button type="submit" name="submit" value="saveCounty" id="saveCounty" onclick="goToCounties()">Salveaza</button>
+        <button type="submit" name="submitNew" value="saveNewCounty" id="saveNewCounty" onclick="stayToCounty()">Salveaza nou</button>
+    }
+    @if (Model.CountyId != 0)
+    {
+        <button type="submit" name="update" value="saveCounty" id="saveCounty" onclick="editCounty()">Salveaza</button>
+    }
+    <button type="submit" id="cancelCounty" onclick="cancelCounty()">Anuleaza</button>
+</div>
+
+
+<script type="text/javascript">
+
+    function goToCounties() {
+        saveCounty();
+        document.location = 'Counties';
+    }
+
+    function stayToCounty() {
+        saveCounty();
+        document.location = 'County?countyToEditId='+0;
+    }
+
+    function cancelCounty() {
+        document.location = 'Counties';
+    }
+
+    function saveCounty() {
+        var countyNameBox = $("#setCountyName").val();
+        var countyCodeBox = $("#setCountyCode").val();
+        var countryIdBox = $("#countries").val();
+        var dataView = {
+           countyName: countyNameBox,
+           countyCode: countyCodeBox,
+           countryId: countryIdBox          
+        }
+        $.ajax({
+                type: "PUT",
+                url: '@Url.Action("AddCounty", "Dictionary")',
+                data: dataView,
+                error: function () {
+                        alert("Nu s-a putut adauga judetul!")
+                },
+                success: function () {
+                    alert("Judet adaugat!");
+                }
+        })
+        document.location = 'Counties';
+    }
+
+    function editCounty() {
+        var countyNameBox = $("#setCountyName").val();
+        var countyCodeBox = $("#setCountyCode").val();
+        var countryIdBox = $("#countries").val();
+        url_string = window.location.href;
+        var url = new URL(url_string);
+        var id = url.searchParams.get("countyToEditId");
+        var dataView = {
+           countyId: id,
+           countyName: countyNameBox,
+           countyCode: countyCodeBox,
+           countryId: countryIdBox
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EditCounty", "Dictionary")',
+            data: dataView,
+            error: function () {
+                alert("Nu s-a putut modifica judetul din diferite motive!")
+            },
+            success: function () {
+                alert("Judet modificat!"),
+                document.location = 'Counties';
+            }
+        })
+        
+    }
+
+</script>
+
+
+
+
+
