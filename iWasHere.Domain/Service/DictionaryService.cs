@@ -104,8 +104,6 @@ namespace iWasHere.Domain.Service
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page - 1) * pageSize;
-            int skip = (page - 1) * pageSize;
-
 
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
@@ -159,7 +157,7 @@ namespace iWasHere.Domain.Service
 
             return dictionarySeason;
         }
-        
+
         public int GetCityCount()
         {
             return _dbContext.DictionaryCity.Count();
@@ -503,12 +501,8 @@ namespace iWasHere.Domain.Service
                     DictionaryCountryName = a.DictionaryCountryName
 
                 }).ToList();
-                {
-                    DictionaryCountryId = a.DictionaryCountryId,
-                    DictionaryCountryCode = a.DictionaryCountryCode,
-                    DictionaryCountryName = a.DictionaryCountryName
-                }).ToList();
-            return dictionaryCountry[0];
+           
+            return dictionaryCountry.FirstOrDefault();
         }
 
         public int GetDictionarySeasonTypeModels()
@@ -711,10 +705,6 @@ namespace iWasHere.Domain.Service
         public int GetCurrencyCount()
         {
             List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
-        }       
-    }
-}
-
             {
                 DictionaryCurrencyName = a.DictionaryCurrencyName,
                 DictionaryCurrencyCode = a.DictionaryCurrencyCode,
@@ -734,7 +724,7 @@ namespace iWasHere.Domain.Service
                 DictionaryCurrencyCode = a.DictionaryCurrencyCode,
 
                 DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
-               
+
             });
             if (!string.IsNullOrEmpty(currencyName))
             {
@@ -744,9 +734,9 @@ namespace iWasHere.Domain.Service
             return dictionaryCurrencyTypeModels.Count;
 
         }
-        public List<DictionaryCurrencyType>  GetDictionaryCurrencyTypeModels(int Page, int PageSize, string currencyName)
+        public List<DictionaryCurrencyType> GetDictionaryCurrencyTypeModels(int Page, int PageSize, string currencyName)
         {
-            
+
             int skip = (Page - 1) * PageSize;
             var x = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
 
@@ -755,12 +745,12 @@ namespace iWasHere.Domain.Service
                 DictionaryCurrencyCode = a.DictionaryCurrencyCode,
                 DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
             });
-            if(!string.IsNullOrEmpty(currencyName))
+            if (!string.IsNullOrEmpty(currencyName))
             {
                 x = x.Where(p => p.DictionaryCurrencyName.Contains(currencyName));
             }
             List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = x.Skip(skip).Take(PageSize).ToList();
-                    
+
             return dictionaryCurrencyTypeModels;
 
         }
@@ -775,7 +765,7 @@ namespace iWasHere.Domain.Service
                 Code = a.CurrencyType.DictionaryCurrencyCode,
 
                 Id = a.CurrencyType.DictionaryCurrencyTypeId,
-             
+
             }).ToList();
 
             return dictionaryCountryModels;
@@ -791,9 +781,9 @@ namespace iWasHere.Domain.Service
             {
                 DictionaryCurrencyType dictionary = new DictionaryCurrencyType() { DictionaryCurrencyTypeId = getDictionaryId.DictionaryCurrencyTypeId };
                 _dbContext.DictionaryCurrencyType.Remove(dictionary);
-                status =_dbContext.SaveChanges();
+                status = _dbContext.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 status = 500;
             }
@@ -806,7 +796,7 @@ namespace iWasHere.Domain.Service
             {
                 DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
                 DictionaryCurrencyName = a.DictionaryCurrencyName,
-                DictionaryCurrencyCode=a.DictionaryCurrencyCode
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode
             }).Where(a => a.DictionaryCurrencyTypeId == id).FirstOrDefault();
             return currency1;
         }

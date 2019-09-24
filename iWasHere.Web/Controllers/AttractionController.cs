@@ -9,10 +9,10 @@ namespace iWasHere.Web.Controllers
 {
     public class AttractionController : Controller
     {
-        private readonly AtractionService _attractionService;
-        public AttractionController(AtractionService atractionService)
+        private readonly AttractionService _attractionService;
+        public AttractionController( AttractionService attractionService)
         {
-            _attractionService = atractionService;
+            _attractionService = attractionService;
         }
 
         public ActionResult Attraction(int attrId)
