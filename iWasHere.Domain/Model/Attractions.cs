@@ -11,20 +11,17 @@ namespace iWasHere.Domain.Model
             Photo = new HashSet<Photo>();
         }
 
-        public int Observations { get; set; }
         public int CurrencyId { get; set; }
-        public int CityId { get; set; }
+        public int? CityId { get; set; }
         public int AttractionId { get; set; }
-        public string AttractionName { get; set; }
         public decimal Price { get; set; }
-        public int LandmarkTypeId { get; set; }
+        public int? LandmarkTypeId { get; set; }
         public int AttractionTypeId { get; set; }
         public int SeasonId { get; set; }
-
-        public float Latitude { get; set; }
-
-        public float Longitude { get; set; }
-
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
+        public string AttractionName { get; set; }
+        public string Observations { get; set; }
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
         public virtual DictionaryCurrencyType Currency { get; set; }

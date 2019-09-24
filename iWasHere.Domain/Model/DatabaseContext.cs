@@ -75,14 +75,6 @@ namespace iWasHere.Domain.Model
                 entity.HasKey(e => e.AttractionId)
                     .HasName("PK__Attracti__DAE24D5AFEB6832C");
 
-                entity.HasIndex(e => e.Observations)
-                    .HasName("IX_Attractions")
-                    .IsUnique();
-
-                entity.Property(e => e.AttractionName)
-                    .IsRequired()
-                    .HasMaxLength(1)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
