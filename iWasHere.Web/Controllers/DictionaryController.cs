@@ -358,5 +358,25 @@ namespace iWasHere.Web.Controllers
             else
                 return View();
         }
+
+
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public IActionResult UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.UpdateCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        public ActionResult InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            string status = "";
+            _dictionaryService.InsertCountry(dictionaryCountry);
+            return Json(status);
+        }
+
+        // ******************   23.09 - Modificari Dragos - End  ******************************
     }
 }

@@ -278,8 +278,6 @@ namespace iWasHere.Domain.Service
 
         public DictionaryCountyModel getInfoCounty(int countyId)
         {
-            //  if (countyId.HasValue)
-            // {
             DictionaryCountyModel countyToEdit = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
                 CountyId = a.DictionaryCountyId,
@@ -681,6 +679,22 @@ namespace iWasHere.Domain.Service
             return x;
 
         }
+
+
+
+        // ******************   23.09 - Modificari Dragos - Start  ******************************
+        public void UpdateCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Update(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+
+        public void InsertCountry(DictionaryCountry dictionaryCountry)
+        {
+            _dbContext.DictionaryCountry.Add(dictionaryCountry);
+            _dbContext.SaveChanges();
+        }
+        // ******************   23.09 - Modificari Dragos - End  ******************************
     }
 }
 
