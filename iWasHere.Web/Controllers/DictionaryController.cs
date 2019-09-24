@@ -31,6 +31,8 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
+                               
+
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
@@ -183,6 +185,7 @@ namespace iWasHere.Web.Controllers
         {
             return Content(CountryName);
         }
+      
 
         public IActionResult Currency()
         {
@@ -472,4 +475,7 @@ namespace iWasHere.Web.Controllers
         }
     }
 
+        }       
+        
+    }
 }

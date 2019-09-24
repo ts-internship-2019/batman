@@ -1,9 +1,6 @@
 ﻿@model iWasHere.Domain.DTOs.DictionaryCountyModel
 
-
-
 <h1 style="margin: 50px 0">County</h1>
-
 
 <div id="countyDetails" style="margin: 10px 0">
     <label for="countyName">County Name</label>
@@ -37,14 +34,14 @@
 <div id="countyButton" style="margin:20px 0;">
     @if (Model.CountyId == 0)
     {
-        <button type="submit" name="submit" value="saveCounty" id="saveCounty" onclick="goToCounties()">Salveaza</button>
-        <button type="submit" name="submitNew" value="saveNewCounty" id="saveNewCounty" onclick="stayToCounty()">Salveaza nou</button>
+        <button type="submit" name="submit" value="saveCounty" id="saveCounty" class="btn btn-dark" onclick="goToCounties()">Salveaza</button>
+        <button type="submit" name="submitNew" value="saveNewCounty" id="saveNewCounty" class="btn btn-dark" onclick="stayToCounty()">Salveaza nou</button>
     }
     @if (Model.CountyId != 0)
     {
-        <button type="submit" name="update" value="saveCounty" id="saveCounty" onclick="editCounty()">Salveaza</button>
+        <button type="submit" name="update" value="saveCounty" id="saveCounty" class="btn btn-dark" onclick="editCounty()">Salveaza</button>
     }
-    <button type="submit" id="cancelCounty" onclick="cancelCounty()">Anuleaza</button>
+    <button type="submit" id="cancelCounty" class="btn btn-dark" onclick="cancelCounty()">Anuleaza</button>
 </div>
 
 
@@ -81,7 +78,7 @@
                         alert("Nu s-a putut adauga judetul!")
                 },
                 success: function () {
-                    alert("Judet adaugat!");
+                   // alert("Judet adaugat!");
                 }
         })
         document.location = 'Counties';
@@ -105,10 +102,10 @@
             url: '@Url.Action("EditCounty", "Dictionary")',
             data: dataView,
             error: function () {
-                alert("Nu s-a putut modifica judetul din diferite motive!")
+                alert("Nu s-a putut modifica judetul!")
             },
             success: function () {
-                alert("Judet modificat!"),
+               // alert("Judet modificat!"),
                 document.location = 'Counties';
             }
         })

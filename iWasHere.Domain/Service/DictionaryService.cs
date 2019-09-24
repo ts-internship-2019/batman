@@ -11,7 +11,7 @@ using System.Transactions;
 
 namespace iWasHere.Domain.Service
 {
-    public class DictionaryService 
+    public class DictionaryService
     {
 
         private readonly DatabaseContext _dbContext;
@@ -104,6 +104,9 @@ namespace iWasHere.Domain.Service
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page - 1) * pageSize;
+            int skip = (page - 1) * pageSize;
+
+
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,
@@ -174,6 +177,8 @@ namespace iWasHere.Domain.Service
         {
             return _dbContext.DictionarySeasonType.Count();
         }
+
+
         public List<DictionaryCountry> GetDictionaryCountry(int page, int pageSize)
         {
             int skip = (page - 1) * pageSize;
@@ -222,6 +227,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountyModels;
         }
+
         public List<DictionaryCountryModel> GetCountryList()
         {
             List<DictionaryCountryModel> dictionaryCountryModels = _dbContext.DictionaryCountry.Select(a => new DictionaryCountryModel()
@@ -266,6 +272,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryLandmarkModels;
         }
+
         public int DeleteCounty(int? countyId)
         {
             int status;
@@ -346,6 +353,7 @@ namespace iWasHere.Domain.Service
         }
         public void DeleteLandmark(int? id)
         {
+
             var landmark = _dbContext.DictionaryLandmarkType.Find(id);
 
             if (id.HasValue)
@@ -495,6 +503,11 @@ namespace iWasHere.Domain.Service
                     DictionaryCountryName = a.DictionaryCountryName
 
                 }).ToList();
+                {
+                    DictionaryCountryId = a.DictionaryCountryId,
+                    DictionaryCountryCode = a.DictionaryCountryCode,
+                    DictionaryCountryName = a.DictionaryCountryName
+                }).ToList();
             return dictionaryCountry[0];
         }
 
@@ -581,6 +594,7 @@ namespace iWasHere.Domain.Service
             return dictionarySeasonTypeModels;
 
         }
+
         public int InsertCity(DictionaryCity city)
         {
             int status;
@@ -697,6 +711,9 @@ namespace iWasHere.Domain.Service
         public int GetCurrencyCount()
         {
             List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+        }       
+    }
+}
 
             {
                 DictionaryCurrencyName = a.DictionaryCurrencyName,
