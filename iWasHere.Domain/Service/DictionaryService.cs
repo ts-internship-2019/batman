@@ -141,7 +141,23 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountyModels;
         }
+        public List<DictionarySeasonType> ServerFiltering_GetSeasons(string text)
+        {
+            var x = _dbContext.DictionarySeasonType.Select(a => new DictionarySeasonType()
+            {
+                DictionarySeasonName = a.DictionarySeasonName,
+                DictionarySeasonCode = a.DictionarySeasonCode,
+                DictionarySeasonId = a.DictionarySeasonId
+            });
+            if (!string.IsNullOrEmpty(text))
+            {
+                x = x.Where(p => p.DictionarySeasonName.StartsWith(text));
+            }
+            List<DictionarySeasonType> dictionarySeason = x.Take(50).ToList();
 
+            return dictionarySeason;
+        }
+        
         public int GetCityCount()
         {
             return _dbContext.DictionaryCity.Count();

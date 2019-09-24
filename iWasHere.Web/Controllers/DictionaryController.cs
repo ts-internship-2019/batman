@@ -186,6 +186,10 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_dictionaryService.ServerFiltering_GetLandmarks(text));
         }
+        public ActionResult ServerFiltering_GetSeasons(string text)
+        {
+            return Json(_dictionaryService.ServerFiltering_GetSeasons(text));
+        }
 
         public IActionResult County()
         {

@@ -11,7 +11,7 @@ namespace iWasHere.Domain.Model
             Photo = new HashSet<Photo>();
         }
 
-        public int Observations { get; set; }
+        public string Observations { get; set; }
         public int CurrencyId { get; set; }
         public int CityId { get; set; }
         public int AttractionId { get; set; }
