@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using iWasHere.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
 using Newtonsoft.Json.Serialization;
+using iWasHere.Domain.Model;
 
 namespace iWasHere.Web
 {
@@ -51,6 +46,7 @@ namespace iWasHere.Web
 
             services.AddKendo();
             services.AddScoped<DictionaryService>();
+            services.AddScoped<PhotoService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
