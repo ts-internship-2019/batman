@@ -154,7 +154,10 @@ namespace iWasHere.Domain.Model
                 entity.HasKey(e => e.AttractionId)
                     .HasName("PK__Attracti__DAE24D5AFEB6832C");
 
-                entity.Property(e => e.AttractionName).IsUnicode(false);
+                
+
+                entity.Property(e => e.AttractionName)                
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
