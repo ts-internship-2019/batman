@@ -2,73 +2,147 @@
 
 
 <p>
-    <input type="button" value="Add New Currency" onclick='window.location="@Url.Action("CurrencyAdd", "Dictionary")";' />
+   
+    <input type="button" class="btn btn-success" value="Add New Currency" onclick="OpenToAdd()" />
+   
 </p>
 
 
-@*<div class="well">
-    <div class="form-inline">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Last Name"
-                   data-mvcgrid-type="filter" data-mvcgrid-option="LastName" />
-        </div>
-        <div class="form-group">
 
 
-            <input type="email" class="form-control" placeholder="First name"
-                   data-mvcgrid-type="filter" data-mvcgrid-option="FirstName" />
-        </div>
-        <div class="form-group">
-            <select class="form-control" data-mvcgrid-type="filter" data-mvcgrid-option="Status">
-                <option value=""></option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-            </select>
-        </div>
-        <button type="button" class="btn btn-default" data-mvcgrid-apply-filter="click">Apply</button>
-    </div>
-</div>*@
+<div style="margin-bottom: 5px;">
+
+    Search Currency: @Html.TextBox("compSearch", (string)TempData["currencyName"], new { id = "name", style = "width: 400px;" })
+    <button id="searchButton" class="btn btn-info" type="button" style="text-align:center;" onclick="BindGrid()">
+        <span>Search</span>
+
+    </button>
+    <button id="resetFilter" class="btn btn-warning" type="button" style="text-align:center;" onclick="ClearFilters()">
+        <span>Reset Filter</span>
+
+    </button>
+
+</div>
+<script type="text/javascript">
+  
+
+    function deleteCurrency(id) {
+        if (window.confirm('Sunteti sigur ca doriti sa stergeti aceasta moneda?'))
+{
+     $.ajax({
+            type: 'DELETE',
+            url: '@Url.Action("DeleteCurrency", "Dictionary")',
+            data: { id: id },
+            success: function (response) {
+                
+                $("#grid").data("kendoGrid").dataSource.read();
+                 
+            },
+            error: function (response) {
+                alert("Aceasta moneda nu poate fi stearsa");
+            }
+        })
+}
+else
+{
+            return false;
+}
+       
+    }
+
+  function OpenToEdit(id)
+    {
+        window.location.href = 'CurrencyAdd/?id=' + id;
+        
+    }
+
+    function OpenToAdd() {
+        window.location.href = 'CurrencyAdd/?id=' + 0;
+    }
+    
+
+    function BindGrid() {
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").refresh;
+    }
+
+    function ClearFilters()
+   {  
+        document.getElementById('name').value = "";
+        $("#grid").data("kendoGrid").dataSource.read();
+        $("#grid").data("kendoGrid").refresh;
+   }
+    
+    
+
+    
+</script>
+
+
+<div class="k-content">
+    @model IEnumerable<iWasHere.Domain.Model.DictionaryCurrencyType>
+
+    @{
+        ViewData["Title"] = "Currency";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    @(Html.Kendo().Grid<iWasHere.Domain.Model.DictionaryCurrencyType>()
+        .Name("grid")
+        .Columns(columns =>
+        {
+            columns.Bound(c => c.DictionaryCurrencyName).Title("Currency Name").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
+
+            columns.Bound(c => c.DictionaryCurrencyCode).Title("Currency Code").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
 
 
 
-
-                @model IEnumerable<iWasHere.Domain.DTOs.DictionaryCurrencyTypeModel>
-
-                @{
-                    ViewData["Title"] = "Currency";
-                    Layout = "~/Views/Shared/_Layout.cshtml";
-                }
+            columns.Bound(c => c.DictionaryCurrencyTypeId).Hidden();
 
 
-                @(Html.Kendo().Grid<iWasHere.Domain.DTOs.DictionaryCurrencyTypeModel>()
-                    .Name("grid")
-                    .Columns(columns =>
-                    {
-                        columns.Bound(c => c.Name);
 
-                        columns.Bound(c => c.Code);
+            columns.Template("<button id=\"editButton\"  class=\"btn btn-warning\" onclick=\"OpenToEdit(#=DictionaryCurrencyTypeId#)\"> Edit </button>").HtmlAttributes(new {style = "text-align: center;" });
+            columns.Template("<button id=\"deleteButton\" class=\"btn btn-danger\" onclick=\"deleteCurrency(#=DictionaryCurrencyTypeId#)\">Delete</button>").HtmlAttributes(new {style = "text-align: center;" });
 
-                        columns.Bound(c => c.Value);
 
-                        columns.Bound(c => c.Data);
+        })
+        .HtmlAttributes(new { style = "height: 550px;" , @id = "grid"  })
+        .Scrollable()
+        //.Groupable()
+        //.Sortable()
 
-                    })
-                    .HtmlAttributes(new { style = "height: 550px;" })
-                    .Scrollable()
-                    .Groupable()
-                    .Sortable()
-                    
-                    .Pageable(pageable => pageable
-                        .Refresh(true)
-                        .PageSizes(true)
-                        .ButtonCount(5))
-                    .DataSource(dataSource => dataSource
-                        .Ajax()
-                        .Read(read => read.Action("CurrencyData", "Dictionary"))
-                        .PageSize(20)
-                    )
-                )
+        .Pageable(pageable => pageable
+            .Refresh(true)
+            .PageSizes(true)
+            .ButtonCount(5))
+        .DataSource(dataSource => dataSource
+            .Ajax()
 
+            .Read(read => read.Action("CurrencyData", "Dictionary").Data("additionalData"))
+
+            .PageSize(20)
+        .Destroy(update => update.Action("DeleteCurrency", "Dictionary"))
+
+        )
+
+
+    )
+    <script type="text/javascript">
+        function additionalData() {
+            return {
+                currencyName: $("#name").val()
+            }
+        }
+        
+       
+
+    </script>
+    
+</div>
+   
+
+    
 
 
 

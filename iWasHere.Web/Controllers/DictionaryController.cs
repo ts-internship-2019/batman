@@ -103,18 +103,95 @@ namespace iWasHere.Web.Controllers
 
         }
 
-        public ActionResult CurrencyAdd()
+        public IActionResult CurrencyAdd(int id)
         {
-            return View();
+            if(id!=0)
+            {
+                DictionaryCurrencyType dict = _dictionaryService.CurrencyEdit(id);
+                return View(dict);
+            }
+           else
+          
+            {
+                DictionaryCurrencyType dict = new DictionaryCurrencyType();
+                return View(dict);
+
+            }
+
+            
         }
 
-        public ActionResult CurrencyData([DataSourceRequest]DataSourceRequest request)
+        public ActionResult CurrencyData([DataSourceRequest]DataSourceRequest request, string currencyName)
         {
-            return Json(_dictionaryService.GetDictionaryCurrencyTypeModels(request.Page, request.PageSize).ToDataSourceResult(request));
+            List<DictionaryCurrencyType> data = _dictionaryService.GetDictionaryCurrencyTypeModels(request.Page, request.PageSize, currencyName );
+             var result = new DataSourceResult()
+            {
+                Data = data, 
+                 Total = _dictionaryService.GetDictionaryCurrencyTypeModels1(request.Page, request.PageSize, currencyName)
+             };
+           
+             return Json(result);
+        }
+
+      
+
+       
+
+    
+
+        public ActionResult DeleteCurrency([DataSourceRequest] DataSourceRequest request, int id)
+        {
+            if (id != 0)
+            {
+                _dictionaryService.DeleteCurrency(id);
+            }
+            return Json(ModelState.ToDataSourceResult());
+        }
+
+
+        public ActionResult EditCurrency(int typeId, string currencyName, string currencyCode)
+        {
+            
+
+            DictionaryCurrencyType dictionary = new DictionaryCurrencyType();
+        
+            dictionary.DictionaryCurrencyTypeId = typeId;
+            dictionary.DictionaryCurrencyName = currencyName;
+            dictionary.DictionaryCurrencyCode = currencyCode;
+
+
+            DatabaseContext database = new DatabaseContext();
+
+            
+            database.DictionaryCurrencyType.Update(dictionary);
+
+
+            return Json(database.SaveChanges());
+
 
         }
 
-     
+      
+
+
+
+
+        public ActionResult CurrencySave( string currencyName, string currencyCode)
+        {
+            DatabaseContext database = new DatabaseContext();
+            database.DictionaryCurrencyType.Add(new DictionaryCurrencyType
+            {
+                
+                DictionaryCurrencyName = currencyName,
+                DictionaryCurrencyCode = currencyCode
+
+            });
+
+            return Json(database.SaveChanges());
+
+        }
+
+
 
 
     }

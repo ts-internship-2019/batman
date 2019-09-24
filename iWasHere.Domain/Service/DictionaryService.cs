@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace iWasHere.Domain.Service
 {
@@ -21,8 +23,9 @@ namespace iWasHere.Domain.Service
         //    this.entities = entities;
         //}
 
+        private static bool UpdateDatabase = false;
 
-
+        
 
         public DictionaryService(DatabaseContext databaseContext)
         {
@@ -167,44 +170,151 @@ namespace iWasHere.Domain.Service
             return dictionaryCountryModels;
         }
 
-        public List<DictionaryCurrencyTypeModel> GetDictionaryCurrencyTypeModels(int Page, int PageSize)
+     
+
+        public int GetCurrencyCount()
         {
-            List<DictionaryCurrencyTypeModel> dictionaryCurrencyTypeModels = _dbContext.Currrency.Select(a => new DictionaryCurrencyTypeModel()
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+
             {
-                Name = a.CurrencyType.DictionaryCurrencyName,
-                Code = a.CurrencyType.DictionaryCurrencyCode,
-                Id = a.CurrencyType.DictionaryCurrencyTypeId,
-                Value = a.Value,
-                Data = a.CurrencyDate
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId
+               
 
             }).ToList();
+            return dictionaryCurrencyTypeModels.Count;
+        }
+
+
+
+       
+
+        public int GetDictionaryCurrencyTypeModels1(int Page, int PageSize, string currencyName)
+        {
+
+            int skip = (Page - 1) * PageSize;
+            var x = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+
+            {
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+               
+            });
+            if (!string.IsNullOrEmpty(currencyName))
+            {
+                x = x.Where(p => p.DictionaryCurrencyName.Contains(currencyName));
+            }
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = x.ToList();
+            return dictionaryCurrencyTypeModels.Count;
+
+        }
+
+
+
+
+        public List<DictionaryCurrencyType>  GetDictionaryCurrencyTypeModels(int Page, int PageSize, string currencyName)
+        {
+            
+            int skip = (Page - 1) * PageSize;
+            var x = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+
+            {
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode = a.DictionaryCurrencyCode,
+
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+            
+
+            });
+            if(!string.IsNullOrEmpty(currencyName))
+            {
+                x = x.Where(p => p.DictionaryCurrencyName.Contains(currencyName));
+            }
+            List<DictionaryCurrencyType> dictionaryCurrencyTypeModels = x.Skip(skip).Take(PageSize).ToList();
+                    
             return dictionaryCurrencyTypeModels;
 
         }
 
 
-        //public List<DictionaryCurrency> GetDictionaryCurrencies(int Page, int PageSize)
-        //{
-        //    List<DictionaryCurrency> dictionaryCurrencies = _dbContext.Currrency.Select(a => new DictionaryCurrency()
-        //    {
-        //        CurrencyId = a.CurrencyId,
-        //        TypeId = a.CurrencyType.DictionaryCurrencyTypeId,
-        //        Value = a.Value,
-        //        Date = a.CurrencyDate
-        //    }).ToList();
-
-        //    return dictionaryCurrencies;
-
-        //}
 
 
-        //public List<DictionaryCurrencyTypeModel> GetDictionaryCurrencyTypeModels()
-        //{
-        //    var result = HttpContext.Current.Session["Currency"] as IList<DictionaryCurrencyTypeModel>;
 
 
-        //}
 
+
+        public List<DictionaryCurrencyTypeModel> GetAllCurrencyList()
+        {
+            List<DictionaryCurrencyTypeModel> dictionaryCountryModels = _dbContext.Currrency.Select(a => new DictionaryCurrencyTypeModel()
+            {
+                DicurrencyId = a.CurrencyType.DictionaryCurrencyTypeId,
+
+                Name = a.CurrencyType.DictionaryCurrencyName,
+                Code = a.CurrencyType.DictionaryCurrencyCode,
+
+                Id = a.CurrencyType.DictionaryCurrencyTypeId,
+             
+            }).ToList();
+
+            return dictionaryCountryModels;
+        }
+
+
+
+
+
+        
+        public void DeleteCurrency(int id)
+        {
+
+
+
+            DictionaryCurrencyType getDictionaryId = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+            {
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+                
+
+            }).Where(a => a.DictionaryCurrencyTypeId.Equals(id)).FirstOrDefault();
+
+           
+
+            DictionaryCurrencyType dictionary = new DictionaryCurrencyType() { DictionaryCurrencyTypeId = getDictionaryId.DictionaryCurrencyTypeId };
+
+            _dbContext.DictionaryCurrencyType.Remove(dictionary);
+
+            _dbContext.SaveChanges();
+
+        }
+
+
+
+
+
+        public DictionaryCurrencyType CurrencyEdit(int id)
+        {
+          
+            
+            DictionaryCurrencyType currency1 = _dbContext.DictionaryCurrencyType.Select(a => new DictionaryCurrencyType()
+            {
+               
+                DictionaryCurrencyTypeId = a.DictionaryCurrencyTypeId,
+                DictionaryCurrencyName = a.DictionaryCurrencyName,
+                DictionaryCurrencyCode=a.DictionaryCurrencyCode
+               
+
+
+            }).Where(a => a.DictionaryCurrencyTypeId == id).FirstOrDefault();
+
+            
+           
+            
+            return currency1;
+        }
+
+        
 
 
 
