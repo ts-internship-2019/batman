@@ -475,7 +475,4 @@ namespace iWasHere.Web.Controllers
         }
     }
 
-        }       
-        
-    }
-}
+}       
