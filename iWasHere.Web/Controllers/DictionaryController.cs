@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
-using iWasHere.Web.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
@@ -168,18 +164,27 @@ namespace iWasHere.Web.Controllers
             return Json(result);
         }
 
-        public ActionResult ServerFiltering_GetCountries(string text)
-        {
-            return Json(_dictionaryService.ServerFiltering_GetCountries(text));
-        }
         public ActionResult ServerFiltering_GetLandmarks(string text)
         {
             return Json(_dictionaryService.ServerFiltering_GetLandmarks(text));
         }
+        public ActionResult ServerFiltering_GetSeasons(string text)
+        {
+            return Json(_dictionaryService.ServerFiltering_GetSeasons(text));
+        }
 
+        public ActionResult ServerFiltering_GetCountries(string text)
+        {
+            return Json(_dictionaryService.ServerFiltering_GetCountries(text));
+        }
         public ActionResult FliterButton(string CountryCode, string CountryName)
         {
             return Content(CountryName);
+        }
+
+        public IActionResult Currency()
+        {
+            return View();
         }
 
 
@@ -198,6 +203,7 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+        
 
         public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
         {
@@ -209,7 +215,6 @@ namespace iWasHere.Web.Controllers
             DictionaryCountry dictionaryCountry = _dictionaryService.GetSelectedCountry(CountryId);
             return View(dictionaryCountry);
         }
-
 
         public ActionResult DictionarySeasonTypeData([DataSourceRequest]DataSourceRequest request, string SeasonName, string SeasonCode)//************
         {
@@ -267,7 +272,6 @@ namespace iWasHere.Web.Controllers
 
         [HttpPost]
         public ActionResult SaveCity(string cityName, int countyId, string cityCode)
-
         {
             DictionaryCity city = new DictionaryCity()
             {
@@ -352,7 +356,33 @@ namespace iWasHere.Web.Controllers
             else
                 return View();
         }
+           
+        public ActionResult CurrencyData([DataSourceRequest]DataSourceRequest request, string currencyName)
+        {
+            List<DictionaryCurrencyType> data = _dictionaryService.GetDictionaryCurrencyTypeModels(request.Page, request.PageSize, currencyName );
+             var result = new DataSourceResult()
+            {
+                Data = data, 
+                 Total = _dictionaryService.GetDictionaryCurrencyTypeModels1(request.Page, request.PageSize, currencyName)
+             };
+           
+             return Json(result);
+        }
 
+        public ActionResult DeleteCurrency([DataSourceRequest] DataSourceRequest request, int id)
+        {
+            int status = 0;
+            if (id != 0)
+            {
+               status = _dictionaryService.DeleteCurrency(id);
+            }
+            if (status != 500)
+            {
+                return Json(ModelState.ToDataSourceResult());
+            }
+            else return View();
+            
+        }
         public ActionResult EditCounty([DataSourceRequest] DataSourceRequest request, int countyId, string countyName,
             string countyCode, int countryId)
         {
@@ -363,24 +393,55 @@ namespace iWasHere.Web.Controllers
                 return View();
         }
 
-
-
-
-        // ******************   23.09 - Modificari Dragos - Start  ******************************
         public IActionResult UpdateCountry(DictionaryCountry dictionaryCountry)
         {
             string status = "";
             _dictionaryService.UpdateCountry(dictionaryCountry);
             return Json(status);
         }
-
+        
         public ActionResult InsertCountry(DictionaryCountry dictionaryCountry)
         {
             string status = "";
             _dictionaryService.InsertCountry(dictionaryCountry);
             return Json(status);
         }
+        public IActionResult CurrencyAdd(int id)
+        {
+            if (id != 0)
+            {
+                DictionaryCurrencyType dict = _dictionaryService.CurrencyEdit(id);
+                return View(dict);
+            }
+            else
+            {
+                DictionaryCurrencyType dict = new DictionaryCurrencyType();
+                return View(dict);
+            }
+        }
+        public ActionResult EditCurrency(int typeId, string currencyName, string currencyCode)
+        {
+            DictionaryCurrencyType dictionary = new DictionaryCurrencyType();
 
-        // ******************   23.09 - Modificari Dragos - End  ******************************
+            dictionary.DictionaryCurrencyTypeId = typeId;
+            dictionary.DictionaryCurrencyName = currencyName;
+            dictionary.DictionaryCurrencyCode = currencyCode;
+
+            DatabaseContext database = new DatabaseContext();
+
+            database.DictionaryCurrencyType.Update(dictionary);
+
+            return Json(database.SaveChanges());
+        }
+        public ActionResult CurrencySave(string currencyName, string currencyCode)
+        {
+            DatabaseContext database = new DatabaseContext();
+            database.DictionaryCurrencyType.Add(new DictionaryCurrencyType
+            {
+                DictionaryCurrencyName = currencyName,
+                DictionaryCurrencyCode = currencyCode
+            });
+            return Json(database.SaveChanges());
+        }
     }
 }

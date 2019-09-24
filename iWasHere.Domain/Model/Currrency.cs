@@ -6,7 +6,7 @@ namespace iWasHere.Domain.Model
     public partial class Currrency
     {
         public int CurrencyId { get; set; }
-        public int? CurrencyTypeId { get; set; }
+        public int CurrencyTypeId { get; set; }
         public double Value { get; set; }
         public DateTime CurrencyDate { get; set; }
 
