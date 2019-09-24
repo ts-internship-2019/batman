@@ -10,13 +10,77 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Country</title>
-    
+
     @if (Model == null)
     {
         <script>
+
             function SaveCountry() {
-                var code = $("#DictionaryCountryCode").val();
-                var name = $("#DictionaryCountryName").val();
+
+                var CountryCode = $("#DictionaryCountryCode").val();
+                var CountryName = $("#DictionaryCountryName").val();
+                var CountryId = $("#DictionaryCountryId").val();
+                var formData = {
+                    DictionaryCountryId: parseInt(CountryId),
+                    DictionaryCountryCode: CountryCode,
+                    DictionaryCountryName:CountryName
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("InsertCountry", "Dictionary"))",
+                    data: formData,
+
+
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionaryCountry", "Dictionary")';
+               }
+            function SaveAndNew() {
+
+                var CountryCode = $("#DictionaryCountryCode").val();
+                var CountryName = $("#DictionaryCountryName").val();
+                var CountryId = $("#DictionaryCountryId").val();
+                var formData = {
+                    DictionaryCountryId: parseInt(CountryId),
+                    DictionaryCountryCode: CountryCode,
+                    DictionaryCountryName:CountryName
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateCountry", "Dictionary"))",
+                    data: formData,
+
+                    success: function (response) {
+                    }
+                });
+                window.location.href = "@Url.Action("Country", "Dictionary")";
+
+            }
+        </script>
+    }
+    else
+    {
+        <script>
+            function SaveCountry() {
+
+                var CountryCode = $("#DictionaryCountryCode").val();
+                var CountryName = $("#DictionaryCountryName").val();
+                var CountryId = $("#DictionaryCountryId").val();
+                var formData = {
+                    DictionaryCountryId: parseInt(CountryId),
+                    DictionaryCountryCode: CountryCode,
+                    DictionaryCountryName:CountryName
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("UpdateCountry", "Dictionary"))",
+                    data: formData,
+                    success: function (response) {
+                    }
+                });
+                window.location.href = '@Url.Action("DictionaryCountry", "Dictionary")';
             }
         </script>
     }
@@ -39,11 +103,14 @@
     <br />
     <td>@Html.TextBoxFor(model => model.DictionaryCountryName, new { @class = "form-control maintain-text", @id = "DictionaryCountryName" })</td>
     <br />
+    <td>@Html.TextBoxFor(model => model.DictionaryCountryId, new { @class = "form-control", @id = "DictionaryCountryId", style = "width:380px;display: none" })</td>
+
     @if (Model == null)
     {
-        <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" value="Save and new" class="btn btn-default">Save and New</button>
+        <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New</button>
     }
-    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="save" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry">Save</button>
+    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveCountry" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry()">Save</button>
+    <button type="submit" style=" border-style: solid !important; border-color: #ced4da!important;" id="cancel" runat="server" name="backButton" class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionaryCountry", "Dictionary")";'>Cancel</button>
 
 </body>
 </html>
