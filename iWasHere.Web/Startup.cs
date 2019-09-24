@@ -46,6 +46,7 @@ namespace iWasHere.Web
 
             services.AddKendo();
             services.AddScoped<DictionaryService>();
+            services.AddScoped<AtractionService>();
             services.AddScoped<PhotoService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
