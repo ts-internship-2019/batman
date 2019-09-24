@@ -474,8 +474,5 @@ namespace iWasHere.Web.Controllers
             return Json(database.SaveChanges());
         }
     }
-
-        }       
-        
-    }
-}
+ }       
+       

@@ -11,46 +11,49 @@
 <div class="attractionInfo">
     <div class="details">
 
-        <div>
-            <label for="getAttrName">Price</label>
+        <div class="form-group row">
+            <label for="getAttrName" class="col-sm-2 col-form-label">Price</label>
             @(Html.Kendo().TextBoxFor(model => model.Price)
-            .HtmlAttributes(new { id = "getAttrName", @readonly = true })
+            .HtmlAttributes(new { id = "getAttrName", @readonly = true})
             )
         </div>
        
-        <div>
-            <label for="getAttrCity">City</label>
+        <div class="form-group row">
+            <label for="getAttrCity" class="col-sm-2 col-form-label">City</label>
             @(Html.Kendo().TextBoxFor(model => model.CityName)
            .HtmlAttributes(new { id = "getAttrCity", @readonly = true })
             )
         </div>
        
-        <div>
-            <label for="getAttrType">Attraction Type</label>
+        <div class="form-group row">
+            <label for="getAttrType" class="col-sm-2 col-form-label">Type</label>
             @(Html.Kendo().TextBoxFor(model => model.AttractionTypeName)
       .HtmlAttributes(new { id = "getAttrType", @readonly = true })
             )
         </div>
       
-        <div>
+        <div class="attrDetail">
             <label for="getAttrSeason">Season</label>
             @(Html.Kendo().TextBoxFor(model => model.SeasonName)
           .HtmlAttributes(new { id = "getAttrSeason", @readonly = true })
             )
         </div>
        
-        <div>
+        <div class="attrDetail">
             <label for="getAttrLandmark">Landmark</label>
             @(Html.Kendo().TextBoxFor(model => model.LandmarkTypeName)
            .HtmlAttributes(new { id = "getAttrLandmark", @readonly = true })
             )
         </div>
       
-        <div>
+        <div class="attrDetail">
             <label for="getAttrObs">Observations</label>
-            @(Html.Kendo().TextBoxFor(model => model.Observations)
-          .HtmlAttributes(new { id = "getAttrObs", @readonly = true })
-            )
+            @*@(Html.Kendo().TextBoxFor(model => model.Observations)
+        .HtmlAttributes(new { id = "getAttrObs", @readonly = true })
+          )*@
+
+            @Html.TextAreaFor(model => model.Observations, new { @class = "form-control" })
+
         </div>
 
        
@@ -77,7 +80,7 @@
     }
 
     .details {
-         
+         display: block;
     }
 
     .attrDetail {
