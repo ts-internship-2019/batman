@@ -1,0 +1,201 @@
+﻿
+    <div class="container" style="width:40%;margin-top:2%">
+
+        @model iWasHere.Domain.Model.DictionaryCurrencyType;
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+        <body onload="LoadEdit()">
+
+
+
+            @(Html.Kendo().TextBoxFor(model => model.DictionaryCurrencyTypeId)
+                                .HtmlAttributes(new { @id = "typeId", style = "margin:10px;display: none" })
+                                
+
+            )
+
+            @(Html.Kendo().TextBoxFor(model => model.DictionaryCurrencyName)
+                    .HtmlAttributes(new { @id = "currencyName", style = "margin:10px" })
+            )
+
+            @(Html.Kendo().TextBoxFor(model => model.DictionaryCurrencyCode)
+                    .HtmlAttributes(new { @id = "currencyCode", style = "margin:10px" })
+
+            )
+
+
+
+
+
+
+            <script type="text/javascript">
+            function additionalData() {
+                return {
+                    cDate: $("#cdata").val()
+                }
+            }
+            function LoadEdit() {
+                var url_string = window.location.href;
+                var url = new URL(url_string);
+
+                var id = url.searchParams.get("id");
+                if (id != 0) {
+
+                    document.getElementById("buttonId").innerText = "Update";
+                }
+            }
+            let stat = false;
+            function Add() {
+                var url_string = window.location.href;
+        var url = new URL(url_string);
+        var id = url.searchParams.get("id");
+        if (id != 0) {
+            if (document.getElementById("currencyName").value != ""|| document.getElementById("currencyCode").value != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditCurrency", "Dictionary")',
+                    data: {
+                        currencyName: document.getElementById("currencyName").value,
+                        currencyCode: document.getElementById("currencyCode").value,
+                        typeId: document.getElementById("typeId").value
+
+
+                    },
+                    success: function (response) {
+                        window.location.href = '@Url.Action("Currency", "Dictionary")';
+                        alert("Editarea s-a efectuat cu succes!")
+                    },
+                    error: function (response) {
+                        alert("Moneda existenta  ");
+                    }
+                })
+            }
+            else { alert("Nu au fost introduse numele monedei sau codul") }
+        }
+        else {
+            if (document.getElementById("currencyName").value != "" || document.getElementById("currencyCode").value != "") {
+                $.ajax({
+                    type: 'PUT',
+                    url: '@Url.Action("CurrencySave", "Dictionary")',
+                    data: {
+                        currencyName: document.getElementById("currencyName").value,
+                        currencyCode: document.getElementById("currencyCode").value,
+
+                    },
+                    success: function (response) {
+                        if (stat) {
+                            document.getElementById("currencyName").value = "";
+                            document.getElementById("currencyCode").value = "";
+                         alert("Adaugarea s-a efectuat cu succes!")
+                           stat = false;
+                        }
+                        else {
+                            window.location.href = '@Url.Action("Currency", "Dictionary")';
+                        }
+                    },
+                    error: function (response) {
+                        alert("Moneda existenta ");
+                    }
+                })
+            }
+            else { alert("Nu au fost introduse numele monedei sau codul");}
+        }
+
+
+            }
+
+
+            function AddAndNew() {
+          stat = true;
+          Add();
+    }
+
+
+            function Cancel() {
+        window.location.href = '@Url.Action("Currency", "Dictionary")';
+    }
+
+
+            </script>
+
+            <p>
+                <input type="submit" value="Add" id="buttonId" class="btn btn-success" onclick="Add()" />
+
+                <input type="submit" value="Add and New" id="buttonIdd" class="btn btn-primary" onclick="AddAndNew()" />
+
+                <input type="button" value="Cancel" id="buttonIddd" class="btn btn-warning" onclick="Cancel()" />
+            </p>
+            
+
+        </body>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div>
+        <script type="text/javascript">
+        $(document).ready(function () {
+        $("#CurrencySave").click(function () {
+        var url = "@Url.Action("SaveCurrency", "Dictionary")";
+        debugger;
+        var CurrencyDet = {
+            Name: $.trim($("#CurrencyName").val()),
+            Code: $.trim($("#CurrencyCode").val()),
+            Value: $.trim($("#CurrencyValue").val()),
+            Date: $.trim($("#CurrencyDate").val())
+
+        };
+        $.post(url, { TypeData: CurrencyDet }, function (data) {
+            debugger;
+            if (data != 0 && data > 0)
+            {
+                var url = "@Url.Action("Currency", "Dictionary")";
+                var Curr = {
+                Name: $.trim($("#CurrencyName").val()),
+                Code: $.trim($("#CurrencyCode").val())
+
+                DictionaryCurrencyTypeId:data
+            };
+        $.post(url, { CurrencyData: Curr }, function (response) {
+            debugger;
+            if (response == true)
+            {
+                var indata = {
+                    Value: $.trim($("#CurrencyValue").val()),
+                    Date: $.trim($("#CurrencyDate").val())
+                    CurrencyTypeId:response
+            };
+        $.post("@Url.Action("Currency", "Dictionary")", { SaveData: indata }, function (result) {
+            debugger;
+            if (result == true) {
+                alert("Form data saved successfully ");
+                resetForm();
+             }
+        });
+        }
+        });
+        }
+        });
+        });
+        });
+        function resetForm() {
+        $("#CurrencyName").val("");
+        $("#CurrencyCode").val("");
+        $("#CurrencyValue").val("");
+        $("#CurrencyDate").val("");
+
+        }
+        </script>
+    </div>*@
