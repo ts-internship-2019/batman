@@ -189,7 +189,7 @@ namespace iWasHere.Domain.Model
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attractions_SeasonId");
 
-                entity.Property(e => e.Observations).IsUnicode(false);
+                entity.Property(e => e.Observations);
             });
 
             modelBuilder.Entity<Comment>(entity =>
