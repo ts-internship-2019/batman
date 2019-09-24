@@ -39,13 +39,13 @@
         window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + null;
     }
 
-    function editCountry() {
+    @*function editCountry() {
 
         var gview = $("#grid").data("kendoGrid");
         var selectedItem = gview.dataItem(gview.select());
         var id = selectedItem.id;
         window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + id;
-    }
+    }*@
 
    function deleteFilter() {
 
@@ -54,6 +54,13 @@
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").dataSource.page(1);
     }
+
+    function editCountry(e) {
+
+        grid = $("#grid").data("kendoGrid");
+        var row = e.currentTarget.closest("tr").cells[0].outerText;
+        window.location.href = "@Url.Action("Country", "Dictionary")?CountryId=" + row;
+        }
 
         function deleteCountry(e) {
 
@@ -174,21 +181,22 @@
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;">
     Clear Filters
 </button>
-
+<br />
+<br />
 <br />
 
 @(Html.Kendo().Grid<iWasHere.Domain.Model.DictionaryCountry>()
     .Name("grid")
     .Columns(columns =>
     {
-        columns.Bound(c => c.DictionaryCountryId).Visible(false);
+        columns.Bound(c => c.DictionaryCountryId).Width(70).Hidden(true);
         columns.Bound(c => c.DictionaryCountryCode).Width(70);
         columns.Bound(c => c.DictionaryCountryName).Width(110);
         columns.Command(command => { command.Custom("Edit").Click("editCountry"); command.Destroy(); }).Width(70);
     })
     .HtmlAttributes(new { style = "height: 550px;" })
     .Scrollable()
-    .Groupable()
+    .Groupable(false)
     .Selectable()
     .Sortable()
     .Pageable(pageable => pageable
