@@ -185,6 +185,8 @@ namespace iWasHere.Domain.Model
                     .HasForeignKey(d => d.SeasonId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attractions_SeasonId");
+
+                entity.Property(e => e.Observations).IsUnicode(false);
             });
 
             modelBuilder.Entity<Comment>(entity =>
