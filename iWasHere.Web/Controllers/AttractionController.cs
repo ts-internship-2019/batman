@@ -26,12 +26,12 @@ namespace iWasHere.Web.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly AttractionService _attractionService;
-        
-        public AttractionController( AttractionService attractionService, IHostingEnvironment hostingEnvironment)
+
+        public AttractionController(AttractionService attractionService, IHostingEnvironment hostingEnvironment)
         {
             _attractionService = attractionService;
             _hostingEnvironment = hostingEnvironment;
-            
+
         }
 
         public ActionResult Attraction(int attrId)
@@ -59,7 +59,7 @@ namespace iWasHere.Web.Controllers
             Attraction = _attractionService.GetAttractionToExport(AttractionId);
             var path = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction.docx");
             string resultPath = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction_Saved.docx");
-           
+
 
             byte[] byteArray = System.IO.File.ReadAllBytes(path);
             using (MemoryStream stream = new MemoryStream())
@@ -167,7 +167,7 @@ namespace iWasHere.Web.Controllers
             //        EditId = "50D07946"
             //    });
 
-            
+
 
             //var savedDoc = wordDocumentResult.SaveAs(resultPath) as WordprocessingDocument;
             //savedDoc.Close();
@@ -176,20 +176,20 @@ namespace iWasHere.Web.Controllers
             //wordDocumentResult.Close();
             ////File.Delete(resultPath);
             //wordDocument.Close();
-            
-           
+
+
             //var savedDocSecond = wordDocumentResult.SaveAs(resultPath) as WordprocessingDocument;
             //savedDocSecond.Close();
             //wordDocument.Close();
-            
+
             byte[] bytes = System.IO.File.ReadAllBytes(resultPath);
             FileContentResult file = File(bytes, MediaTypeNames.Application.Octet, FileName);
-            
+
             return file;
         }
         public ActionResult AddOrEditAttraction(int attrId)
         {
-           
+
 
             if (attrId != 0)
             {
@@ -201,10 +201,10 @@ namespace iWasHere.Web.Controllers
             return View(new AttractionModel());
         }
         [HttpPost]
-        public IActionResult SaveAttraction(AttractionModel attraction,List<IFormFile> files)
+        public IActionResult SaveAttraction(AttractionModel attraction, List<IFormFile> files)
         {
             _attractionService.SaveAttraction(attraction, out string errorMessage, out int id);
-            SubmitPhoto( id, files);
+            SubmitPhoto(id, files);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 TempData["message"] = errorMessage;
@@ -224,7 +224,7 @@ namespace iWasHere.Web.Controllers
                 var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
                 var filePath = Path.GetFullPath(fileContent.FileName.ToString().Trim('"'));
 
-                status = _attractionService.AddPhoto(attractionId, fileName, filePath);
+                status = _attractionService.AddPhoto(attractionId, fileName);
                 fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length, filePath));
             }
 
@@ -242,12 +242,7 @@ namespace iWasHere.Web.Controllers
             }
             return Json(status);
         }
-        }      
-
-        //public ActionResult AttractionsCountry(int countryId)
-        //{
-        //    return View();
-        //}
+       
         public ActionResult AttractionsCountry(int countryId)
         {
             List<AttractionListModel> attrList = new List<AttractionListModel>();
@@ -257,3 +252,4 @@ namespace iWasHere.Web.Controllers
         }
     }
 }
+

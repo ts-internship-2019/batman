@@ -262,14 +262,13 @@ namespace iWasHere.Domain.Service
             List<PhotoModel> photos = x.ToList();
             return photos;
         }
-        public int AddPhoto(int attractionId, string photoName, string photoPath)
+        public int AddPhoto(int attractionId, string photoName)
         {
             int status = 0;
             Photo image = new Photo()
             {
                 AttractionId = attractionId,
-                PhotoName = photoName,
-                Path = photoPath
+                PhotoName = photoName               
             };
             try
             {
@@ -289,7 +288,7 @@ namespace iWasHere.Domain.Service
             {
                 AttractionId = a.AttractionId,
                 AttractionTypeName = a.AttractionType.DictionaryAttractionName,
-                CurrencyName = a.Currency.DictionaryCurrencyCode,
+                CurrencyName = a.Currency.CurrencyType.DictionaryCurrencyName,
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName,
                 MainPhotoName = a.Photo.Any() ? a.Photo.FirstOrDefault().PhotoName : null,
                 Name = a.AttractionName,
