@@ -30,6 +30,8 @@ namespace iWasHere.Domain.DTOs
         public DictionaryLandmarkType LandmarkType { get; set; }
         public DictionarySeasonType Season { get; set; }
         public List<Comment> Comment { get; set; }
-        public ICollection<Photo> Photo { get; set; }
+
+        public List<string> PhotoName { get; set; }
+        public List<Photo> Photo { get; set; }
     }
 }

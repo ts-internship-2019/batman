@@ -160,7 +160,7 @@ namespace iWasHere.Domain.Service
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
                 SeasonName = a.Season.DictionarySeasonName,
                 Comment = a.Comment,
-                //Photo = a.Photo
+                Photo = a.Photo
             })
             .Where(a => a.AttractionId == attractionId)
             .FirstOrDefault();
