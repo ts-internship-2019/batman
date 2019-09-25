@@ -7,8 +7,7 @@ namespace iWasHere.Domain.Model
     {
         public int? AttractionId { get; set; }
         public string PhotoName { get; set; }
-        public int PhotoId { get; set; }
-        public string Path { get; set; }
+        public int PhotoId { get; set; }       
 
         public virtual Attractions Attraction { get; set; }
     }

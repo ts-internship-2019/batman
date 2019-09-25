@@ -8,14 +8,14 @@
 <h1>County</h1>
 
 <p>
-    <input type="button" value="Add county" id="goToCounty" onclick="goToAddCounty()" />
+    <input type="button" value="Add county" id="goToCounty" class="btn btn-dark" onclick="goToAddCounty()" />
 </p>
 
 <div>
     <div style="margin:5px 0">
-        <button id="filterCounties"> Filter </button>
+        <button id="filterCounties" class="btn btn-dark"> Filter </button>
 
-        <button id="deleteFilterCounties"> Delete filters </button>
+        <button id="deleteFilterCounties" class="btn btn-dark"> Delete filters </button>
     </div>
 
     <div style="margin:5px 0">
@@ -53,11 +53,11 @@
                     columns.Bound(c => c.CountyName);
                     columns.Bound(c => c.CountyCode);
                     columns.Bound(c => c.CountryId);
-                    columns.Bound(c => c.CountryName);                   
-                    columns.Template(" <a href='/dictionary/County?countyToEditId=#=CountyId#'>Edit</a>");
-                    columns.Template(" <button onClick='deleteCounty(#=CountyId#)'value = 'delete'>Delete</button>");
+                    columns.Bound(c => c.CountryName);
+                    columns.Template(" <a class='btn btn-dark' href='/dictionary/County?countyToEditId=#=CountyId#'>Edit</a>");
+                    columns.Template(" <button class='btn btn-dark' onClick='deleteCounty(#=CountyId#)'value = 'delete'>Delete</button>");
                 })
-                .HtmlAttributes(new { style = "height: 550px;" })
+                .HtmlAttributes(new { style = "height: 550px; " })
                 .Scrollable()
                 .Selectable()
                 .Groupable()
@@ -122,11 +122,11 @@
 
     function redirectCounty() {
         document.location = 'County';
-    }   
+    }
 
     function goToAddCounty() {
         window.location = '/dictionary/County?countyToEditId=' + 0;
-    }      
+    }
 
     function deleteCounty(e) {
 
@@ -141,16 +141,28 @@
                 .done(function (r) {
                      $("#grid").data("kendoGrid").dataSource.read();
                      $("#grid").data("kendoGrid").dataSource.page(1);
-                    
+
                 })
                 .fail(function (r) {
-                    alert("There are other connections to County");                  
+                    alert("There are other connections to County");
                 });
         } else {
             // cancel button is clicked
         }
     }
 </script>
+
+<style>
+    #grid .k-grouping-header {
+        display: none !important;
+    }
+
+    #grid .k-dropdown-wrap .k-state-default .k-state-focused .k-state-active
+    .k-state-border-down .k-state-hover{
+        color: black;
+    }
+ 
+</style>
 
 
 

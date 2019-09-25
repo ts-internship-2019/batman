@@ -5,13 +5,13 @@ namespace iWasHere.Domain.Model
 {
     public partial class Attractions
     {
-        public Attractions()
-        {
-            Comment = new HashSet<Comment>();
-            Photo = new HashSet<Photo>();
-        }
+        //public Attractions()
+        //{
+        //    Comment = new HashSet<Comment>();
+        //    Photo = new HashSet<Photo>();
+        //}
 
-        public string Observations { get; set; }
+       
         public int CurrencyId { get; set; }
         public int? CityId { get; set; }
         public int AttractionId { get; set; }
@@ -19,16 +19,16 @@ namespace iWasHere.Domain.Model
         public int? LandmarkTypeId { get; set; }
         public int AttractionTypeId { get; set; }
         public int SeasonId { get; set; }
-        public double? Longitude { get; set; }
-        public double? Latitude { get; set; }
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
         public string AttractionName { get; set; }
-
+        public string Observations { get; set; }
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
-        public virtual DictionaryCurrencyType Currency { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual DictionaryLandmarkType LandmarkType { get; set; }
         public virtual DictionarySeasonType Season { get; set; }
-        public virtual ICollection<Comment> Comment { get; set; }
-        public virtual ICollection<Photo> Photo { get; set; }
+        public virtual List<Comment> Comment { get; set; }
+        public virtual List<Photo> Photo { get; set; }
     }
 }

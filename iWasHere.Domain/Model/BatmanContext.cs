@@ -24,7 +24,7 @@ namespace iWasHere.Domain.Model
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Attractions> Attractions { get; set; }
         public virtual DbSet<Comment> Comment { get; set; }
-        public virtual DbSet<Currrency> Currrency { get; set; }
+        public virtual DbSet<Currency> Currency { get; set; }
         public virtual DbSet<DictionaryAttractionType> DictionaryAttractionType { get; set; }
         public virtual DbSet<DictionaryCity> DictionaryCity { get; set; }
         public virtual DbSet<DictionaryCountry> DictionaryCountry { get; set; }
@@ -154,7 +154,10 @@ namespace iWasHere.Domain.Model
                 entity.HasKey(e => e.AttractionId)
                     .HasName("PK__Attracti__DAE24D5AFEB6832C");
 
-                entity.Property(e => e.AttractionName).IsUnicode(false);
+                
+
+                entity.Property(e => e.AttractionName)                
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
@@ -185,6 +188,8 @@ namespace iWasHere.Domain.Model
                     .HasForeignKey(d => d.SeasonId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attractions_SeasonId");
+
+                entity.Property(e => e.Observations);
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -214,7 +219,7 @@ namespace iWasHere.Domain.Model
                     .HasConstraintName("FK_Comments_UserId");
             });
 
-            modelBuilder.Entity<Currrency>(entity =>
+            modelBuilder.Entity<Currency>(entity =>
             {
                 entity.HasKey(e => e.CurrencyId)
                     .HasName("PK__Currrenc__14470AF0DB4AD544");
@@ -222,7 +227,7 @@ namespace iWasHere.Domain.Model
                 entity.Property(e => e.CurrencyDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CurrencyType)
-                    .WithMany(p => p.Currrency)
+                    .WithMany(p => p.Currency)
                     .HasForeignKey(d => d.CurrencyTypeId)
                     .HasConstraintName("FK_Currency_CurrencyTypeId");
             });
@@ -341,7 +346,7 @@ namespace iWasHere.Domain.Model
                     .HasName("PK__Dictiona__585CA0BEC2C2EAE8");
 
                 entity.Property(e => e.DictionarySeasonCode)
-                    .HasMaxLength(5)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DictionarySeasonName)
@@ -350,9 +355,7 @@ namespace iWasHere.Domain.Model
             });
 
             modelBuilder.Entity<Photo>(entity =>
-            {
-                entity.Property(e => e.Path).IsUnicode(false);
-
+            {                
                 entity.Property(e => e.PhotoName)
                     .HasMaxLength(20)
                     .IsUnicode(false);

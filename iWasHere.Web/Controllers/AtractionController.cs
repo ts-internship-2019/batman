@@ -13,13 +13,11 @@ namespace iWasHere.Web.Controllers
 {
     public class AtractionController : Controller
     {
-        private readonly AtractionService _atractionService;
-        private readonly DatabaseContext _dbContext;
+        private readonly AttractionService _attractionService;
 
-        public AtractionController(AtractionService atractionService, DatabaseContext databaseContext)
+        public AtractionController(AttractionService attractionService, DatabaseContext databaseContext)
         {
-            _atractionService = atractionService;
-            _dbContext = databaseContext;
+            _attractionService = attractionService;
         }
 
         public IActionResult Index()
@@ -35,23 +33,27 @@ namespace iWasHere.Web.Controllers
         }
         public ActionResult ServerFiltering_GetCountries(string text)
         {
-            return Json(_atractionService.ServerFiltering_GetCountries(text));
+            return Json(_attractionService.ServerFiltering_GetCountries(text));
         }
         public ActionResult ServerFiltering_GetCounties(int? countryId,string text)
         {
-            return Json(_atractionService.ServerFiltering_GetCounties(countryId, text));
+            return Json(_attractionService.ServerFiltering_GetCounties(countryId, text));
         }
         public ActionResult ServerFiltering_GetCities(int ? countyId ,string text)
         {
-            return Json(_atractionService.ServerFiltering_GetCities(countyId, text));
+            return Json(_attractionService.ServerFiltering_GetCities(countyId, text));
         }
         public ActionResult ServerFiltering_GetLandmarks(string text)
         {
-            return Json(_atractionService.ServerFiltering_GetLandmarks(text));
+            return Json(_attractionService.ServerFiltering_GetLandmarks(text));
         }
         public ActionResult ServerFiltering_GetSeasons(string text)
         {
-            return Json(_atractionService.ServerFiltering_GetSeasons(text));
+            return Json(_attractionService.ServerFiltering_GetSeasons(text));
+        }
+        public string ExportDocument(int AttractionId)
+        {
+            return "";
         }
     }
 }

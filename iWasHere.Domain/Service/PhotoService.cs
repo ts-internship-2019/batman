@@ -26,25 +26,15 @@ namespace iWasHere.Domain.Service
             return attractions;
         }
 
-        public int AddPhoto(int attractionId, string photoName, string photoPath)
+        public void SaveImagesDB(string path, int id)
         {
-            int status = 0;
-            Photo image = new Photo()
+            Photo photo = new Photo()
             {
-                AttractionId = attractionId,
-                PhotoName = photoName,
-                Path = photoPath
+                PhotoName = path,
+                AttractionId = id
             };
-            try
-            {
-                 _dbContext.Photo.Add(image);
-                status =_dbContext.SaveChanges();
-            }
-            catch(Exception e)
-            {
-                status = 500;
-            }
-            return status;
+            _dbContext.Photo.Add(photo);
+            _dbContext.SaveChanges();
         }
     }
 }
