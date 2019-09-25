@@ -59,7 +59,7 @@ namespace iWasHere.Web.Controllers
             Attraction = _attractionService.GetAttractionToExport(AttractionId);
             var path = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction.docx");
             string resultPath = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction_Saved.docx");
-           
+            string FirstPhoto = Attraction.Photo[0].PhotoName.ToString();
 
             byte[] byteArray = System.IO.File.ReadAllBytes(path);
             using (MemoryStream stream = new MemoryStream())
@@ -71,6 +71,48 @@ namespace iWasHere.Web.Controllers
                     Body body = wordDoc.MainDocumentPart.Document.Body;
                     var paragraphs = body.Elements<Paragraph>();
 
+                    int? MaxRating = 0;
+                    int? MinRating = 10;
+                    int? MaxRating2 = 0;
+                    int? MinRating2 = 10;
+                    string CommentMax1 = "";
+                    string CommentMax2 = "";
+                    string CommentMin1 = "";
+                    string CommentMin2 = "";
+                    int j1 = -1; //pozitia min 1
+                    int j2 = -1; //pozitia max 1
+                    if (Attraction.Comment.Count > 0)
+                    {
+                        for (int i = 0; i < Attraction.Comment.Count; i++)
+                        {
+                            if (Attraction.Comment[i].Rating <= MinRating)
+                            {
+                                MinRating = Attraction.Comment[i].Rating;
+                                CommentMin1 = Attraction.Comment[i].CommentText;
+                                j1 = i;
+                            }
+                            if (Attraction.Comment[i].Rating >= MaxRating)
+                            {
+                                MaxRating = Attraction.Comment[i].Rating;
+                                CommentMax1 = Attraction.Comment[i].CommentText;
+                                j2 = i;
+                            }
+                        }
+                        for (int i = 0; i < Attraction.Comment.Count; i++)
+                        {
+                            if (Attraction.Comment[i].Rating == MinRating && i != j1)
+                            {
+                                MinRating2 = Attraction.Comment[i].Rating;
+                                CommentMin2 = Attraction.Comment[i].CommentText;
+                            }
+                            if (Attraction.Comment[i].Rating == MaxRating && i != j2)
+                            {
+                                MaxRating2 = Attraction.Comment[i].Rating;
+                                CommentMax2 = Attraction.Comment[i].CommentText;
+                            }
+                        }
+                    }
+
                     foreach (Paragraph paragraph in paragraphs)
                     {
                         foreach (Run run in paragraph.Elements<Run>())
@@ -81,21 +123,65 @@ namespace iWasHere.Web.Controllers
                                 {
                                     text.Text = Attraction.AttractionName;
                                 }
-                                if (text.Text == "City")
+                                if (text.Text == "XY")
                                 {
-                                    text.Text = Attraction.CityName;
-                                }
-                                if (text.Text == "County")
-                                {
-                                    text.Text = Attraction.CountyName;
+                                    int? rating = 0;
+                                    string stars = "";
+                                    if (Attraction.Comment.Count > 0)
+                                    {
+                                        for (int i = 0; i < Attraction.Comment.Count; i++)
+                                        {
+                                            rating = rating + Attraction.Comment[i].Rating;
+                                        }
+                                        rating = rating / Attraction.Comment.Count;
+                                        for (int i = 0; i < rating; i++)
+                                            stars = stars + "* ";
+                                        text.Text = stars;
+                                    }
+                                    else text.Text = "No Ratings";
                                 }
                                 if (text.Text == "Country")
                                 {
                                     text.Text = Attraction.CountryName;
                                 }
+                                if (text.Text == "County")
+                                {
+                                    text.Text = Attraction.CountyName;
+                                }
+                                if (text.Text == " City")
+                                {
+                                    text.Text = Attraction.CityName;
+                                }
+
+                                
+
+                                if (text.Text == "Pro1")
+                                {
+                                    text.Text = CommentMax1;
+                                }
+                                if (text.Text == "Pro2")
+                                {
+                                    text.Text = CommentMax2;
+                                }
+                                if (text.Text == "Rau")
+                                {
+                                    text.Text = CommentMin1;
+                                }
+                                if (text.Text == "zyx")
+                                {
+                                    text.Text = CommentMin2;
+                                }
                             }
                         }
                     }
+                    ImagePart imagePart = wordDoc.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
+
+                    using (FileStream streamPhoto = new FileStream(_hostingEnvironment.WebRootPath + "/images/" + FirstPhoto + ".jpg", FileMode.Open))
+                    {
+                        imagePart.FeedData(streamPhoto);
+                    }
+
+                    AddImageToBody(wordDoc, wordDoc.MainDocumentPart.GetIdOfPart(imagePart));
                 }
                 // Save the file with the new name
                 System.IO.File.WriteAllBytes(resultPath, stream.ToArray());
@@ -103,84 +189,6 @@ namespace iWasHere.Web.Controllers
 
             string FileName = "Attraction_" + Attraction.AttractionId + ".docx";
 
-
-            //   var element =
-            //new Drawing(
-            //    new DW.Inline(
-            //        new DW.Extent() { Cx = 990000L, Cy = 792000L },
-            //        new DW.EffectExtent()
-            //        {
-            //            LeftEdge = 0L,
-            //            TopEdge = 0L,
-            //            RightEdge = 0L,
-            //            BottomEdge = 0L
-            //        },
-            //        new DW.DocProperties()
-            //        {
-            //            Id = (UInt32Value)1U,
-            //            Name = "Picture 1"
-            //        },
-            //        new DW.NonVisualGraphicFrameDrawingProperties(
-            //            new A.GraphicFrameLocks() { NoChangeAspect = true }),
-            //        new A.Graphic(
-            //            new A.GraphicData(
-            //                new PIC.Picture(
-            //                    new PIC.NonVisualPictureProperties(
-            //                        new PIC.NonVisualDrawingProperties()
-            //                        {
-            //                            Id = (UInt32Value)0U,
-            //                            Name = "New Bitmap Image.jpg"
-            //                        },
-            //                        new PIC.NonVisualPictureDrawingProperties()),
-            //                    new PIC.BlipFill(
-            //                        new A.Blip(
-            //                            new A.BlipExtensionList(
-            //                                new A.BlipExtension()
-            //                                {
-            //                                    Uri =
-            //                                      "{28A0092B-C50C-407E-A947-70E740481C1C}"
-            //                                })
-            //                        )
-            //                        {
-
-            //                            CompressionState =
-            //                            A.BlipCompressionValues.Print
-            //                        },
-            //                        new A.Stretch(
-            //                            new A.FillRectangle())),
-            //                    new PIC.ShapeProperties(
-            //                        new A.Transform2D(
-            //                            new A.Offset() { X = 0L, Y = 0L },
-            //                            new A.Extents() { Cx = 990000L, Cy = 792000L }),
-            //                        new A.PresetGeometry(
-            //                            new A.AdjustValueList()
-            //                        )
-            //                        { Preset = A.ShapeTypeValues.Rectangle }))
-            //            )
-            //            { Uri = "http://www.monolitstudio.ro/wp-content/uploads/2015/02/logopoza-1.png" })
-            //    )
-            //    {
-            //        DistanceFromTop = (UInt32Value)0U,
-            //        DistanceFromBottom = (UInt32Value)0U,
-            //        DistanceFromLeft = (UInt32Value)0U,
-            //        DistanceFromRight = (UInt32Value)0U,
-            //        EditId = "50D07946"
-            //    });
-
-            
-
-            //var savedDoc = wordDocumentResult.SaveAs(resultPath) as WordprocessingDocument;
-            //savedDoc.Close();
-            //wordDocument.Close();
-            //wordDocument.Dispose();
-            //wordDocumentResult.Close();
-            ////File.Delete(resultPath);
-            //wordDocument.Close();
-            
-           
-            //var savedDocSecond = wordDocumentResult.SaveAs(resultPath) as WordprocessingDocument;
-            //savedDocSecond.Close();
-            //wordDocument.Close();
             
             byte[] bytes = System.IO.File.ReadAllBytes(resultPath);
             FileContentResult file = File(bytes, MediaTypeNames.Application.Octet, FileName);
@@ -241,6 +249,79 @@ namespace iWasHere.Web.Controllers
                 fileInfo = GetFileInfo(files, attractionId);
             }
             return Json(status);
+        }
+
+
+
+
+        private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId)
+        {
+            // Define the reference of the image.
+            var element =
+                 new Drawing(
+                     new DW.Inline(
+                         new DW.Extent() { Cx = 990000L, Cy = 792000L },
+                         new DW.EffectExtent()
+                         {
+                             LeftEdge = 0L,
+                             TopEdge = 0L,
+                             RightEdge = 0L,
+                             BottomEdge = 0L
+                         },
+                         new DW.DocProperties()
+                         {
+                             Id = (UInt32Value)1U,
+                             Name = "Picture 1"
+                         },
+                         new DW.NonVisualGraphicFrameDrawingProperties(
+                             new A.GraphicFrameLocks() { NoChangeAspect = true }),
+                         new A.Graphic(
+                             new A.GraphicData(
+                                 new PIC.Picture(
+                                     new PIC.NonVisualPictureProperties(
+                                         new PIC.NonVisualDrawingProperties()
+                                         {
+                                             Id = (UInt32Value)0U,
+                                             Name = "New Bitmap Image.jpg"
+                                         },
+                                         new PIC.NonVisualPictureDrawingProperties()),
+                                     new PIC.BlipFill(
+                                         new A.Blip(
+                                             new A.BlipExtensionList(
+                                                 new A.BlipExtension()
+                                                 {
+                                                     Uri =
+                                                        "{28A0092B-C50C-407E-A947-70E740481C1C}"
+                                                 })
+                                         )
+                                         {
+                                             Embed = relationshipId,
+                                             CompressionState =
+                                             A.BlipCompressionValues.Print
+                                         },
+                                         new A.Stretch(
+                                             new A.FillRectangle())),
+                                     new PIC.ShapeProperties(
+                                         new A.Transform2D(
+                                             new A.Offset() { X = 0L, Y = 0L },
+                                             new A.Extents() { Cx = 990000L, Cy = 792000L }),
+                                         new A.PresetGeometry(
+                                             new A.AdjustValueList()
+                                         )
+                                         { Preset = A.ShapeTypeValues.Rectangle }))
+                             )
+                             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                     )
+                     {
+                         DistanceFromTop = (UInt32Value)0U,
+                         DistanceFromBottom = (UInt32Value)0U,
+                         DistanceFromLeft = (UInt32Value)0U,
+                         DistanceFromRight = (UInt32Value)0U,
+                         EditId = "50D07946"
+                     });
+
+            // Append the reference to body, the element should be in a Run.
+            wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
         }
     }
 }
