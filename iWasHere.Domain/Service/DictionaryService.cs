@@ -38,7 +38,6 @@ namespace iWasHere.Domain.Service
            int? landmarkId, string landmarkName, string landmarkCode, out int landmarkCount)
         {
             int skip = (page - 1) * pageSize;
-
             var x = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkTypeModel()
             {
                 Id = a.DictionaryItemId,
@@ -104,7 +103,6 @@ namespace iWasHere.Domain.Service
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)
         {
             int skip = (page - 1) * pageSize;
-           
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,
@@ -494,7 +492,6 @@ namespace iWasHere.Domain.Service
             }
             List<DictionaryCountry> dictionaryCountry = _dbContext.DictionaryCountry
                 .Where(a => a.DictionaryCountryId == CountryId).Select(a => new DictionaryCountry()
-
                 {
                     DictionaryCountryId = a.DictionaryCountryId,
                     DictionaryCountryCode = a.DictionaryCountryCode,
