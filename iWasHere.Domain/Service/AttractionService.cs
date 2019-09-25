@@ -126,7 +126,7 @@ namespace iWasHere.Domain.Service
             {
                 AttractionId = a.AttractionId,
                 AttractionTypeName = a.AttractionType.DictionaryAttractionName,
-                CurrencyName = a.Currency.DictionaryCurrencyCode,
+                CurrencyName = a.Currency.CurrencyType.DictionaryCurrencyName,
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName,
                 MainPhotoName = a.Photo.Any() ? a.Photo.FirstOrDefault().PhotoName : null,
                 Name = a.AttractionName,

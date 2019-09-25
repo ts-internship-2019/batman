@@ -757,7 +757,7 @@ namespace iWasHere.Domain.Service
 
         public List<DictionaryCurrencyTypeModel> GetAllCurrencyList()
         {
-            List<DictionaryCurrencyTypeModel> dictionaryCountryModels = _dbContext.Currrency.Select(a => new DictionaryCurrencyTypeModel()
+            List<DictionaryCurrencyTypeModel> dictionaryCountryModels = _dbContext.Currency.Select(a => new DictionaryCurrencyTypeModel()
             {
                 DicurrencyId = a.CurrencyType.DictionaryCurrencyTypeId,
 
