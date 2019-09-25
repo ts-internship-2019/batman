@@ -7,7 +7,7 @@ namespace iWasHere.Domain.Model
     {
         public DictionaryCurrencyType()
         {
-            Attractions = new HashSet<Attractions>();
+            
             Currency = new HashSet<Currency>();
         }
 
@@ -16,7 +16,7 @@ namespace iWasHere.Domain.Model
         public int DictionaryCurrencyTypeId { get; set; }
         //public int CurrencyId { get; set; }
 
-        public virtual ICollection<Attractions> Attractions { get; set; }
+       
         public virtual ICollection<Currency> Currency { get; set; }
     }
 }

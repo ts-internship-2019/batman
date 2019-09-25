@@ -160,6 +160,7 @@ namespace iWasHere.Domain.Service
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
                 SeasonName = a.Season.DictionarySeasonName,
                 Comment = a.Comment,
+                
                 Photo = a.Photo,
                 CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
             })
@@ -202,6 +203,7 @@ namespace iWasHere.Domain.Service
         public void SaveAttraction(AttractionModel attractionModel,out string errorMessage, out int id)
         {
             Attractions attractions = new Attractions();
+            attractions.CurrencyId = 1;
             errorMessage = "";
             if (attractionModel.AttractionId != 0)
                 attractions.AttractionId = attractionModel.AttractionId;
@@ -222,10 +224,12 @@ namespace iWasHere.Domain.Service
                 attractions.CityId = attractionModel.CityId;
             if (attractionModel.CurrencyId != 0)
                 attractions.CurrencyId = attractionModel.CurrencyId;
+            
             if (attractionModel.LandmarkTypeId != 0)
                 attractions.LandmarkTypeId = attractionModel.LandmarkTypeId;
             if (attractionModel.SeasonId != 0)
                 attractions.SeasonId = attractionModel.SeasonId;
+          
 
             if (attractionModel.AttractionId == 0)
             {
@@ -235,7 +239,7 @@ namespace iWasHere.Domain.Service
             {
                 _dbContext.Attractions.Update(attractions);
             }
-
+            
             try
             {
                 _dbContext.SaveChanges();
@@ -308,6 +312,36 @@ namespace iWasHere.Domain.Service
             List<AttractionListModel> attractionsCountryModels = x.ToList();
 
             return attractionsCountryModels;
+        }
+        public void SaveImagesDB(string path, int id,out string errorMessage)
+        {
+            errorMessage = "";
+            Photo photo = new Photo()
+            {
+                PhotoName = path,
+                AttractionId = id
+            };
+            
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                errorMessage = "ceva merge prost la imagini";
+            }
+            _dbContext.SaveChanges();
+
+        }
+        public List<DictionaryAttractionType> GetAttractionTypesforCombo()
+        {
+            var attr = _dbContext.DictionaryAttractionType.Select(a => new DictionaryAttractionType()
+            {
+                DictionaryAttractionName = a.DictionaryAttractionName,
+                DictionaryAttractionTypeId = a.DictionaryAttractionTypeId
+
+            });
+            return attr.Take(50).ToList();
         }
     }
 }
