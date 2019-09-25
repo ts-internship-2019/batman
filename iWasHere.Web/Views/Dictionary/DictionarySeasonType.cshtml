@@ -26,15 +26,15 @@
 @* <label for="searchSeasonName">Nume sezon</label>*@
 @*<input type="text" name="searchSeasonyName" />*@
 <label>
-    Denumire Sezon
+    Season Name
 </label>
 <input id="SeasonName" type="text">
 <label>
-    Tip Cod
+    Season Code
 </label>
 <input id="SeasonCode" type="text">
-<button id=" FilterSeason" onclick="test()">Filtreaza</button>
-<button id=" DeleteFilterSeason" onclick="ClearFilter()">Sterge Filtre</button>
+<button id=" FilterSeason" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" onclick="test()">Filter</button>
+<button id=" DeleteFilterSeason" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" onclick="ClearFilter()">Delete Filter</button>
 
 <br>
 <br>
@@ -99,8 +99,8 @@
 
 @*buton adauga*@
 
-<div>
-    <button type="submit" class="btn  btn-danger" onclick="Add()">Create New </button>
+<div> 
+    <button type="submit" class="btn  btn-danger" style="background-color: #000000; color: white; border-color:#000000 ; box-shadow: 0px 0px 10px 0px  #ffff00;" ; onclick="Add()">Create New </button>
 
 </div>
 
@@ -124,7 +124,9 @@
            columns.Bound(s => s.DictionarySeasonId).Title("Season Id").Visible(false);
            columns.Bound(s => s.DictionarySeasonName).Title("Season Name").Width(150);
            columns.Bound(s => s.DictionarySeasonCode).Title("Season Code").Width(100);
-           columns.Command(command => { command.Custom("Editare").Click("EditareSezon"); command.Destroy(); }).Width(250);
+           columns.Command(command => {
+               command.Custom("Edit").Click("EditareSezon").HtmlAttributes(new { style = "background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" });
+               command.Destroy().HtmlAttributes(new { style = "background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" }); }).Width(250);
 
 
 
@@ -145,8 +147,8 @@
 
           .Model(model =>
           {
-             model.Id(s => s.DictionarySeasonId);
-             model.Field(s => s.DictionarySeasonId).Editable(false);
+              model.Id(s => s.DictionarySeasonId);
+              model.Field(s => s.DictionarySeasonId).Editable(false);
           }
           )
           .PageSize(8)
@@ -154,4 +156,8 @@
           .Destroy(update => update.Action("DeleteSeason", "Dictionary"))
        )
 )
+
+
+
+
 

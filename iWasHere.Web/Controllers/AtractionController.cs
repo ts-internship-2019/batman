@@ -51,5 +51,9 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_attractionService.ServerFiltering_GetSeasons(text));
         }
+        public string ExportDocument(int AttractionId)
+        {
+            return "";
+        }
     }
 }

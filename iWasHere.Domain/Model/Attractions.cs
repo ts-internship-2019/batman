@@ -5,11 +5,11 @@ namespace iWasHere.Domain.Model
 {
     public partial class Attractions
     {
-        public Attractions()
-        {
-            Comment = new HashSet<Comment>();
-            Photo = new HashSet<Photo>();
-        }
+        //public Attractions()
+        //{
+        //    Comment = new HashSet<Comment>();
+        //    Photo = new HashSet<Photo>();
+        //}
 
        
         public int CurrencyId { get; set; }
@@ -26,10 +26,10 @@ namespace iWasHere.Domain.Model
 
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
-        public virtual DictionaryCurrencyType Currency { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual DictionaryLandmarkType LandmarkType { get; set; }
         public virtual DictionarySeasonType Season { get; set; }
-        public virtual ICollection<Comment> Comment { get; set; }
-        public virtual ICollection<Photo> Photo { get; set; }
+        public virtual List<Comment> Comment { get; set; }
+        public virtual List<Photo> Photo { get; set; }
     }
 }

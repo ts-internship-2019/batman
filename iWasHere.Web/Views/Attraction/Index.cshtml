@@ -4,6 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+    <script>
+
+        function Download(AttractionId) {
+
+            window.location.href = "@Url.Action("ExportDocument", "Attraction")?AttractionId=" + AttractionId;
+        }
+
+    </script>
+
 <h1>Index</h1>
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.AttractionListModel>
     ()
@@ -53,8 +62,7 @@
         <div class='row'>
             <div class='col-md-12' style='text-align: end'>
                 <a href='/TouristicObjective/AddOrEdit?id=#=AttractionId#' class='btn btn-info'><i class='fa fa-edit'></i> Edit</a>
-                <a href='/TouristicObjective/TouristicObjectiveDetail?id=#=AttractionId#' class='btn btn-success'><i class='fa fa-eye'></i> View</a>
-                <a href='' class='btn btn-success'><i class='fa fa-eye'></i> View2</a>
+                <a href='/Attraction/Attraction?attrId=#=AttractionId#' class='btn btn-success'><i class='fa fa-eye'></i> View</a>               
                 <a href='' class='btn btn-primary'><i class='fa fa-download'></i> Export</a>
             </div>
         </div>
