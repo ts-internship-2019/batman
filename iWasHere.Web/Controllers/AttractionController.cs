@@ -26,12 +26,12 @@ namespace iWasHere.Web.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly AttractionService _attractionService;
-        
-        public AttractionController( AttractionService attractionService, IHostingEnvironment hostingEnvironment)
+
+        public AttractionController(AttractionService attractionService, IHostingEnvironment hostingEnvironment)
         {
             _attractionService = attractionService;
             _hostingEnvironment = hostingEnvironment;
-            
+
         }
 
         public ActionResult Attraction(int attrId)
@@ -192,12 +192,12 @@ namespace iWasHere.Web.Controllers
             
             byte[] bytes = System.IO.File.ReadAllBytes(resultPath);
             FileContentResult file = File(bytes, MediaTypeNames.Application.Octet, FileName);
-            
+
             return file;
         }
         public ActionResult AddOrEditAttraction(int attrId)
         {
-           
+
 
             if (attrId != 0)
             {
@@ -209,10 +209,10 @@ namespace iWasHere.Web.Controllers
             return View(new AttractionModel());
         }
         [HttpPost]
-        public IActionResult SaveAttraction(AttractionModel attraction,List<IFormFile> files)
+        public IActionResult SaveAttraction(AttractionModel attraction, List<IFormFile> files)
         {
             _attractionService.SaveAttraction(attraction, out string errorMessage, out int id);
-            SubmitPhoto( id, files);
+            SubmitPhoto(id, files);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 TempData["message"] = errorMessage;
@@ -232,7 +232,7 @@ namespace iWasHere.Web.Controllers
                 var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
                 var filePath = Path.GetFullPath(fileContent.FileName.ToString().Trim('"'));
 
-                status = _attractionService.AddPhoto(attractionId, fileName, filePath);
+                status = _attractionService.AddPhoto(attractionId, fileName);
                 fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length, filePath));
             }
 
@@ -323,5 +323,14 @@ namespace iWasHere.Web.Controllers
             // Append the reference to body, the element should be in a Run.
             wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
         }
+       
+        public ActionResult AttractionsCountry(int countryId)
+        {
+            List<AttractionListModel> attrList = new List<AttractionListModel>();
+            attrList = _attractionService.GetAttractionsFromCountry(countryId);
+            return View(attrList);
+
+        }
     }
 }
+

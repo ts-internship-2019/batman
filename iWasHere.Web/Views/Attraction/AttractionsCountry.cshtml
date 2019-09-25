@@ -1,0 +1,35 @@
+﻿@model IEnumerable<iWasHere.Domain.DTOs.AttractionListModel>
+@{
+    ViewData["Title"] = "AttractionsCountry";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Attractions Country</h1>
+
+
+
+@(Html.Kendo().Grid<iWasHere.Domain.DTOs.AttractionListModel>()
+                .Name("grid")
+                .Columns(columns =>
+                {
+                    columns.Bound(c => c.AttractionId).Hidden();
+                    columns.Bound(c => c.Name);
+                    columns.Bound(c => c.CityName);
+
+                })
+               .Sortable()
+               .Pageable(p => p.Numeric(false).PreviousNext(false))
+               .HtmlAttributes(new { style = "height: 550px" })
+               .Scrollable()
+//.DataSource(dataSource => dataSource
+//     .Ajax()
+//     .PageSize(5)
+//     .Read(r => r.Action("GetAttractions", "Attraction"))
+//)
+)
+
+<script>
+
+</script>
+
+

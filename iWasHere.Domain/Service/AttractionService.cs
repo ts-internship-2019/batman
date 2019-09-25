@@ -13,7 +13,6 @@ namespace iWasHere.Domain.Service
     {
         private readonly DatabaseContext _dbContext;
 
-
         public AttractionService(DatabaseContext databaseContext)
         {
             _dbContext = databaseContext;
@@ -155,12 +154,14 @@ namespace iWasHere.Domain.Service
                 Longitude = a.Longitude,
                 Observations = a.Observations,
                 CityName = a.City.DictionaryCityName,
+                CountryName = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName,                
                 AttractionTypeName = a.AttractionType.DictionaryAttractionName,               
                 //Currency = a.Currency,
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
                 SeasonName = a.Season.DictionarySeasonName,
                 Comment = a.Comment,
-                Photo = a.Photo
+                Photo = a.Photo,
+                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
             })
             .Where(a => a.AttractionId == attractionId)
             .FirstOrDefault();
@@ -261,13 +262,13 @@ namespace iWasHere.Domain.Service
             List<PhotoModel> photos = x.ToList();
             return photos;
         }
-        public int AddPhoto(int attractionId, string photoName, string photoPath)
+        public int AddPhoto(int attractionId, string photoName)
         {
             int status = 0;
             Photo image = new Photo()
             {
                 AttractionId = attractionId,
-                PhotoName = photoName
+                PhotoName = photoName               
             };
             try
             {
@@ -279,6 +280,34 @@ namespace iWasHere.Domain.Service
                 status = 500;
             }
             return status;
+        }
+
+        public List<AttractionListModel> GetAttractionsFromCountry(int? countryId)
+        {
+            var x = _dbContext.Attractions.Select(a => new AttractionListModel()
+            {
+                AttractionId = a.AttractionId,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
+                CurrencyName = a.Currency.CurrencyType.DictionaryCurrencyName,
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
+                MainPhotoName = a.Photo.Any() ? a.Photo.FirstOrDefault().PhotoName : null,
+                Name = a.AttractionName,
+                Observations = a.Observations,
+                Price = a.Price,
+                Rating = (a.Comment.Any() ? a.Comment.Average(b => b.Rating) : (double?)null),
+                CityName = a.City.DictionaryCityName,
+                SeasonName = a.Season.DictionarySeasonName,
+                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
+            });
+
+            if (countryId.HasValue)
+            {
+                x = x.Where(p => p.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == countryId);
+            }
+
+            List<AttractionListModel> attractionsCountryModels = x.ToList();
+
+            return attractionsCountryModels;
         }
     }
 }

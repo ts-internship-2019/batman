@@ -23,6 +23,7 @@ namespace iWasHere.Domain.Model
         public string Latitude { get; set; }
         public string AttractionName { get; set; }
         public string Observations { get; set; }
+
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
         public virtual Currency Currency { get; set; }

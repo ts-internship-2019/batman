@@ -12,6 +12,18 @@
 
         <div class="row">
             <div class="column">
+                @*<label for="getAttrCountry">Country</label>*@
+                <a href='/Attraction/AttractionsCountry?countryId=CountryId'>
+                    @Model.CountryName
+                </a>
+
+                @*@(Html.Kendo().TextBoxFor(model => model.CountryName)
+                    .HtmlAttributes(new { id = "getAttrCountry", @readonly = true })
+                     )*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
                 <label for="getAttrCity">City</label>
                 @(Html.Kendo().TextBoxFor(model => model.CityName)
                .HtmlAttributes(new { id = "getAttrCity", @readonly = true })
@@ -228,7 +240,7 @@
     <div class="media">
         <div class="media-body">
             <h5 class="mt-0">@t.CommentTitle</h5>
-            @if (@t.UserId != null)
+            @if (@t.UserId != "0")
             {
                 <div class="userName">
                     @t.Name
@@ -248,6 +260,7 @@
             </p>
         </div>
     </div>
+    <hr />
 }
 
 

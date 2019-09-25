@@ -6,7 +6,7 @@ namespace iWasHere.Domain.DTOs
 {
     public class DictionaryCurrency
     {
-        public int CurrencyId { get; set; }
+       // public int CurrencyId { get; set; }
 
         public int TypeId { get; set; }
 

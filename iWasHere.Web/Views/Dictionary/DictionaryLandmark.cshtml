@@ -4,8 +4,13 @@
     ViewData["Title"] = "Landmarks";
 }
 
-<h1>Landmarks</h1>
-<input type='button' class='k-button info' name='info' value='Adauga' onclick='window.location.href = "@Url.Action("Landmark", "Dictionary")";' />
+<center><h1>Landmarks</h1></center>
+
+<br />
+<br />
+
+
+@*<input type='button' class='k-button info' name='info' value='Adauga' onclick='window.location.href = "@Url.Action("Landmark", "Dictionary")";' />*@
 
 <script type="text/javascript">
     function test() {
@@ -50,9 +55,9 @@
         return object;
     }
     function deleteFilter() {
-    
 
-       
+
+
 
         $("#LandmarkCode").val('');
         $("#LandmarkName").val('');
@@ -62,9 +67,9 @@
 
     }
     function deleteLandmark(id) {
-        
 
-        
+
+
         //var gview = $("#grid").data("kendoGrid");
 
 
@@ -90,14 +95,42 @@
     }
 </script>
 
-<label>Landmark Code </label>
+<label>
+    Landmark Code
+</label>
 <input id="LandmarkCode" type="text" />
-<br />
-<label>Landmark Name </label>
+<label>
+    Landmark Name
+</label>
 <input id="LandmarkName" type="text" />
+<button id="FilterLandmark" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;
+    }" onclick="test()">Filter</button>
+<button id="deleteFilterLndmark" style="background-color: #000000; color: white; border-color:#000000;box-shadow: 0px 0px 10px 0px  #ffff00;
+    }" onclick="deleteFilter()">Delete filter</button>
+
 <br />
-<button id="FilterLandmark" onclick="test()">Filtreaza</button>
-<button id="deleteFilterLndmark" onclick="deleteFilter()">Delete filter</button>
+<br />
+
+
+<input type='button' class='k-button info' name='info' value='Add' style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;
+    }" ; onclick='window.location.href = "@Url.Action("Landmark", "Dictionary")";' />
+
+<style>
+
+    .k-grid tbody .k-button {
+        border-color:#000000;
+        color: white
+        
+    }
+</style>
+<style>
+
+ .k-grid-content .k-button{
+    background-color: #000000;
+    box-shadow: 0px 0px 10px 0px  #ffff00;
+                          
+    }
+</style>
 
 
 
@@ -112,31 +145,32 @@
         //columns.Command(command => { command.Custom("Edit").Click("edit");  }).Width(250);
         //columns.Command(command => { command.Custom("Delete").Click("deleteLandmark"); }).Width(250);
         //columns.Template("<button id=\"btnDelete\" onclick=\"deleteLandmark(#=Id#)\">Delete</button>").Width(150);
-        columns.Template("<a class='k-button' href='/Dictionary/Landmark?Id=#=Id# '> Editeaza </a>").Width(150);
-        columns.Template("<button id=\"btnDelete\" onclick=\"deleteLandmark(#=Id#)\">Delete</button>").Width(150);
+        columns.Template("<a class='k-button' href='/Dictionary/Landmark?Id=#=Id# '> Edit </a>").Width(150);
+        //columns.Template("<button id=\"btnDelete\" onclick=\"deleteLandmark(#=Id#)\">Delete</button>").Width(150); --buton delete initial
+        columns.Template("<a class='k-button' id=\"btnDelete\" onclick=\"deleteLandmark(#=Id#)\"> Delete </a>").Width(150);
 
 
 
 
     })
-    .HtmlAttributes(new { style = "height: 550px;" })
-    .Scrollable()
-    .Selectable()
-    .Groupable(false)
-    .Sortable()
-    .Pageable(pageable => pageable
-        .Refresh(true)
-        .PageSizes(true)
-        .ButtonCount(5))
-    .DataSource(dataSource => dataSource
-        .Ajax()
-        .Read(read => read.Action("DictionaryLandmarkData", "Dictionary").Data("txtFilterLandmark"))
-        .PageSize(20)
-        .Model(model => model.Id(p => p.Id))
-    //.Destroy(update => update.Action("DeleteLandmark", "Dictionary"))
+.HtmlAttributes(new { style = "height: 550px;" })
+.Scrollable()
+.Selectable()
+.Groupable(false)
+.Sortable()
+.Pageable(pageable => pageable
+.Refresh(true)
+.PageSizes(true)
+.ButtonCount(5))
+.DataSource(dataSource => dataSource
+.Ajax()
+.Read(read => read.Action("DictionaryLandmarkData", "Dictionary").Data("txtFilterLandmark"))
+.PageSize(20)
+.Model(model => model.Id(p => p.Id))
+//.Destroy(update => update.Action("DeleteLandmark", "Dictionary"))
 
 
 
 
-    )
+)
 )
