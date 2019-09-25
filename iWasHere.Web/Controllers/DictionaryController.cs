@@ -31,6 +31,8 @@ namespace iWasHere.Web.Controllers
             return View();
         }
 
+
+
         public IActionResult Landmark(DictionaryLandmarkTypeModel dictionary)
         {
             DictionaryLandmarkType dictionaryLandmarkType = _dictionaryService.GetSelectedLandmark(dictionary.Id);
@@ -48,6 +50,8 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
+
+
 
 
         public ActionResult DictionaryCountryData([DataSourceRequest]DataSourceRequest request, string CountryName, string CountryCode)//************
@@ -182,6 +186,7 @@ namespace iWasHere.Web.Controllers
             return Content(CountryName);
         }
 
+
         public IActionResult Currency()
         {
             return View();
@@ -203,7 +208,7 @@ namespace iWasHere.Web.Controllers
         {
             return View();
         }
-        
+
 
         public void DeleteCountry([DataSourceRequest] DataSourceRequest request, DictionaryCountry model)
         {
@@ -262,6 +267,7 @@ namespace iWasHere.Web.Controllers
         ///functie stergere Sezoane
         public void DeleteSeason([DataSourceRequest] DataSourceRequest request, DictionarySeasonType model)
         {
+
             _dictionaryService.DeleteSeason(model.DictionarySeasonId);
         }
 
@@ -344,7 +350,31 @@ namespace iWasHere.Web.Controllers
                 countyToEdit = _dictionaryService.getInfoCounty(countyToEditId);
                 return View(countyToEdit);
             }
+            //return Json(status);
+        }
 
+        public IActionResult UpdateSeason(DictionarySeasonType dictionarySeason)
+        {
+
+            string status = "";
+            _dictionaryService.UpdateSeason(dictionarySeason);
+            return Json(status);
+
+        }
+
+
+        public ActionResult InsertSeason(DictionarySeasonType dictionarySeason)
+        {
+            string status = "";
+            _dictionaryService.InsertSeason(dictionarySeason);
+            return Json(status);
+
+        }
+        public IActionResult EditSeason(int SeasonId)
+        {
+
+            DictionarySeasonType dictionarySeason = _dictionaryService.GetSelectedSeason(SeasonId);
+            return View(dictionarySeason);
         }
 
         public ActionResult AddCounty([DataSourceRequest] DataSourceRequest request, string countyName, string countyCode,
@@ -356,17 +386,17 @@ namespace iWasHere.Web.Controllers
             else
                 return View();
         }
-           
+
         public ActionResult CurrencyData([DataSourceRequest]DataSourceRequest request, string currencyName)
         {
-            List<DictionaryCurrencyType> data = _dictionaryService.GetDictionaryCurrencyTypeModels(request.Page, request.PageSize, currencyName );
-             var result = new DataSourceResult()
+            List<DictionaryCurrencyType> data = _dictionaryService.GetDictionaryCurrencyTypeModels(request.Page, request.PageSize, currencyName);
+            var result = new DataSourceResult()
             {
-                Data = data, 
-                 Total = _dictionaryService.GetDictionaryCurrencyTypeModels1(request.Page, request.PageSize, currencyName)
-             };
-           
-             return Json(result);
+                Data = data,
+                Total = _dictionaryService.GetDictionaryCurrencyTypeModels1(request.Page, request.PageSize, currencyName)
+            };
+
+            return Json(result);
         }
 
         public ActionResult DeleteCurrency([DataSourceRequest] DataSourceRequest request, int id)
@@ -374,14 +404,14 @@ namespace iWasHere.Web.Controllers
             int status = 0;
             if (id != 0)
             {
-               status = _dictionaryService.DeleteCurrency(id);
+                status = _dictionaryService.DeleteCurrency(id);
             }
             if (status != 500)
             {
                 return Json(ModelState.ToDataSourceResult());
             }
             else return View();
-            
+
         }
         public ActionResult EditCounty([DataSourceRequest] DataSourceRequest request, int countyId, string countyName,
             string countyCode, int countryId)
@@ -399,7 +429,7 @@ namespace iWasHere.Web.Controllers
             _dictionaryService.UpdateCountry(dictionaryCountry);
             return Json(status);
         }
-        
+
         public ActionResult InsertCountry(DictionaryCountry dictionaryCountry)
         {
             string status = "";

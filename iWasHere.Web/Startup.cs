@@ -46,9 +46,8 @@ namespace iWasHere.Web
 
             services.AddKendo();
             services.AddScoped<DictionaryService>();
-            services.AddScoped<AtractionService>();
+            services.AddScoped<AttractionService>();            
             services.AddScoped<PhotoService>();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
         }
@@ -78,7 +77,7 @@ namespace iWasHere.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Attraction}/{action=Index}/{id?}");
             });
         }
 

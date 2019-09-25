@@ -1,5 +1,6 @@
 ﻿using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,16 @@ using System.Transactions;
 
 namespace iWasHere.Domain.Service
 {
-    public class AtractionService
+    public class AttractionService
     {
-
         private readonly DatabaseContext _dbContext;
-        private static bool UpdateDatabase = false;
 
 
-        public AtractionService(DatabaseContext databaseContext)
+        public AttractionService(DatabaseContext databaseContext)
         {
             _dbContext = databaseContext;
         }
+
         public List<DictionaryCountryModel> ServerFiltering_GetCountries(string text)
         {
             var x = _dbContext.DictionaryCountry.Select(a => new DictionaryCountryModel()
@@ -35,7 +35,7 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountryModels;
         }
-        public List<DictionaryCountyModel> ServerFiltering_GetCounties(int ? countryId, string text)
+        public List<DictionaryCountyModel> ServerFiltering_GetCounties(int? countryId, string text)
         {
             var x = _dbContext.DictionaryCounty.Select(a => new DictionaryCountyModel()
             {
@@ -68,7 +68,7 @@ namespace iWasHere.Domain.Service
             {
                 x = x.Where(p => p.CountyName.StartsWith(text));
             }
-            if (countyId != 0 )
+            if (countyId != 0)
             {
                 x = x.Where(p => p.CountyId.Equals(countyId));
             }
@@ -92,7 +92,7 @@ namespace iWasHere.Domain.Service
 
             return dictionarySeason;
         }
-        
+
         public List<DictionaryLandmarkType> ServerFiltering_GetLandmarks(string text)
         {
             var x = _dbContext.DictionaryLandmarkType.Select(a => new DictionaryLandmarkType()
@@ -111,6 +111,61 @@ namespace iWasHere.Domain.Service
             return dictionaryLandmarkModels;
         }
 
+        public IQueryable<AttractionListModel> GetAttractionListModels()
+        {
+            var x =
 
+            _dbContext.Attractions.Include(a => a.Currency)
+            .Include(a => a.LandmarkType)
+            .Include(a => a.AttractionType)
+            .Include(a => a.Season)
+            .Include(a => a.Photo)
+            .Include(a => a.Comment)
+            .Include(a => a.City)
+            .Select(a => new AttractionListModel()
+            {
+                AttractionId = a.AttractionId,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
+                CurrencyName = a.Currency.DictionaryCurrencyCode,
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
+                MainPhotoName = a.Photo.Any() ? a.Photo.FirstOrDefault().PhotoName : null,
+                Name = a.AttractionName,
+                Observations = a.Observations,
+                Price = a.Price,
+                Rating = (a.Comment.Any() ? a.Comment.Average(b => b.Rating) : (double?)null),
+                CityName = a.City.DictionaryCityName,
+                SeasonName = a.Season.DictionarySeasonName
+            });
+
+            return x;
+        }
+        public AttractionModel GetAttractionLocation(int attractionId)
+        {
+            AttractionModel attr = _dbContext.Attractions.Select(a => new AttractionModel()
+            {
+                AttractionId = a.AttractionId,
+                CurrencyId = a.CurrencyId,
+                CityId = a.CityId,
+                Price = a.Price,
+                LandmarkTypeId = a.LandmarkTypeId,
+                AttractionTypeId = a.AttractionTypeId,
+                SeasonId = a.SeasonId,
+                AttractionName = a.AttractionName,
+                Latitude = a.Latitude,
+                Longitude = a.Longitude,
+                Observations = a.Observations,
+                CityName = a.City.DictionaryCityName,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,               
+                //Currency = a.Currency,
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
+                SeasonName = a.Season.DictionarySeasonName,
+                //Comment = a.Comment,
+                //Photo = a.Photo
+            })
+            .Where(a => a.AttractionId == attractionId)
+            .FirstOrDefault();
+
+            return attr;
+        }
     }
 }
