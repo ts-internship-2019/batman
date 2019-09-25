@@ -3,7 +3,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using iWasHere.Domain.DTOs;
-
+using System.Collections.Generic;
 
 namespace iWasHere.Web.Controllers
 {
@@ -30,6 +30,18 @@ namespace iWasHere.Web.Controllers
         public IActionResult GetAttractions([DataSourceRequest] DataSourceRequest request)
         {
             return Json(_attractionService.GetAttractionListModels().ToDataSourceResult(request));
+        }      
+
+        //public ActionResult AttractionsCountry(int countryId)
+        //{
+        //    return View();
+        //}
+        public ActionResult AttractionsCountry(int countryId)
+        {
+            List<AttractionListModel> attrList = new List<AttractionListModel>();
+            attrList = _attractionService.GetAttractionsFromCountry(countryId);
+            return View(attrList);
+
         }
     }
 }
