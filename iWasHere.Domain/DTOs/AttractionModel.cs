@@ -27,7 +27,9 @@ namespace iWasHere.Domain.DTOs
         public DictionaryCurrencyType Currency { get; set; }
         public DictionaryLandmarkType LandmarkType { get; set; }
         public DictionarySeasonType Season { get; set; }
-        public ICollection<Comment> Comment { get; set; }
-        public ICollection<Photo> Photo { get; set; }
+        public List<Comment> Comment { get; set; }
+
+        public List<string> PhotoName { get; set; }
+        public List<Photo> Photo { get; set; }
     }
 }

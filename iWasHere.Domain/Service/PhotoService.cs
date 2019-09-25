@@ -32,8 +32,7 @@ namespace iWasHere.Domain.Service
             Photo image = new Photo()
             {
                 AttractionId = attractionId,
-                PhotoName = photoName,
-                Path = photoPath
+                PhotoName = photoName                
             };
             try
             {

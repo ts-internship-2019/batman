@@ -159,8 +159,8 @@ namespace iWasHere.Domain.Service
                 //Currency = a.Currency,
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
                 SeasonName = a.Season.DictionarySeasonName,
-                //Comment = a.Comment,
-                //Photo = a.Photo
+                Comment = a.Comment,
+                Photo = a.Photo
             })
             .Where(a => a.AttractionId == attractionId)
             .FirstOrDefault();

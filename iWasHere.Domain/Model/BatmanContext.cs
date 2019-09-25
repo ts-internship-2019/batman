@@ -355,9 +355,7 @@ namespace iWasHere.Domain.Model
             });
 
             modelBuilder.Entity<Photo>(entity =>
-            {
-                entity.Property(e => e.Path).IsUnicode(false);
-
+            {                
                 entity.Property(e => e.PhotoName)
                     .HasMaxLength(20)
                     .IsUnicode(false);

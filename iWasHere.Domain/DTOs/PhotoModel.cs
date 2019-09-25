@@ -12,6 +12,6 @@ namespace iWasHere.Domain.DTOs
 
         public string PhotoName { get; set; }
 
-        public string PhotoPath { get; set; }
+      
     }
 }
