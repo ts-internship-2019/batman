@@ -1,21 +1,26 @@
 ﻿using iWasHere.Domain.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Net.Http.Headers;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using System;
+using Microsoft.AspNetCore.Hosting;
+using iWasHere.Domain.DTOs;
+using System.Collections.Generic;
+using Spire.Pdf.General.Paper.Font.Common.Environment;
 
 namespace iWasHere.Web.Controllers
 {
 
     public class PhotoController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         private readonly PhotoService _photoService;
-        public PhotoController(PhotoService photoService)
+        public PhotoController(PhotoService photoService, IHostingEnvironment hostingEnvironment)
         {
             _photoService = photoService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public ActionResult GetAttractionsForCombo()
@@ -33,41 +38,25 @@ namespace iWasHere.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Submit(int attractionId, IEnumerable<IFormFile> files )
+        public void Submit(List<IFormFile> files, int LandmarkId)
         {
-            int status = 0;
-            //attractionId = 14;
-            IEnumerable<string> fileInfo = new List<string>();
-
-            if (files != null)
+            List<string> path = new List<string>();
+            foreach (var image in files)
             {
-                fileInfo = GetFileInfo(files,attractionId);
+                LandmarkId = 14;
+                if (image.Length > 0)
+                {
+                    //var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                    var a = Guid.NewGuid().ToString();
+                    var fileName = Path.Combine(_hostingEnvironment.WebRootPath + "/images", a + Path.GetExtension(image.FileName));
+                    image.CopyTo(new FileStream(fileName, FileMode.Create));
+                    path.Add(a + Path.GetExtension(image.FileName));
+                }
             }
-            return Json(status);
-        }
-
-        
-        public ActionResult Result()
-        {
-            return View();
-        }
-
-        private IEnumerable<string> GetFileInfo(IEnumerable<IFormFile> files, int attractionId)
-        {
-            int status = 0;
-            List<string> fileInfo = new List<string>();
-
-            foreach (var file in files)
+            foreach (string p in path)
             {
-                var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-                var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                var filePath = Path.GetFullPath(fileContent.FileName.ToString().Trim('"'));
-
-                status = _photoService.AddPhoto(attractionId, fileName, filePath);
-                fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length,filePath));
+                _photoService.SaveImagesDB(p, LandmarkId);
             }
-
-            return fileInfo;
         }
     }
 }

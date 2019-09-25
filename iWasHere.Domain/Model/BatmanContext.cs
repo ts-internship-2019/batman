@@ -346,7 +346,7 @@ namespace iWasHere.Domain.Model
                     .HasName("PK__Dictiona__585CA0BEC2C2EAE8");
 
                 entity.Property(e => e.DictionarySeasonCode)
-                    .HasMaxLength(5)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DictionarySeasonName)
