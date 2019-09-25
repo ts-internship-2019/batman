@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
+using System;
 
 namespace iWasHere.Web.Controllers
 {
@@ -59,8 +60,6 @@ namespace iWasHere.Web.Controllers
             Attraction = _attractionService.GetAttractionToExport(AttractionId);
             var path = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction.docx");
             string resultPath = Path.Combine(_hostingEnvironment.WebRootPath + "/Attraction_Download/Attraction_Saved.docx");
-            string FirstPhoto = Attraction.Photo[0].PhotoName.ToString();
-
             byte[] byteArray = System.IO.File.ReadAllBytes(path);
             using (MemoryStream stream = new MemoryStream())
             {
@@ -138,7 +137,7 @@ namespace iWasHere.Web.Controllers
                                             stars = stars + "* ";
                                         text.Text = stars;
                                     }
-                                    else text.Text = "No Ratings";
+                                    else text.Text = "";
                                 }
                                 if (text.Text == "Country")
                                 {
@@ -153,35 +152,68 @@ namespace iWasHere.Web.Controllers
                                     text.Text = Attraction.CityName;
                                 }
 
-                                
 
-                                if (text.Text == "Pro1")
-                                {
-                                    text.Text = CommentMax1;
+                                if (Attraction.Comment.Count > 0)
+                                { 
+                                    if (text.Text == "Pro1")
+                                    {
+                                        text.Text = CommentMax1;
+                                    }
+                                    if (text.Text == "Pro2")
+                                    {
+                                        text.Text = CommentMax2;
+                                    }
+                                    if (text.Text == "Rau")
+                                    {
+                                        text.Text = CommentMin1;
+                                    }
+                                    if (text.Text == "zyx")
+                                    {
+                                        text.Text = CommentMin2;
+                                    }
                                 }
-                                if (text.Text == "Pro2")
+                                else
                                 {
-                                    text.Text = CommentMax2;
-                                }
-                                if (text.Text == "Rau")
-                                {
-                                    text.Text = CommentMin1;
-                                }
-                                if (text.Text == "zyx")
-                                {
-                                    text.Text = CommentMin2;
+                                    if (text.Text == "Pareri Pozitive ")
+                                    {
+                                        text.Text = "Nu exista comentarii.";
+                                    }
+                                    if (text.Text == "Pareri Negative ")
+                                    {
+                                        text.Text = "";
+                                    }
+                                    if (text.Text == "Pro1")
+                                    {
+                                        text.Text = "";
+                                    }
+                                    if (text.Text == "Pro2")
+                                    {
+                                        text.Text = "";
+                                    }
+                                    if (text.Text == "Rau")
+                                    {
+                                        text.Text = "";
+                                    }
+                                    if (text.Text == "zyx")
+                                    {
+                                        text.Text = "";
+                                    }
                                 }
                             }
                         }
                     }
-                    ImagePart imagePart = wordDoc.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
 
-                    using (FileStream streamPhoto = new FileStream(_hostingEnvironment.WebRootPath + "/images/" + FirstPhoto + ".jpg", FileMode.Open))
+                    if (Attraction.Photo.Count > 0)
                     {
-                        imagePart.FeedData(streamPhoto);
-                    }
+                        string FirstPhoto = Attraction.Photo[0].PhotoName;
+                        ImagePart imagePart = wordDoc.MainDocumentPart.AddImagePart(ImagePartType.Jpeg);
 
-                    AddImageToBody(wordDoc, wordDoc.MainDocumentPart.GetIdOfPart(imagePart));
+                        using (FileStream streamPhoto = new FileStream(_hostingEnvironment.WebRootPath + "/images/" + FirstPhoto, FileMode.Open))
+                        {
+                            imagePart.FeedData(streamPhoto);
+                        }
+                        AddImageToBody(AttractionId, wordDoc, wordDoc.MainDocumentPart.GetIdOfPart(imagePart));
+                    }
                 }
                 // Save the file with the new name
                 System.IO.File.WriteAllBytes(resultPath, stream.ToArray());
@@ -254,13 +286,26 @@ namespace iWasHere.Web.Controllers
 
 
 
-        private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId)
+        public void AddImageToBody(int Id, WordprocessingDocument wordDoc, string relationshipId)
         {
+            AttractionModel Attraction = new AttractionModel();
+            Attraction = _attractionService.GetAttractionToExport(Id);
+            string FirstPhoto = Attraction.Photo[0].PhotoName;
+            int iWidth = 0;
+            int iHeight = 0;
+            using (System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(_hostingEnvironment.WebRootPath + "/images/" + FirstPhoto))
+            {
+                iWidth = bmp.Width;
+                iHeight = bmp.Height;
+            }
+            iWidth = (int)Math.Round((decimal)iWidth * 3380);
+            iHeight = (int)Math.Round((decimal)iHeight * 3380);
+
             // Define the reference of the image.
             var element =
                  new Drawing(
                      new DW.Inline(
-                         new DW.Extent() { Cx = 990000L, Cy = 792000L },
+                         new DW.Extent() { Cx = iWidth, Cy = iHeight },
                          new DW.EffectExtent()
                          {
                              LeftEdge = 0L,
@@ -320,8 +365,17 @@ namespace iWasHere.Web.Controllers
                          EditId = "50D07946"
                      });
 
-            // Append the reference to body, the element should be in a Run.
-            wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
+            wordDoc.MainDocumentPart.Document.Body.AppendChild(
+             new DocumentFormat.OpenXml.Wordprocessing.Paragraph(new DocumentFormat.OpenXml.Wordprocessing.Run(element))
+             {
+                 ParagraphProperties = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties()
+                 {
+                     Justification = new DocumentFormat.OpenXml.Wordprocessing.Justification()
+                     {
+                         Val = DocumentFormat.OpenXml.Wordprocessing.JustificationValues.Center
+                     }
+                 }
+             });
         }
        
         public ActionResult AttractionsCountry(int countryId)
