@@ -5,11 +5,11 @@ using System.Text;
 
 namespace iWasHere.Domain.DTOs
 {
-   public class AttractionModel
+    public class AttractionModel
     {
         public int AttractionId { get; set; }
         public int CurrencyId { get; set; }
-        public int? CityId { get; set; }       
+        public int? CityId { get; set; }
         public decimal Price { get; set; }
         public int? LandmarkTypeId { get; set; }
         public int AttractionTypeId { get; set; }
@@ -22,6 +22,8 @@ namespace iWasHere.Domain.DTOs
         public string AttractionTypeName { get; set; }
         public string LandmarkTypeName { get; set; }
         public string SeasonName { get; set; }
+        public string CountyName { get; set; }
+        public string CountryName { get; set; }
         public DictionaryAttractionType AttractionType { get; set; }
         public DictionaryCity City { get; set; }
         public DictionaryCurrencyType Currency { get; set; }

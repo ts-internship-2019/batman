@@ -167,5 +167,119 @@ namespace iWasHere.Domain.Service
 
             return attr;
         }
+
+        public AttractionModel GetAttractionToExport(int attractionId)
+        {
+            AttractionModel attr = _dbContext.Attractions.Select(a => new AttractionModel()
+            {
+                AttractionId = a.AttractionId,
+                CurrencyId = a.CurrencyId,
+                CityId = a.CityId,
+                Price = a.Price,
+                LandmarkTypeId = a.LandmarkTypeId,
+                AttractionTypeId = a.AttractionTypeId,
+                SeasonId = a.SeasonId,
+                AttractionName = a.AttractionName,
+                Latitude = a.Latitude,
+                Longitude = a.Longitude,
+                Observations = a.Observations,
+                CityName = a.City.DictionaryCityName,
+                CountyName = a.City.DictionaryCounty.DictionaryCountyName,
+                CountryName = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
+                //Currency = a.Currency,
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
+                SeasonName = a.Season.DictionarySeasonName,
+                Comment = a.Comment,
+                //Photo = a.Photo
+            })
+            .Where(a => a.AttractionId == attractionId)
+            .FirstOrDefault();
+
+            return attr;
+        }
+        public void SaveAttraction(AttractionModel attractionModel,out string errorMessage, out int id)
+        {
+            Attractions attractions = new Attractions();
+            errorMessage = "";
+            if (attractionModel.AttractionId != 0)
+                attractions.AttractionId = attractionModel.AttractionId;
+            if (!(string.IsNullOrWhiteSpace(attractionModel.AttractionName)))
+                attractions.AttractionName = attractionModel.AttractionName;
+            if (!(string.IsNullOrWhiteSpace(attractionModel.Observations)))
+                attractions.Observations = attractionModel.Observations;
+            if (!string.IsNullOrWhiteSpace(attractionModel.Latitude))
+                attractions.Latitude = attractionModel.Latitude;
+            if (!string.IsNullOrWhiteSpace(attractionModel.Longitude))
+                attractions.Longitude = attractionModel.Longitude;
+            if (attractionModel.Price != 0)
+                attractions.Price = attractionModel.Price;
+           
+            if (attractionModel.AttractionTypeId != 0)
+                attractions.AttractionTypeId = attractionModel.AttractionTypeId;
+            if (attractionModel.CityId != 0)
+                attractions.CityId = attractionModel.CityId;
+            if (attractionModel.CurrencyId != 0)
+                attractions.CurrencyId = attractionModel.CurrencyId;
+            if (attractionModel.LandmarkTypeId != 0)
+                attractions.LandmarkTypeId = attractionModel.LandmarkTypeId;
+            if (attractionModel.SeasonId != 0)
+                attractions.SeasonId = attractionModel.SeasonId;
+
+            if (attractionModel.AttractionId == 0)
+            {
+                _dbContext.Attractions.Add(attractions);
+            }
+            else
+            {
+                _dbContext.Attractions.Update(attractions);
+            }
+
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                errorMessage = "Ceva nu a mers.Mai incearca odata!!!";
+            }
+            id = attractions.AttractionId;
+
+        }
+        public List<PhotoModel> GetPhotosByAttractionId(int attractionId)
+        {
+
+            var x = _dbContext.Photo.Select(a => new PhotoModel()
+            {
+                PhotoId = a.PhotoId,
+                AttractionId = (int)a.AttractionId,
+                PhotoName = a.PhotoName
+                //Photo = a.Photo
+            })
+            .Where(a => a.AttractionId == attractionId);
+
+            List<PhotoModel> photos = x.ToList();
+            return photos;
+        }
+        public int AddPhoto(int attractionId, string photoName, string photoPath)
+        {
+            int status = 0;
+            Photo image = new Photo()
+            {
+                AttractionId = attractionId,
+                PhotoName = photoName,
+                Path = photoPath
+            };
+            try
+            {
+                _dbContext.Photo.Add(image);
+                status = _dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                status = 500;
+            }
+            return status;
+        }
     }
 }
