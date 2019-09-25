@@ -7,8 +7,8 @@ namespace iWasHere.Domain.Model
     {
         public Attractions()
         {
-            Comment = new HashSet<Comment>();
-            Photo = new HashSet<Photo>();
+            //Comment = new HashSet<Comment>();
+            //Photo = new HashSet<Photo>();
         }
 
        
@@ -28,7 +28,7 @@ namespace iWasHere.Domain.Model
         public virtual DictionaryCurrencyType Currency { get; set; }
         public virtual DictionaryLandmarkType LandmarkType { get; set; }
         public virtual DictionarySeasonType Season { get; set; }
-        public virtual ICollection<Comment> Comment { get; set; }
+        public virtual List<Comment> Comment { get; set; }
         public virtual ICollection<Photo> Photo { get; set; }
     }
 }
