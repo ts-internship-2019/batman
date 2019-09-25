@@ -4,6 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+    <script>
+
+        function Download(AttractionId) {
+
+            window.location.href = "@Url.Action("ExportDocument", "Attraction")?AttractionId=" + AttractionId;
+        }
+
+    </script>
+
 <h1>Index</h1>
 @(Html.Kendo().Grid<iWasHere.Domain.DTOs.AttractionListModel>
     ()

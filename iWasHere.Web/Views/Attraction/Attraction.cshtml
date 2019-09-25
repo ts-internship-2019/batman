@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <h1>@Model.AttractionName</h1>
 
 <div class="attractionInfo">
@@ -65,7 +64,7 @@
 
         <div class="row">
             <label for="getAttrObs">Observations</label>
-            @Html.TextAreaFor(model => model.Observations, new { @class = "form-control", @readonly = true })
+            @Html.TextAreaFor(model => model.Observations, new { @class = "form-control", @readonly = true , id = "getAttrObs"})
         </div>
     </div>
 
@@ -81,15 +80,18 @@
     </div>
 </div>
 
+
+
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
+        @*@foreach (var t in Model.Photo)*@
         <div class="carousel-item active">
-            <img src="/images/@Model.Photo[0].PhotoName" alt="@Model.Photo[0].PhotoName" />
+            <img src=@Url.Content("~/images/@Model.Photo[0].PhotoName") alt="@Model.Photo[0].PhotoName" />
         </div>
-        @for (int i = 1; i < Model.Photo.Count; i++)
+        @for (int i = 0; i < Model.Photo.Count; i++)
         {
             <div class="carousel-item">
-                <img src="/images/@Model.Photo[i].PhotoName" alt="@Model.Photo[i].PhotoName" />
+                <img src=@Url.Content("~/images/@Model.Photo[i].PhotoName") alt="@Model.Photo[i].PhotoName" />
             </div>
         }
     </div>
@@ -105,6 +107,129 @@
 
 
 <h2>Comments</h2>
+
+<br />
+<br />
+
+<h3>Adauga un comentariu</h3>
+<br />
+<div class="panelDealafain">
+    <br />
+<p>
+    <label for="commentTitle">Titlu:</label>
+    @(Html.Kendo().TextBox()
+.Name("commentTitle")
+.HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='commentTitle'" })
+    )
+</p>
+
+<p>
+    <label for="commentDescription">Titlu:</label>
+    <textarea rows="4" cols="50" id="commentDescription"></textarea>
+</p>
+
+<div class="stars" data-rating="3">
+    <span class="star "></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+    <span class="star"></span>
+</div>
+</div>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<style>
+    .panelDealafain {
+        background-color: mintcream;
+    }
+
+    .star {
+        color: orange;
+        font-size: 30px;
+        padding: 0 0px; /* space out the stars */
+    }
+
+        .star::before {
+            content: '\2605'; /* star outline */
+            cursor: pointer;
+            color: black;
+        }
+
+        .star.rated::before {
+            color: orange;
+            /* the style for a selected star */
+            content: '\2605'; /* filled star */
+        }
+
+    .stars {
+        counter-reset: rateme 0;
+        font-size: 2.0rem;
+        font-weight: 100;
+    }
+
+    .star.rated {
+        counter-increment: rateme 1;
+    }
+
+    .stars::after {
+        content: counter(rateme) '/10';
+    }
+</style>
+
+<script>
+
+    //initial setup
+    document.addEventListener('DOMContentLoaded', function () {
+        let stars = document.querySelectorAll('.star');
+        stars.forEach(function (star) {
+            star.addEventListener('click', setRating);
+        });
+
+        let rating = parseInt(document.querySelector('.stars').getAttribute('data-rating'));
+        let target = stars[rating - 1];
+        target.dispatchEvent(new MouseEvent('click'));
+    });
+    function setRating(ev) {
+        let span = ev.currentTarget;
+        let stars = document.querySelectorAll('.star');
+        let match = false;
+        let num = 0;
+        stars.forEach(function (star, index) {
+            if (match) {
+                star.classList.remove('rated');
+            } else {
+                star.classList.add('rated');
+            }
+            //are we currently looking at the span that was clicked
+            if (star === span) {
+                match = true;
+                num = index + 1;
+            }
+        });
+        document.querySelector('.stars').setAttribute('data-rating', num);
+    }
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $(".rating input:radio").attr("checked", false);
+
+
+        $('.rating input').click(function () {
+            $(".rating span").removeClass('checked');
+            $(this).parent().addClass('checked');
+        });
+        $('input:radio').change();
+    });
+</script>
+
 
 <script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />

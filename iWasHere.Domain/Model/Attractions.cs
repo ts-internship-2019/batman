@@ -25,7 +25,7 @@ namespace iWasHere.Domain.Model
         public string Observations { get; set; }
         public virtual DictionaryAttractionType AttractionType { get; set; }
         public virtual DictionaryCity City { get; set; }
-        public virtual DictionaryCurrencyType Currency { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual DictionaryLandmarkType LandmarkType { get; set; }
         public virtual DictionarySeasonType Season { get; set; }
         public virtual List<Comment> Comment { get; set; }
