@@ -120,7 +120,10 @@
             <p>
                 <input type="submit" value="Add" id="buttonId" class="btn btn-success" onclick="Add()" />
 
-                <input type="submit" value="Add and New" id="buttonIdd" class="btn btn-primary" onclick="AddAndNew()" />
+                @if (Model.DictionaryCurrencyTypeId == 0)
+                {
+                    <input type="submit" value="Add and New" id="buttonIdd" class="btn btn-primary" onclick="AddAndNew()" />
+                }
 
                 <input type="button" value="Cancel" id="buttonIddd" class="btn btn-warning" onclick="Cancel()" />
             </p>
@@ -131,71 +134,3 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<div>
-        <script type="text/javascript">
-        $(document).ready(function () {
-        $("#CurrencySave").click(function () {
-        var url = "@Url.Action("SaveCurrency", "Dictionary")";
-        debugger;
-        var CurrencyDet = {
-            Name: $.trim($("#CurrencyName").val()),
-            Code: $.trim($("#CurrencyCode").val()),
-            Value: $.trim($("#CurrencyValue").val()),
-            Date: $.trim($("#CurrencyDate").val())
-
-        };
-        $.post(url, { TypeData: CurrencyDet }, function (data) {
-            debugger;
-            if (data != 0 && data > 0)
-            {
-                var url = "@Url.Action("Currency", "Dictionary")";
-                var Curr = {
-                Name: $.trim($("#CurrencyName").val()),
-                Code: $.trim($("#CurrencyCode").val())
-
-                DictionaryCurrencyTypeId:data
-            };
-        $.post(url, { CurrencyData: Curr }, function (response) {
-            debugger;
-            if (response == true)
-            {
-                var indata = {
-                    Value: $.trim($("#CurrencyValue").val()),
-                    Date: $.trim($("#CurrencyDate").val())
-                    CurrencyTypeId:response
-            };
-        $.post("@Url.Action("Currency", "Dictionary")", { SaveData: indata }, function (result) {
-            debugger;
-            if (result == true) {
-                alert("Form data saved successfully ");
-                resetForm();
-             }
-        });
-        }
-        });
-        }
-        });
-        });
-        });
-        function resetForm() {
-        $("#CurrencyName").val("");
-        $("#CurrencyCode").val("");
-        $("#CurrencyValue").val("");
-        $("#CurrencyDate").val("");
-
-        }
-        </script>
-    </div>*@
