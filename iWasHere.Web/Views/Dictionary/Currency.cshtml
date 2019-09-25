@@ -2,15 +2,16 @@
 
 
 <p>
-   
 
-        <input type="button" class="btn btn-success" value="Add New Currency +" onclick="OpenToAdd()" />
-       
 
-    
+    <input type="button" class="btn btn-success" value="Add New Currency +" onclick="OpenToAdd()" />
+
+
+
 </p>
 
-
+@*<script type="text/javascript" language="javascript" src="//cdn1.curs-valutar-bnr.ro/custom_widgets/get_widget.php?lw=230&rw=1&font=Trebuchet%20MS&cft=00b0ea&ctt=ffffff&ttb=0&cc=f2f2f2&cfb=ffffff&ct=000000&pd=4&pc=4&aiv=1&val[]=8&mf=14&avc=0&ac=1&aod=0&lang=ro"></script>*@
+@*<script type="text/javascript" language="javascript" src="//cdn1.curs-valutar-bnr.ro/custom_widgets/get_widget.php?lw=155&rw=10&font=Trebuchet%20MS&cft=00b0ea&ctt=ffffff&ttb=0&cc=f2f2f2&cfb=ffffff&ct=000000&pd=4&pc=4&aiv=1&val[]=8&val[]=19&val[]=4&val[]=9&val[]=1&val[]=3&mf=14&avc=0&ac=0&aod=0&lang=ro"></script>*@
 
 
 <div style="margin-bottom: 5px;">
@@ -24,7 +25,14 @@
         <span>Reset Filter</span>
 
     </button>
+    @*<input type="button"
+        value="BNR"
+        onclick="location.href='@Url.Action(" BNR_Integration", "Dictionary" )'" />*@
+    @*<button  class="btn btn-warning" type="button" style="text-align:center;" onclick="location.href='@Url.Action("BNR_Integration", "Dictionary")'" >
+        <span>BNR Curs</span>
 
+    </button>*@
+    <a href="@Url.Action("BNR_Integration", "Dictionary")">BNR</a>
 </div>
 <script type="text/javascript">
   function deleteCurrency(id) {
@@ -35,9 +43,9 @@
             url: '@Url.Action("DeleteCurrency", "Dictionary")',
             data: { id: id },
             success: function (response) {
-                
+
                 $("#grid").data("kendoGrid").dataSource.read();
-                 
+
             },
             error: function (response) {
                 alert("Aceasta moneda nu poate fi stearsa");
@@ -48,23 +56,23 @@
         {
             return false;
         }
-       
+
   }
 
-    
-   
-    
+
+
+
 
   function OpenToEdit(id)
   {
         window.location.href = 'CurrencyAdd/?id=' + id;
-        
+
   }
 
     function OpenToAdd() {
         window.location.href = 'CurrencyAdd/?id=' + 0;
     }
-    
+
 
     function BindGrid() {
         $("#grid").data("kendoGrid").dataSource.read();
@@ -72,15 +80,15 @@
     }
 
     function ClearFilters()
-    {  
+    {
         document.getElementById('name').value = "";
         $("#grid").data("kendoGrid").dataSource.read();
         $("#grid").data("kendoGrid").refresh;
     }
-    
-    
 
-    
+
+
+
 </script>
 
 
@@ -97,9 +105,9 @@
         .Name("grid")
         .Columns(columns =>
         {
-            columns.Bound(c => c.DictionaryCurrencyName).Title("Currency Name").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
+            columns.Bound(c => c.DictionaryCurrencyName).Title("Currency Name").HeaderHtmlAttributes(new { style = "text-align: center;" }).HtmlAttributes(new { style = "text-align: center;" });
 
-            columns.Bound(c => c.DictionaryCurrencyCode).Title("Currency Code").HeaderHtmlAttributes(new {style = "text-align: center;" }).HtmlAttributes(new {style = "text-align: center;" });
+            columns.Bound(c => c.DictionaryCurrencyCode).Title("Currency Code").HeaderHtmlAttributes(new { style = "text-align: center;" }).HtmlAttributes(new { style = "text-align: center;" });
 
 
 
@@ -107,12 +115,12 @@
 
 
 
-            columns.Template("<button id=\"editButton\"  class=\"btn btn-warning\" onclick=\"OpenToEdit(#=DictionaryCurrencyTypeId#)\"> Edit </button>").HtmlAttributes(new {style = "text-align: center;" });
-            columns.Template("<button id=\"deleteButton\" class=\"btn btn-danger\" onclick=\"deleteCurrency(#=DictionaryCurrencyTypeId#)\">Delete</button>").HtmlAttributes(new {style = "text-align: center;" });
+            columns.Template("<button id=\"editButton\"  class=\"btn btn-warning\" onclick=\"OpenToEdit(#=DictionaryCurrencyTypeId#)\"> Edit </button>").HtmlAttributes(new { style = "text-align: center;" });
+            columns.Template("<button id=\"deleteButton\" class=\"btn btn-danger\" onclick=\"deleteCurrency(#=DictionaryCurrencyTypeId#)\">Delete</button>").HtmlAttributes(new { style = "text-align: center;" });
 
 
         })
-        .HtmlAttributes(new { style = "height: 550px;" , @id = "grid"  })
+        .HtmlAttributes(new { style = "height: 550px;", @id = "grid" })
         .Scrollable()
         //.Groupable()
         //.Sortable()
@@ -139,15 +147,83 @@
                 currencyName: $("#name").val()
             }
         }
-        
-       
+
+
 
     </script>
-    
-</div>
-   
 
-    
+</div>
+@*<script>
+       <?php
+
+
+         class cursBnrXML
+         {
+
+
+            var $xmlDocument = "";
+
+
+
+
+            var $date = "";
+
+
+
+            var $currency = array();
+
+
+
+            function __construct($url)
+            {
+            $this->xmlDocument = file_get_contents($url);
+            $this->parseXMLDocument();
+            }
+
+            function parseXMLDocument()
+            {
+            $xml = new SimpleXMLElement($this->xmlDocument);
+
+            $this->date=$xml->Header->PublishingDate;
+
+            foreach($xml->Body->Cube->Rate as $line)
+            {
+            $this->currency[]=array("name"=>$line["currency"], "value"=>$line, "multiplier"=>$line["multiplier"]);
+            }
+            }
+
+
+            function getExchangeRate($currency)
+            {
+            foreach($this->currency as $line)
+            {
+            if($line["name"]==$currency)
+            {
+            return $line["value"];
+            }
+            }
+
+            return "Incorrect currency!";
+            }
+            }
+
+
+
+            $curs=new cursBnrXML("http://www.bnro.ro/nbrfxrates.xml");
+
+            print $curs->date;
+
+            print "
+            <hr>";
+            print "USD: ".$curs->getExchangeRate("USD");
+            print "
+            <hr>";
+            print "EUR: ".$curs->getExchangeRate("EUR");
+            print "
+            <hr>";
+            ?>
+    </script>*@
+
 
 
 

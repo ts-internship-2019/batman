@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using iWasHere.Domain.DTOs;
 using iWasHere.Domain.Model;
 using iWasHere.Domain.Service;
@@ -457,21 +461,75 @@ namespace iWasHere.Web.Controllers
             dictionary.DictionaryCurrencyName = currencyName;
             dictionary.DictionaryCurrencyCode = currencyCode;
 
-            DatabaseContext database = new DatabaseContext();
+            // DatabaseContext database = new DatabaseContext();
 
-            database.DictionaryCurrencyType.Update(dictionary);
+            _dbContext.DictionaryCurrencyType.Update(dictionary);
 
-            return Json(database.SaveChanges());
+            return Json(_dbContext.SaveChanges());
         }
         public ActionResult CurrencySave(string currencyName, string currencyCode)
         {
-            DatabaseContext database = new DatabaseContext();
-            database.DictionaryCurrencyType.Add(new DictionaryCurrencyType
+            // DatabaseContext database = new DatabaseContext();
+            _dbContext.DictionaryCurrencyType.Add(new DictionaryCurrencyType
             {
                 DictionaryCurrencyName = currencyName,
                 DictionaryCurrencyCode = currencyCode
             });
-            return Json(database.SaveChanges());
+            return Json(_dbContext.SaveChanges());
         }
+
+
+
+        public async void BNR_Integration([DataSourceRequest] DataSourceRequest request)
+        {
+            ServiceBNR.CursSoapClient curs = new ServiceBNR.CursSoapClient(ServiceBNR.CursSoapClient.EndpointConfiguration.CursSoap);
+            ServiceBNR.getallResponseGetallResult result = curs.getallAsync(DateTime.UtcNow).Result;
+
+            //_dictionaryService.AddBNRCurrency(new Currrency() { Value = 3, CurrencyDate = DateTime.Now });
+
+            foreach (var xNode in result.Any1.Elements().Where(x => x.Value != "").FirstOrDefault().Nodes())
+            {
+                var elem = xNode as XElement;
+                var valuta = elem.Element("IDMoneda");
+                var valoare = elem.Element("Value");
+                //var data = elem.Element("CurrencyDate");
+                // var data = elem.Element("");
+
+                if (valuta != null && valuta.Value != null)
+
+                    _dictionaryService.AddBNRType(new DictionaryCurrencyType()
+                    {
+                        DictionaryCurrencyName = valuta.Value,
+                        DictionaryCurrencyCode = valuta.Value
+
+                    });
+
+                if (valoare != null && valoare.Value != null)
+
+                    _dictionaryService.AddBNRCurrency(new Currency()
+                    {
+
+                        Value = double.Parse(valoare.Value),
+                        CurrencyDate = DateTime.UtcNow
+
+                    },new DictionaryCurrencyType()
+                    {
+                        DictionaryCurrencyName = valuta.Value,
+                        DictionaryCurrencyCode = valuta.Value
+
+                    });
+               
+
+            }
+
+
+
+
+        }
+
     }
+
+
+
+
 }
