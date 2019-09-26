@@ -1,10 +1,26 @@
 ﻿@model iWasHere.Domain.DTOs.AttractionModel
 
 
-@{
-    
-    Layout = "~/Views/Shared/_Layout.cshtml";
+@if (Model.AttractionId == 0)
+{
+
+     Layout = "~/Views/Shared/_Layout.cshtml";
+
+        
+
+        
+        
 }
+else
+{
+    
+
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+        List<string> images = ViewData["Images"] as List<string>;
+
+}
+
 
 <!DOCTYPE html>
 
@@ -16,134 +32,179 @@
 
     <script src="https://kendo.cdn.telerik.com/2017.1.223/js/jquery.min.js"></script>
     <script src="https://kendo.cdn.telerik.com/2017.1.223/js/kendo.all.min.js"></script>
+    
 
 </head>
 <body>
-    
-    <div>
-        <label>Nume Atractie</label>
+    <span>
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger myvalidation" })
+    </span>
 
-        @Html.TextBoxFor(model => model.AttractionName, new { @class = "form-control", @id = "name", style = "width:380px;" })
-    </div>
-    <div>
-        <label>Observatii</label>
-        @Html.TextBoxFor(model => model.Observations, new { @class = "form-control", @id = "observations", style = "width:380px;" })
-    </div>
+    @using (Html.BeginForm("SaveAttraction", "Attraction", FormMethod.Post,
+              new { enctype = "multipart/form-data" }))
+    {
+        <div>
+            <label>Nume Atractie</label>
 
-    <div>
-        <label>Pret</label>
-        @Html.TextBoxFor(model => model.Price, new { @class = "form-control", @id = "price", style = "width:380px;" })
-    </div>
-    <div>
-        <label>Tari</label>
-        @(Html.Kendo().ComboBox()
-                  .Name("Tari")
-                  .DataTextField("CountryName")
-                  .DataValueField("CountryId")
+            @Html.TextBoxFor(model => model.AttractionName, new { @class = "form-control", @id = "name", style = "width:380px;" })
+        </div>
+        <div>
+            <label>Observatii</label>
+            @Html.TextBoxFor(model => model.Observations, new { @class = "form-control", @id = "observations", style = "width:380px;" })
+        </div>
+        <div class="demo-section k-content">
+            @(Html.Kendo().Upload()
+                    .Name("files")
+                    .HtmlAttributes(new { aria_label = "files" })
+            )
 
-                  .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Tari'" })
-                  .Filter("StartsWith")
-                  .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("ServerFiltering_GetCountries", "Atraction")/*.Data("filterCountries")*/;
+        </div>
 
-                      })
-                      .ServerFiltering(true)
-                      ;
-                  }))
+        <div>
+            <label>Pret</label>
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control", @id = "price", style = "width:380px;" })
+        </div>
+        <div>
+            <label>Tari</label>
+            @(Html.Kendo().ComboBox()
+                          .Name("Tari")
+                          .DataTextField("CountryName")
+                          .DataValueField("CountryId")
 
-    </div>
-    <div>
-        <label>Judete</label>
-        @(Html.Kendo().ComboBox()
-                  .Name("Judete")
-                  .DataTextField("CountyName")
-                  .DataValueField("CountyId")
-                  //.DataValueField("CityId")
-                  .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
-                  .Filter("StartsWith")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Tari'" })
+                          .Filter("StartsWith")
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("ServerFiltering_GetCountries", "Atraction")/*.Data("filterCountries")*/;
 
-                  .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("ServerFiltering_GetCounties", "Atraction").Data("filterCounties");
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }))
 
-                      })
-                      .ServerFiltering(true)
-                      ;
-                  }).CascadeFrom("Tari"))
-    </div>
-    <div>
-        <label>Orase</label>
-        @(Html.Kendo().ComboBox()
-                  .Name("Orase")
-                  .DataTextField("Name")
-                  .DataValueField("Id")
-                  .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Orase'" })
-                  .Filter("StartsWith")
+        </div>
+        <div>
+            <label>Judete</label>
+            @(Html.Kendo().ComboBox()
+                          .Name("Judete")
+                          .DataTextField("CountyName")
+                          .DataValueField("CountyId")
+                          //.DataValueField("CityId")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Judete'" })
+                          .Filter("StartsWith")
 
-                  .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("ServerFiltering_GetCities", "Atraction").Data("filterCities");
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("ServerFiltering_GetCounties", "Atraction").Data("filterCounties");
 
-                      })
-                      .ServerFiltering(true)
-                      ;
-                  }).CascadeFrom("Judete"))
-    </div>
-    <div>
-        <label>Tip Relief</label>
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }).CascadeFrom("Tari"))
+        </div>
+        <div>
+            <label>Orase</label>
+            @(Html.Kendo().ComboBoxFor(m => m.CityId)
+                          //.Name("Orase")
+                          .DataTextField("Name")
+                          .DataValueField("Id")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Orase'" })
+                          .Filter("StartsWith")
+                          .AutoBind(true)
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("ServerFiltering_GetCities", "Atraction").Data("filterCities");
 
-        @(Html.Kendo().ComboBox()
-                  .Name("TipRelif")
-                  .DataTextField("DictionaryItemName")
-                  .DataValueField("DictionaryItemId")
-                  .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='TipRelif'" })
-                  .Filter("StartsWith")
-                  .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("ServerFiltering_GetLandmarks", "Atraction");
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }).CascadeFrom("Judete"))
+        </div>
+        <div>
+            <label>Tip Relief</label>
 
-                      })
-                      .ServerFiltering(true)
-                      ;
-                  }))
-    </div>
-    <div>
-        <label>Sezonabilitate</label>
-        @(Html.Kendo().ComboBox()
-                  .Name("Sezon")
-                  .DataTextField("DictionarySeasonName")
-                  .DataValueField("DictionarySeasonId")
-                  .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Sezon'" })
-                  .Filter("StartsWith")
-                  .DataSource(source =>
-                  {
-                      source.Read(read =>
-                      {
-                          read.Action("ServerFiltering_GetSeasons", "Atraction");
+            @(Html.Kendo().ComboBoxFor(m => m.LandmarkTypeId)
+                          //.Name("TipRelif")
+                          .DataTextField("DictionaryItemName")
+                          .DataValueField("DictionaryItemId")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='TipRelif'" })
+                          .Filter("StartsWith")
+                          .AutoBind(true)
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("ServerFiltering_GetLandmarks", "Atraction");
 
-                      })
-                      .ServerFiltering(true)
-                      ;
-                  }))
-    </div>
-    <div>
-        <label>Latitudine</label>
-        @Html.TextBoxFor(model => model.Latitude, new { @class = "form-control", @id = "LAT", style = "width:380px;" })
-    </div>
-    <div>
-        <label>longitudine</label>
-        @Html.TextBoxFor(model => model.Longitude, new { @class = "form-control", @id = "LONG", style = "width:380px;" })
-    </div>
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }))
+        </div>
+        <div>
+            <label>Sezonabilitate</label>
+            @(Html.Kendo().ComboBoxFor(m => m.SeasonId)
+                          //.Name("Sezon")
+                          .DataTextField("DictionarySeasonName")
+                          .DataValueField("DictionarySeasonId")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Sezon'" })
+                          .Filter("StartsWith")
+                          .AutoBind(true)
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("ServerFiltering_GetSeasons", "Atraction");
 
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }))
+        </div>
+        <div>
+            <label>Tip Atractie</label>
+            @(Html.Kendo().ComboBoxFor(m => m.AttractionTypeId)
+                          //.Name("Sezon")
+                          .DataTextField("DictionaryAttractionName")
+                          .DataValueField("DictionaryAttractionTypeId")
+                          .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='Sezon'" })
+                          .Filter("StartsWith")
+                          .AutoBind(true)
+                          .DataSource(source =>
+                          {
+                              source.Read(read =>
+                              {
+                                  read.Action("GetCurrenciesforCombo", "Attraction");
+
+                              })
+                              .ServerFiltering(true)
+                              ;
+                          }))
+        </div>
+        <div>
+            <label>Latitudine</label>
+            @Html.TextBoxFor(model => model.Latitude, new { @class = "form-control", @id = "LAT", style = "width:380px;" })
+        </div>
+        <div>
+            <label>longitudine</label>
+            @Html.TextBoxFor(model => model.Longitude, new { @class = "form-control", @id = "LONG", style = "width:380px;" })
+        </div>
+        @*@Html.HiddenFor(h => h.CurrencyId);*@
+        @Html.HiddenFor(h => h.AttractionId);
+        <div class="demo-section k-content">
+            @(Html.Kendo().Button()
+                .Name("btnSave")
+                .Content("Save")
+                .HtmlAttributes(new { name = "btnSave", style = "background: green", type = "submit" })
+                .Events(ev => ev.Click("onClick")))
+        </div>
+    }
     <script>
 
         function filterCounties() {
@@ -156,7 +217,7 @@
 
         }
         function filterCities() {
-            
+
             return {
                 countyId: $("#Judete").val(),
                 text: $("#Orase").data("kendoComboBox").input.val()

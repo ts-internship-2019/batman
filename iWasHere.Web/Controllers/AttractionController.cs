@@ -241,42 +241,39 @@ namespace iWasHere.Web.Controllers
             return View(new AttractionModel());
         }
         [HttpPost]
-        public IActionResult SaveAttraction(AttractionModel attraction, List<IFormFile> files)
+        public IActionResult AddOrEditAttraction(AttractionModel attraction, List<IFormFile> files)
         {
             _attractionService.SaveAttraction(attraction, out string errorMessage, out int id);
-            SubmitPhoto(id, files);
-            if (!string.IsNullOrEmpty(errorMessage))
+            SubmitPhoto(id, files, out string errorMessage2);
+            if (!string.IsNullOrEmpty(errorMessage) || !string.IsNullOrEmpty(errorMessage2))
             {
-                TempData["message"] = errorMessage;
-                return RedirectToAction("AddEditNewLandmark", new { attrId = attraction.AttractionId });
-            }
-            return RedirectToAction("Attraction", new { attrId = attraction.AttractionId });
 
-        }
-        private IEnumerable<string> GetFileInfo(IEnumerable<IFormFile> files, int attractionId)
-        {
-            int status = 0;
-            List<string> fileInfo = new List<string>();
-
-            foreach (var file in files)
-            {
-                var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-                var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                var filePath = Path.GetFullPath(fileContent.FileName.ToString().Trim('"'));
-
-                status = _attractionService.AddPhoto(attractionId, fileName);
-                fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length, filePath));
+                ModelState.AddModelError("", errorMessage);
+                ModelState.AddModelError("", errorMessage2);
+                return AddOrEditAttraction(attraction.AttractionId);
+                //return RedirectToAction("AddEditNewLandmark", new { attrId = attraction.AttractionId });
             }
 
-            return fileInfo;
-        }
-        public ActionResult SubmitPhoto(int attractionId, IEnumerable<IFormFile> files)
-        {
-            int status = 0;
-            //attractionId = 14;
-            IEnumerable<string> fileInfo = new List<string>();
+            return RedirectToAction("Index");
 
-            if (files != null)
+        }
+        public void SubmitPhoto(int LandmarkId, List<IFormFile> files, out string errorMessage)
+        {
+            errorMessage = "";
+            List<string> path = new List<string>();
+            foreach (var image in files)
+            {
+                LandmarkId = 14;
+                if (image.Length > 0)
+                {
+                    //var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                    var a = Guid.NewGuid().ToString();
+                    var fileName = Path.Combine(_hostingEnvironment.WebRootPath + "/images", a + Path.GetExtension(image.FileName));
+                    image.CopyTo(new FileStream(fileName, FileMode.Create));
+                    path.Add(a + Path.GetExtension(image.FileName));
+                }
+            }
+            foreach (string p in path)
             {
                 fileInfo = GetFileInfo(files, attractionId);
             }
@@ -385,6 +382,11 @@ namespace iWasHere.Web.Controllers
             return View(attrList);
 
         }
+        public List<DictionaryAttractionType> GetAttractionTypesforCombo()
+        {
+            return _attractionService.GetAttractionTypesforCombo();
+        }
     }
-}
+    }
+
 
