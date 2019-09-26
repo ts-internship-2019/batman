@@ -161,14 +161,17 @@ else
         {
             <div><input type="submit" value="Submit"/></div>
         }
+        @if (Model.AttractionId != 0)
+        {
         <div class="demo-section k-content">
                @(Html.Kendo().Button()
-                .Name("btnSave")
-                .Content("Anuleaza")
-                .HtmlAttributes(new { name = "btnSave", style = "background: green", type = "submit", value = "Cancel" })
-                .Events(ev => ev.Click("onClick")))
+                     .Name("btnSave")
+                     .Content("Salveaza")
+                     .HtmlAttributes(new { name = "btnSave", style = "background: green", type = "submit", value = "Cancel" })
+                    )
         </div>
-    }
+            }
+        }
     <script>
 
         function filterCounties() {
