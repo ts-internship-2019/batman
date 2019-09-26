@@ -243,20 +243,20 @@ namespace iWasHere.Web.Controllers
         }
         public void SaveAttraction(AttractionModel attraction, List<IFormFile> files, out string errorMessage, out string errorMessage2, out string errorMessage3)
         {
-
+            int id = 0;
             errorMessage = "";
             errorMessage2 = "";
             errorMessage3 = "";
             if (attraction.AttractionId != 0)
             {
-                _attractionService.SaveAttraction(attraction, out  errorMessage);
+                _attractionService.SaveAttraction(attraction, out  errorMessage, out id);
                 SubmitPhoto(attraction.AttractionId, files, out  errorMessage2);
             }
             else
             {
-                _attractionService.SaveAttraction(attraction, out errorMessage);
-                AttractionModel attractionModel = _attractionService.GetAttractionsByNameObsLatLong(attraction.AttractionName, attraction.Observations, attraction.Latitude, attraction.Longitude);
-                SubmitPhoto(attractionModel.AttractionId, files, out  errorMessage3);
+                _attractionService.SaveAttraction(attraction, out errorMessage, out id);
+                //AttractionModel attractionModel = _attractionService.GetAttractionsByNameObsLatLong(attraction.AttractionName, attraction.Observations, attraction.Latitude, attraction.Longitude);
+                SubmitPhoto(id, files, out  errorMessage3);
             }
         }
         [HttpPost]
@@ -282,7 +282,7 @@ namespace iWasHere.Web.Controllers
             List<string> path = new List<string>();
             foreach (var image in files)
             {
-                LandmarkId = 14;
+                
                 if (image.Length > 0)
                 {
                     //var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);

@@ -55,25 +55,20 @@ namespace iWasHere.Domain.Service
 
             return dictionaryCountyModels;
         }
-        public List<DictionaryCityModel> ServerFiltering_GetCities(int? countyId, string text)
+        public List<DictionaryCityModel> ServerFiltering_GetCities(string text)
         {
             var x = _dbContext.DictionaryCity.Select(a => new DictionaryCityModel()
             {
                 Id = a.DictionaryCityId,
-                Name = a.DictionaryCityName,
-                CountyId = (int)a.DictionaryCountyId
+                Name = a.DictionaryCityName
             });
             if (!string.IsNullOrEmpty(text))
             {
-                x = x.Where(p => p.CountyName.StartsWith(text));
+                x = x.Where(p => p.Name.StartsWith(text));
             }
-            if (countyId != 0)
-            {
-                x = x.Where(p => p.CountyId.Equals(countyId));
-            }
-            List<DictionaryCityModel> dictionaryCityModels = x.Take(50).ToList();
+            List<DictionaryCityModel> dictionaryCountyModels = x.Take(50).ToList();
 
-            return dictionaryCityModels;
+            return dictionaryCountyModels;
         }
         public List<DictionarySeasonType> ServerFiltering_GetSeasons(string text)
         {
@@ -200,7 +195,7 @@ namespace iWasHere.Domain.Service
 
             return attr;
         }
-        public void SaveAttraction(AttractionModel attractionModel,out string errorMessage)
+        public void SaveAttraction(AttractionModel attractionModel,out string errorMessage,out int id)
         {
             Attractions attractions = new Attractions();
             attractions.CurrencyId = 1;
@@ -248,8 +243,7 @@ namespace iWasHere.Domain.Service
             {
                 errorMessage = "Ceva nu a mers.Mai incearca odata!!!";
             }
-            
-
+            id = attractions.AttractionId;
         }
         public List<PhotoModel> GetPhotosByAttractionId(int attractionId)
         {
@@ -315,6 +309,7 @@ namespace iWasHere.Domain.Service
         }
         public void SaveImagesDB(string path, int id,out string errorMessage)
         {
+            int status = 0;
             errorMessage = "";
             Photo photo = new Photo()
             {
@@ -324,13 +319,15 @@ namespace iWasHere.Domain.Service
             
             try
             {
-                _dbContext.SaveChanges();
+                _dbContext.Photo.Add(photo);
+               status =  _dbContext.SaveChanges();
+                
             }
             catch (Exception)
             {
                 errorMessage = "ceva merge prost la imagini";
+                status = 500;
             }
-            _dbContext.SaveChanges();
 
         }
         public List<DictionaryAttractionType> GetAttractionTypesforCombo()
@@ -343,42 +340,12 @@ namespace iWasHere.Domain.Service
             });
             return attr.Take(50).ToList();
         }
-        public AttractionModel GetAttractionsByNameObsLatLong(string name, string obs, string lat , string longi)
-        {
-            var x = _dbContext.Attractions.Select(a => new AttractionModel()
-            {
-                AttractionId = a.AttractionId,
-                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
-                
-                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
-                
-                AttractionName = a.AttractionName,
-                Observations = a.Observations,
-                Price = a.Price,
-               
-                CityName = a.City.DictionaryCityName,
-                SeasonName = a.Season.DictionarySeasonName,
-                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
-            });
-            if (!string.IsNullOrEmpty(name))
-            {
-                x = x.Where(p => p.AttractionName.StartsWith(name));
-            }
-            if (!string.IsNullOrEmpty(obs))
-            {
-                x = x.Where(p => p.Observations.StartsWith(obs));
-            }
-            if (!string.IsNullOrEmpty(lat))
-            {
-                x = x.Where(p => p.Latitude.StartsWith(lat));
-            }
-            if (!string.IsNullOrEmpty(longi))
-            {
-                x = x.Where(p => p.Longitude.StartsWith(longi));
-            }
-            AttractionModel attractionModel = x.FirstOrDefault();
-            return attractionModel;
-        }
+        //public int GetAttractionsByNameObsLatLong(string name, string obs, string lat , string longi)
+        //{
+        //    //Attractions x = _dbContext.Attractions.Where(a => a.AttractionName == name);
+            
+        //    return x.AttractionId;
+        //}
 
         public int AddComment(CommentModel comentariu)
         {

@@ -39,9 +39,9 @@ namespace iWasHere.Web.Controllers
         {
             return Json(_attractionService.ServerFiltering_GetCounties(countryId, text));
         }
-        public ActionResult ServerFiltering_GetCities(int ? countyId ,string text)
+        public ActionResult ServerFiltering_GetCities(string text)
         {
-            return Json(_attractionService.ServerFiltering_GetCities(countyId, text));
+            return Json(_attractionService.ServerFiltering_GetCities(text));
         }
         public ActionResult ServerFiltering_GetLandmarks(string text)
         {
