@@ -3,8 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - iWasHere.Web</title>
+    <title>@ViewData["Title"] - iWasHere</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Sidebar on click -->
+    <nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">
+            Close
+            <i class="fa fa-remove"></i>
+        </a>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <a href="#" class="w3-bar-item w3-button">Link 4</a>
+        <a href="#" class="w3-bar-item w3-button">Link 5</a>
+    </nav>
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/kendo-ui/styles/kendo.common-nova.min.css" />
@@ -60,11 +76,11 @@
 <body>
     <header>
        
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white  border-bottom box-shadow mb-3" style=" background-color: yellow !important;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white  border-bottom box-shadow mb-3" style=" background-color: #f3f2f2 !important;">
                  
             <div class="container">
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">iWasHere.Web</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">iWasHere</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -72,8 +88,9 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
+
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Attraction" asp-action="Index">Attractions</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dictionary" asp-action="DictionaryCountry">Countries</a>
@@ -105,8 +122,8 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted" style="background-color: 	#778899; color: #FFFF00 !important;">
-        <div class="container">
+    <footer class="border-top footer text-muted" style="background-color: 	#909dad;">
+        <div class="container" style="color:white;">
             Batman Team
         </div>
     </footer>

@@ -200,7 +200,7 @@ namespace iWasHere.Domain.Service
 
             return attr;
         }
-        public void SaveAttraction(AttractionModel attractionModel,out string errorMessage, out int id)
+        public void SaveAttraction(AttractionModel attractionModel,out string errorMessage)
         {
             Attractions attractions = new Attractions();
             attractions.CurrencyId = 1;
@@ -248,7 +248,7 @@ namespace iWasHere.Domain.Service
             {
                 errorMessage = "Ceva nu a mers.Mai incearca odata!!!";
             }
-            id = attractions.AttractionId;
+            
 
         }
         public List<PhotoModel> GetPhotosByAttractionId(int attractionId)
@@ -342,6 +342,42 @@ namespace iWasHere.Domain.Service
 
             });
             return attr.Take(50).ToList();
+        }
+        public AttractionModel GetAttractionsByNameObsLatLong(string name, string obs, string lat , string longi)
+        {
+            var x = _dbContext.Attractions.Select(a => new AttractionModel()
+            {
+                AttractionId = a.AttractionId,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
+                
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
+                
+                AttractionName = a.AttractionName,
+                Observations = a.Observations,
+                Price = a.Price,
+               
+                CityName = a.City.DictionaryCityName,
+                SeasonName = a.Season.DictionarySeasonName,
+                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
+            });
+            if (!string.IsNullOrEmpty(name))
+            {
+                x = x.Where(p => p.AttractionName.StartsWith(name));
+            }
+            if (!string.IsNullOrEmpty(obs))
+            {
+                x = x.Where(p => p.Observations.StartsWith(obs));
+            }
+            if (!string.IsNullOrEmpty(lat))
+            {
+                x = x.Where(p => p.Latitude.StartsWith(lat));
+            }
+            if (!string.IsNullOrEmpty(longi))
+            {
+                x = x.Where(p => p.Longitude.StartsWith(longi));
+            }
+            AttractionModel attractionModel = x.FirstOrDefault();
+            return attractionModel;
         }
 
         public int AddComment(CommentModel comentariu)
