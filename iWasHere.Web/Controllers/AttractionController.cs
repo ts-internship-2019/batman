@@ -235,21 +235,39 @@ namespace iWasHere.Web.Controllers
             {
                 AttractionModel attr = new AttractionModel();
                 attr = _attractionService.GetAttractionLocation(attrId);
-                ViewData["Images"] = _attractionService.GetPhotosByAttractionId(attrId);
+                
                 return View(attr);
             }
             return View(new AttractionModel());
         }
-        [HttpPost]
-        public IActionResult AddOrEditAttraction(AttractionModel attraction, List<IFormFile> files)
+        public void SaveAttraction(AttractionModel attraction, List<IFormFile> files, out string errorMessage, out string errorMessage2, out string errorMessage3)
         {
-            _attractionService.SaveAttraction(attraction, out string errorMessage, out int id);
-            SubmitPhoto(id, files, out string errorMessage2);
-            if (!string.IsNullOrEmpty(errorMessage) || !string.IsNullOrEmpty(errorMessage2))
+
+            errorMessage = "";
+            errorMessage2 = "";
+            errorMessage3 = "";
+            if (attraction.AttractionId != 0)
+            {
+                _attractionService.SaveAttraction(attraction, out  errorMessage);
+                SubmitPhoto(attraction.AttractionId, files, out  errorMessage2);
+            }
+            else
+            {
+                _attractionService.SaveAttraction(attraction, out errorMessage);
+                AttractionModel attractionModel = _attractionService.GetAttractionsByNameObsLatLong(attraction.AttractionName, attraction.Observations, attraction.Latitude, attraction.Longitude);
+                SubmitPhoto(attractionModel.AttractionId, files, out  errorMessage3);
+            }
+        }
+        [HttpPost]
+        public IActionResult AddOrEditAttraction(AttractionModel attraction, List<IFormFile> files, string btnSave)
+        {
+            SaveAttraction(attraction, files,out string errorMessage, out string errorMessage2, out string errorMessage3);
+            if (!string.IsNullOrEmpty(errorMessage) || !string.IsNullOrEmpty(errorMessage2) || !string.IsNullOrEmpty(errorMessage3))
             {
 
                 ModelState.AddModelError("", errorMessage);
                 ModelState.AddModelError("", errorMessage2);
+                ModelState.AddModelError("", errorMessage3);
                 return AddOrEditAttraction(attraction.AttractionId);
                 //return RedirectToAction("AddEditNewLandmark", new { attrId = attraction.AttractionId });
             }
@@ -273,11 +291,11 @@ namespace iWasHere.Web.Controllers
                     path.Add(a + Path.GetExtension(image.FileName));
                 }
             }
-            foreach (string p in path)
-            {
-                fileInfo = GetFileInfo(files, attractionId);
-            }
-            return Json(status);
+            //foreach (string p in path)
+            //{
+            //    fileInfo = GetFileInfo(files, attractionId);
+            //}
+            //return Json(status);
         }
 
 

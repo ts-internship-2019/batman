@@ -86,18 +86,33 @@ namespace iWasHere.Domain.Service
             }).ToList();
             return dictionaryLandmarkTypes[0];
         }
-        public void InsertLandmark(DictionaryLandmarkType landmarkType)
+        public void InsertLandmark(DictionaryLandmarkType landmarkType,out string errorMessage)
         {
-
+            errorMessage ="";
             _dbContext.DictionaryLandmarkType.Add(landmarkType);
-            _dbContext.SaveChanges();
-
+            
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                errorMessage = "Ceva a mers prost, mai incearca ";
+            }
         }
-        public void UpdateLandmark(DictionaryLandmarkType landmarkType)
+        public void UpdateLandmark(DictionaryLandmarkType landmarkType,out string errorMessage)
         {
-
+            errorMessage = "";
             _dbContext.DictionaryLandmarkType.Update(landmarkType);
-            _dbContext.SaveChanges();
+            
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                errorMessage = "Ceva nu a mers. incearca din nou ";
+            }
 
         }
         public Tuple<List<DictionaryCityModel>, int> GetDictionaryCity(int page, int pageSize, int countyId, string cityName)

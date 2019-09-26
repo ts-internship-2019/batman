@@ -20,6 +20,7 @@ namespace iWasHere.Web.Controllers
 
         public DictionaryController(DictionaryService dictionaryService, DatabaseContext databaseContext)
         {
+            
             _dictionaryService = dictionaryService;
             _dbContext = databaseContext;
         }
@@ -117,7 +118,7 @@ namespace iWasHere.Web.Controllers
         public ActionResult InsertLandmark(DictionaryLandmarkType landmarkType)
         {
             string status = "";
-            _dictionaryService.InsertLandmark(landmarkType);
+            _dictionaryService.InsertLandmark(landmarkType,out string errorMessage);
 
             return Json(status);
         }
@@ -125,20 +126,26 @@ namespace iWasHere.Web.Controllers
         public IActionResult UpdateLandmark(DictionaryLandmarkType landmarkType)
         {
             string status = "";
-            _dictionaryService.UpdateLandmark(landmarkType);
+            _dictionaryService.UpdateLandmark(landmarkType, out string errorMessage);
 
             return Json(status);
         }
         public ActionResult LandmarkForm(DictionaryLandmarkType landmarkType)
         {
+
+            var errorMessage = "";
+            var errorMessage2 = "";
             if (landmarkType.DictionaryItemId < 1)
             {
-                _dictionaryService.InsertLandmark(landmarkType);
+                _dictionaryService.InsertLandmark(landmarkType, out  errorMessage);
             }
             else
             {
-                _dictionaryService.UpdateLandmark(landmarkType);
+                _dictionaryService.UpdateLandmark(landmarkType, out  errorMessage2);
             }
+
+            ModelState.AddModelError("", errorMessage);
+            ModelState.AddModelError("", errorMessage2);
             return View(landmarkType);
         }
         public IActionResult Counties()
