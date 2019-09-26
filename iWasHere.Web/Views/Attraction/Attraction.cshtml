@@ -74,12 +74,12 @@
     <div class="carousel-inner">
         @*@foreach (var t in Model.Photo)*@
         <div class="carousel-item active">
-            <img src=@Url.Content("~/images/@Model.Photo[0].PhotoName") alt="@Model.Photo[0].PhotoName" />
+            <img src="~/images/@Model.Photo[0].PhotoName" alt="@Model.Photo[0].PhotoName" />
         </div>
         @for (int i = 0; i < Model.Photo.Count; i++)
         {
             <div class="carousel-item">
-                <img src=@Url.Content("~/images/@Model.Photo[i].PhotoName") alt="@Model.Photo[i].PhotoName" />
+                <img src="~/images/@Model.Photo[i].PhotoName" alt="@Model.Photo[i].PhotoName" />
             </div>
         }
     </div>
@@ -103,38 +103,104 @@
 <br />
 <div class="panelDealafain">
     <br />
-<p>
-    <label for="commentTitle">Titlu:</label>
-    @(Html.Kendo().TextBox()
-.Name("commentTitle")
-.HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='commentTitle'" })
+    <p>
+        <label for="commentTitle">Subiect</label>
+        @(Html.Kendo().TextBox()
+    .Name("commentTitle")
+    .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='commentTitle'" })
+        )
+    </p>
+
+    <p>
+        <label for="commentDescription"></label>
+        <textarea rows="4" cols="50" id="commentDescription"></textarea>
+    </p>
+    <label for="anonymous">Vrei ca aceast comentariu sa fie anaonim?</label>
+    @(Html.Kendo().CheckBox()
+                .Name("anonymous").HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='anonymous'", onchange = "updateMsg()" })
+                .Checked(false)
     )
+    <div class="stars" data-rating="3">
+        <span class="star "></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+        <span class="star"></span>
+    </div>
+    @(Html.Kendo().Button()
+                 .Name("addComment")
+                 .HtmlAttributes(new { type = "button", @class = "k-primary", style = "margin:10px, color:black" })
+                 .Content("Adauga")
+                 .Events(ev => ev.Click("addComment"))
+    )
+<p class="fainvizibil">
+        @(Html.Kendo().TextBox()
+       .Name("stele")
+       .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='stele'" })
+       .Enable(false)
+        )
+        @(Html.Kendo().TextBox()
+       .Name("id")
+       .HtmlAttributes(new { style = "width:150px; font-size:small; display:none id='id'" })
+       .Enable(false)
+        )
+        <blockquote class="idulasta">
+            autoValidate checked value: <span id="autoValidate-value"></span>
+        </blockquote>
 </p>
-
-<p>
-    <label for="commentDescription">Titlu:</label>
-    <textarea rows="4" cols="50" id="commentDescription"></textarea>
-</p>
-
-<div class="stars" data-rating="3">
-    <span class="star "></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
 </div>
-</div>
+
+<script>
+
+    function addComment() { 
+                             $.ajax({
+                                    type: 'POST',
+                                    url: '@Url.Action("SaveComment", "Attraction")',
+                                 data: {
+                                         titlu: document.getElementById("commentTitle").value,
+                                         continut: document.getElementById("commentDescription").value,
+                                         anonim: document.getElementById("autoValidate-value").textContent,
+                                         rating: $("#stele").val(),
+                                         attractionId: $("#id").val()
+                                          },
+                                    success: function (response) {
+                                        window.location.href = '@Url.Action("Attraction", "Attractions")';
+                                        alert("Comentariu adaugat!");
+                                    },
+                                    error: function (response) {
+                                                        alert("Logheaza-te bai baiatule sau trece-te anonim. Ce esti fraier?");
+                                            }
+                            })
+    }
+
+  function updateMsg() {
+
+    $('#autoValidate-value').text($("#anonymous").is(':checked'));
+            }
+    updateMsg();
+</script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <style>
+    .fainvizibil{
+        visibility:hidden;
+    }
+    .idulasta{
+        visibility:hidden;
+    }
+    .id{
+        visibility:hidden;
+    }
+    .stele{
+        visibility:hidden;
+    }
+    .autoValidate-value{
+        visibility:hidden;
+    }
     .panelDealafain {
         background-color: mintcream;
+        text-align:center;
     }
 
     .star {
@@ -166,7 +232,7 @@
     }
 
     .stars::after {
-        content: counter(rateme) '/10';
+        content: counter(rateme) '/5';
     }
 </style>
 
@@ -201,6 +267,12 @@
             }
         });
         document.querySelector('.stars').setAttribute('data-rating', num);
+        $("#stele").val(num) == num;
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var id = url.searchParams.get("attrId");
+        
+        $("#id").val(id) == id;
     }
 </script>
 
@@ -221,6 +293,7 @@
 
 <script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
 </script>
 
 @foreach (var t in Model.Comment)

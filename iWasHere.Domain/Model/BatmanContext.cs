@@ -203,7 +203,7 @@ namespace iWasHere.Domain.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(10)
+                    .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserId).HasMaxLength(450);

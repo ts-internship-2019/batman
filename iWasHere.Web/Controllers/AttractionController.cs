@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace iWasHere.Web.Controllers
 {
@@ -224,7 +225,7 @@ namespace iWasHere.Web.Controllers
                 var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
                 var filePath = Path.GetFullPath(fileContent.FileName.ToString().Trim('"'));
 
-                status = _attractionService.AddPhoto(attractionId, fileName, filePath);
+                status = _attractionService.AddPhoto(attractionId, fileName);
                 fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length, filePath));
             }
 
@@ -241,6 +242,41 @@ namespace iWasHere.Web.Controllers
                 fileInfo = GetFileInfo(files, attractionId);
             }
             return Json(status);
+        }
+        public ActionResult Checkboxes()
+        {
+            return View();
+        }
+
+        public ActionResult SaveComment(string titlu, string continut, bool anonim, int rating, int attractionId)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            int status = 0;
+            if (anonim == true)
+            {
+                userId = "0";
+                userName = "Anonymous";
+            }
+            CommentModel comentariu = new CommentModel()
+            {
+                UserID = userId,
+                titlu = titlu,
+                descriere = continut,
+                attractionid = attractionId,
+                rating = rating,
+                numeuser = userName,
+            };
+
+            status = _attractionService.AddComment(comentariu);
+            if (status != 500)
+            {
+                return Json(status);
+            }
+            else
+            {
+                return View();
+            }
         }
     }
 }

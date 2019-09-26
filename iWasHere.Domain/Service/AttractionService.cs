@@ -259,16 +259,15 @@ namespace iWasHere.Domain.Service
             .Where(a => a.AttractionId == attractionId);
 
             List<PhotoModel> photos = x.ToList();
-            return photos;
+            return photos;                                                      
         }
-        public int AddPhoto(int attractionId, string photoName, string photoPath)
+        public int AddPhoto(int attractionId, string photoName)
         {
             int status = 0;
             Photo image = new Photo()
             {
                 AttractionId = attractionId,
                 PhotoName = photoName,
-                Path = photoPath
             };
             try
             {
@@ -278,6 +277,40 @@ namespace iWasHere.Domain.Service
             catch (Exception e)
             {
                 status = 500;
+            }
+            return status;
+        }
+
+        public int AddComment(CommentModel comentariu)
+        {
+            int status = 0;
+             if(comentariu.numeuser == null)
+                {
+                status = 500;
+                }
+
+            if (status != 500)
+            {
+                Comment comment = new Comment()
+                {
+                    UserId = comentariu.UserID,
+                    Name = comentariu.numeuser,
+                    AttractionId = comentariu.attractionid,
+                    Rating = comentariu.rating,
+                    CommentTitle = comentariu.titlu,
+                    CommentText = comentariu.descriere,
+                };
+
+
+                try
+                {
+                    _dbContext.Comment.Add(comment);
+                    status = _dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    status = 500;
+                }
             }
             return status;
         }
