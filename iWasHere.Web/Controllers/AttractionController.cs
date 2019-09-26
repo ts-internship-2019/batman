@@ -276,9 +276,8 @@ namespace iWasHere.Web.Controllers
             }
             foreach (string p in path)
             {
-                fileInfo = GetFileInfo(files, attractionId);
+                _attractionService.SaveImagesDB(p, LandmarkId,out errorMessage);
             }
-            return Json(status);
         }
 
 
@@ -376,25 +375,6 @@ namespace iWasHere.Web.Controllers
              });
         }
        
-        public ActionResult AttractionsCountry(int countryId)
-                status = _attractionService.AddPhoto(attractionId, fileName);
-                fileInfo.Add(string.Format("{0} ({1} bytes)", fileName, file.Length, filePath));
-            }
-
-            return fileInfo;
-        }
-        public ActionResult SubmitPhoto(int attractionId, IEnumerable<IFormFile> files)
-        {
-            List<AttractionListModel> attrList = new List<AttractionListModel>();
-            attrList = _attractionService.GetAttractionsFromCountry(countryId);
-            return View(attrList);
-
-            if (files != null)
-            {
-                fileInfo = GetFileInfo(files, attractionId);
-            }
-            return Json(status);
-        }
         public ActionResult Checkboxes()
         {
             return View();
@@ -430,12 +410,12 @@ namespace iWasHere.Web.Controllers
                 return View();
             }
         }
-        }
+        
         public List<DictionaryAttractionType> GetAttractionTypesforCombo()
         {
             return _attractionService.GetAttractionTypesforCombo();
         }
     }
-    }
+}
 
 
