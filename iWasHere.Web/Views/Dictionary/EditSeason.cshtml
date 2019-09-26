@@ -4,9 +4,8 @@
     ViewData["Title"] = "EditSeason";
 }
 
-<h1>EditSeason</h1>
+<h1>Edit Season</h1>
 
-@*<h4>DictionarySeasonType</h4>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -108,9 +107,9 @@ else
 }
 @if (Model == null)
 {
-    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New </button>
+    <button type="button" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New </button>
 }
-<button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveSeason" runat="server" name="saveSeasonButton" value="SaveSeason" class="btn btn-default" OnClick="SaveSeason()">Save </button>
+<button type="button" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" id="saveSeason" runat="server" name="saveSeasonButton" value="SaveSeason" class="btn btn-default" OnClick="SaveSeason()">Save </button>
 @*<button type="submit" style=" border-style: solid !important; border-color: #ced4da!important;" id="cancel" runat="server" name="backButton" class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionarySeasonType", "Dictionary")";'>Cancel</button>*@
 
 
@@ -140,7 +139,7 @@ else
 @*buton cancel*@
 
 <div>
-    <button type="submit" class="btn  btn-danger" onclick="cancel()">Cancel  </button>
+    <button type="submit" class="btn  btn-danger" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" onclick="cancel()">Cancel  </button>
 
 </div>
 

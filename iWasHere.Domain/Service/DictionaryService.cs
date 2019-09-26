@@ -800,5 +800,38 @@ namespace iWasHere.Domain.Service
             }).Where(a => a.DictionaryCurrencyTypeId == id).FirstOrDefault();
             return currency1;
         }
+        public void AddBNRType(DictionaryCurrencyType dictionary)
+        {
+            try
+            {
+                _dbContext.DictionaryCurrencyType.Add(dictionary);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void AddBNRCurrency(Currency bnrcur, DictionaryCurrencyType iauNume)
+        {
+            
+            DictionaryCurrencyType idForCurrency = _dbContext.DictionaryCurrencyType.Where(a => a.DictionaryCurrencyCode== iauNume.DictionaryCurrencyCode).FirstOrDefault();
+
+
+            int id = idForCurrency.DictionaryCurrencyTypeId;
+
+            Currency insert = new Currency()
+            {
+                CurrencyTypeId = id,
+                Value = bnrcur.Value,
+                CurrencyDate = bnrcur.CurrencyDate
+            };
+            _dbContext.Currency.Add(insert);
+            _dbContext.SaveChanges();
+        }
+        
+       
+
     }
 }

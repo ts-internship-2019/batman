@@ -87,30 +87,34 @@
 
 </head>
 <body>
-    <h1>Edit Country</h1>
-    <br />
-    <td>Country Code</td>
-    <br />
-    <td>
-        @Html.TextBoxFor(model => model.DictionaryCountryCode, new
-    {
-        @class = "form-control maintain-text",
-            @id = "DictionaryCountryCode",
-    })
+    <center><h1>Edit Country</h1></center>
+    <label>
+        Country Code
+    </label>
 
-        <br />
-    <td>Country Name</td>
-    <br />
-    <td>@Html.TextBoxFor(model => model.DictionaryCountryName, new { @class = "form-control maintain-text", @id = "DictionaryCountryName" })</td>
-    <br />
-    <td>@Html.TextBoxFor(model => model.DictionaryCountryId, new { @class = "form-control", @id = "DictionaryCountryId", style = "width:380px;display: none" })</td>
+    @Html.TextBoxFor(model => model.DictionaryCountryCode, new
+{
+    @class = "form-control maintain-text",
+        @id = "DictionaryCountryCode",
+})
+    <label>
+        Country Name
+    </label>
+
+     
+    @*<button id="FilterCountry" onclick="test()">Filter</button>
+    <button id="deleteFilterCountry" onclick="deleteFilter()">Delete filter</button>*@
+
+    @Html.TextBoxFor(model => model.DictionaryCountryName, new { @class = "form-control maintain-text", @id = "DictionaryCountryName" })
+
+    @Html.TextBoxFor(model => model.DictionaryCountryId, new { @class = "form-control", @id = "DictionaryCountryId", style = "width:380px;display: none" })
 
     @if (Model == null)
     {
-        <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New</button>
+        <button type="button"  style="background-color: #000000; color: white; border-color:#000000;box-shadow: 0px 0px 10px 0px  #ffff00; " ; id="saveAndNew" name="saveaAndNewButton" onclick="SaveAndNew()" value="Save and new" class="btn btn-default">Save and New</button>
     }
-    <button type="button" style=" border-style: solid !important; border-color: #ced4da!important;" id="saveCountry" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry()">Save</button>
-    <button type="submit" style=" border-style: solid !important; border-color: #ced4da!important;" id="cancel" runat="server" name="backButton" class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionaryCountry", "Dictionary")";'>Cancel</button>
+    <button type="button"  style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" ; id="saveCountry" runat="server" name="saveCountryButton" value="Save" class="btn btn-default" OnClick="SaveCountry()">Save</button>
+    <button type="submit" style="background-color: #000000; color: white; border-color:#000000; box-shadow: 0px 0px 10px 0px  #ffff00;" ; id="cancel" runat="server" name="backButton" class="btn btn-default" onclick='window.location.href = "@Url.Action("DictionaryCountry", "Dictionary")";'>Cancel</button>
 
 </body>
 </html>

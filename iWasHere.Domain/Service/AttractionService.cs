@@ -13,7 +13,6 @@ namespace iWasHere.Domain.Service
     {
         private readonly DatabaseContext _dbContext;
 
-
         public AttractionService(DatabaseContext databaseContext)
         {
             _dbContext = databaseContext;
@@ -155,12 +154,15 @@ namespace iWasHere.Domain.Service
                 Longitude = a.Longitude,
                 Observations = a.Observations,
                 CityName = a.City.DictionaryCityName,
+                CountryName = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryName,                
                 AttractionTypeName = a.AttractionType.DictionaryAttractionName,               
                 //Currency = a.Currency,
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName, 
                 SeasonName = a.Season.DictionarySeasonName,
                 Comment = a.Comment,
-                Photo = a.Photo
+                
+                Photo = a.Photo,
+                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
             })
             .Where(a => a.AttractionId == attractionId)
             .FirstOrDefault();
@@ -191,7 +193,7 @@ namespace iWasHere.Domain.Service
                 LandmarkTypeName = a.LandmarkType.DictionaryItemName,
                 SeasonName = a.Season.DictionarySeasonName,
                 Comment = a.Comment,
-                //Photo = a.Photo
+                Photo = a.Photo
             })
             .Where(a => a.AttractionId == attractionId)
             .FirstOrDefault();
@@ -201,6 +203,7 @@ namespace iWasHere.Domain.Service
         public void SaveAttraction(AttractionModel attractionModel,out string errorMessage, out int id)
         {
             Attractions attractions = new Attractions();
+            attractions.CurrencyId = 1;
             errorMessage = "";
             if (attractionModel.AttractionId != 0)
                 attractions.AttractionId = attractionModel.AttractionId;
@@ -221,10 +224,12 @@ namespace iWasHere.Domain.Service
                 attractions.CityId = attractionModel.CityId;
             if (attractionModel.CurrencyId != 0)
                 attractions.CurrencyId = attractionModel.CurrencyId;
+            
             if (attractionModel.LandmarkTypeId != 0)
                 attractions.LandmarkTypeId = attractionModel.LandmarkTypeId;
             if (attractionModel.SeasonId != 0)
                 attractions.SeasonId = attractionModel.SeasonId;
+          
 
             if (attractionModel.AttractionId == 0)
             {
@@ -234,7 +239,7 @@ namespace iWasHere.Domain.Service
             {
                 _dbContext.Attractions.Update(attractions);
             }
-
+            
             try
             {
                 _dbContext.SaveChanges();
@@ -267,7 +272,7 @@ namespace iWasHere.Domain.Service
             Photo image = new Photo()
             {
                 AttractionId = attractionId,
-                PhotoName = photoName,
+                PhotoName = photoName               
             };
             try
             {
@@ -279,6 +284,64 @@ namespace iWasHere.Domain.Service
                 status = 500;
             }
             return status;
+        }
+
+        public List<AttractionListModel> GetAttractionsFromCountry(int? countryId)
+        {
+            var x = _dbContext.Attractions.Select(a => new AttractionListModel()
+            {
+                AttractionId = a.AttractionId,
+                AttractionTypeName = a.AttractionType.DictionaryAttractionName,
+                CurrencyName = a.Currency.CurrencyType.DictionaryCurrencyName,
+                LandmarkTypeName = a.LandmarkType.DictionaryItemName,
+                MainPhotoName = a.Photo.Any() ? a.Photo.FirstOrDefault().PhotoName : null,
+                Name = a.AttractionName,
+                Observations = a.Observations,
+                Price = a.Price,
+                Rating = (a.Comment.Any() ? a.Comment.Average(b => b.Rating) : (double?)null),
+                CityName = a.City.DictionaryCityName,
+                SeasonName = a.Season.DictionarySeasonName,
+                CountryId = a.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId
+            });
+
+            if (countryId.HasValue)
+            {
+                x = x.Where(p => p.City.DictionaryCounty.DictionaryCountry.DictionaryCountryId == countryId);
+            }
+
+            List<AttractionListModel> attractionsCountryModels = x.ToList();
+
+            return attractionsCountryModels;
+        }
+        public void SaveImagesDB(string path, int id,out string errorMessage)
+        {
+            errorMessage = "";
+            Photo photo = new Photo()
+            {
+                PhotoName = path,
+                AttractionId = id
+            };
+            
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                errorMessage = "ceva merge prost la imagini";
+            }
+            _dbContext.SaveChanges();
+
+        }
+        public List<DictionaryAttractionType> GetAttractionTypesforCombo()
+        {
+            var attr = _dbContext.DictionaryAttractionType.Select(a => new DictionaryAttractionType()
+            {
+                DictionaryAttractionName = a.DictionaryAttractionName,
+                DictionaryAttractionTypeId = a.DictionaryAttractionTypeId
+
+            });
+            return attr.Take(50).ToList();
         }
 
         public int AddComment(CommentModel comentariu)

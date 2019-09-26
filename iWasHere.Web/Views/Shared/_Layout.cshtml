@@ -59,8 +59,11 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+       
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white  border-bottom box-shadow mb-3" style=" background-color: yellow !important;">
+                 
             <div class="container">
+
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">iWasHere.Web</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -96,15 +99,15 @@
         </nav>
     </header>
     <div class="container">
-        <partial name="_CookieConsentPartial" />
+        @*<partial name="_CookieConsentPartial" />*@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted" style="background-color:white;">
+    <footer class="border-top footer text-muted" style="background-color: 	#778899; color: #FFFF00 !important;">
         <div class="container">
-            &copy; 2019 - iWasHere.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            Batman Team
         </div>
     </footer>
 

@@ -11,6 +11,7 @@ namespace iWasHere.Domain.Model
         public DateTime CurrencyDate { get; set; }
 
         public virtual DictionaryCurrencyType CurrencyType { get; set; }
+
         public virtual ICollection<Attractions> Attractions { get; set; }
     }
 }
