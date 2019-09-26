@@ -273,11 +273,11 @@ namespace iWasHere.Web.Controllers
                     path.Add(a + Path.GetExtension(image.FileName));
                 }
             }
-            foreach (string p in path)
-            {
-                fileInfo = GetFileInfo(files, attractionId);
-            }
-            return Json(status);
+            //foreach (string p in path)
+            //{
+            //    fileInfo = GetFileInfo(files, attractionId);
+            //}
+            //return Json(status);
         }
 
 
